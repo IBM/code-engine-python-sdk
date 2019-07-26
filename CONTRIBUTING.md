@@ -8,11 +8,16 @@ Before that, please search for similar issues. It's possible that someone has al
 If you want to contribute to the repository, here's a quick guide:
   1. Fork the repository
   2. Develop and test your code changes:
-      * To build/test: `mvn clean package`   
+      * To run the tests: `pytest`
       * Please add one or more tests to validate your changes.
-  3. Make sure everything builds/tests cleanly
-  4. Commit your changes  
-  5. Push to your fork and submit a pull request to the **master** branch
+  3. Check and fix code style: `./pylint.sh`
+  4. Make sure everything builds/tests cleanly
+  5. Commit your changes
+  6. Push to your fork and submit a pull request to the **master** branch
+
+## Additional Resources
++ [General GitHub documentation](https://help.github.com/)
++ [GitHub pull request documentation](https://help.github.com/send-pull-requests/)
 
 # Developer's Certificate of Origin 1.1
 
@@ -39,9 +44,3 @@ By making a contribution to this project, I certify that:
    personal information I submit with it, including my sign-off) is
    maintained indefinitely and may be redistributed consistent with
    this project or the open source license(s) involved.
-
-## Additional Resources
-+ [General GitHub documentation](https://help.github.com/)
-+ [GitHub pull request documentation](https://help.github.com/send-pull-requests/)
-
-[Maven]: https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html

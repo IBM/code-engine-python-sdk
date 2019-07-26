@@ -13,13 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 import os
 import sys
 
-__version__ = '3.0.3'
+__version__ = '0.0.1'
 
 if sys.argv[-1] == 'publish':
     # test server
@@ -60,29 +59,22 @@ class PyTest(TestCommand):
         sys.exit(errcode)
 
 
-setup(name='ibm-watson',
+setup(name='mysdk',
       version=__version__,
-      description='Client library to use the IBM Watson Services',
+      description='MySDK client library',
       license='Apache 2.0',
       install_requires=['requests>=2.0, <3.0', 'python_dateutil>=2.5.3', 'websocket-client==0.48.0', 'ibm_cloud_sdk_core>=0.2.0'],
       tests_require=['responses', 'pytest', 'python_dotenv', 'pytest-rerunfailures', 'tox'],
       cmdclass={'test': PyTest},
-      author='IBM Watson',
+      author='IBM',
       author_email='watdevex@us.ibm.com',
       long_description=read_md('README.md'),
-      url='https://github.com/watson-developer-cloud/python-sdk',
-      packages=['ibm_watson'],
+      url='https://github.com/mysdk/python-sdk',
+      packages=['mysdk'],
       include_package_data=True,
-      keywords='language, vision, question and answer' +
-      ' tone_analyzer, natural language classifier,' +
-      ' text to speech, language translation, ' +
-      'language identification, concept expansion, machine translation, ' +
-      'personality insights, message resonance, watson developer cloud, ' +
-      ' wdc, watson, ibm, dialog, user modeling,' +
-      'tone analyzer, speech to text, visual recognition',
+      keywords='mysdk',
       classifiers=[
           'Programming Language :: Python',
-          'Programming Language :: Python :: 2',
           'Programming Language :: Python :: 3',
           'Development Status :: 4 - Beta',
           'Intended Audience :: Developers',

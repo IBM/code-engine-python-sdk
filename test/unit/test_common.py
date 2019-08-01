@@ -14,12 +14,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ibm_watson import get_sdk_headers
+"""
+Test methods in the common module
+"""
+
 import unittest
+from mysdk import common
 
 class TestCommon(unittest.TestCase):
+    """
+    Test methods in the common module
+    """
+
     def test_get_sdk_headers(self):
-        headers = get_sdk_headers('my_service', 'v1', 'my_operation')
+        """
+        Test the get_sdk_headers method
+        """
+        headers = common.get_sdk_headers()
         self.assertIsNotNone(headers)
         self.assertIsNotNone(headers.get('User-Agent'))
         self.assertIn('python-sdk-template', headers.get('User-Agent'))

@@ -1,34 +1,133 @@
-# IBM Cloud Python SDK Template
-This repository serves as a template for Python SDKs that are produced with the
-[IBM OpenAPI SDK Generator](https://github.ibm.com/CloudEngineering/openapi-sdkgen).
+# Example README - MYSDK
 
-You can use the contents of this repository to create your own Python SDKs.
+Python client library to use the [mysdk](mysdk-service-link-documention).
 
-## How to use this repository
+<details>
+<summary>Table of Contents</summary>
 
-##### 1. Copy the repository
-Copy the files contained in this repository as a starting point when building your own Python SDK
-for one or more IBM Cloud services.
+* [Overview](#overview)
+* [Prerequisites](#prerequisites)
+* [Installation](#installation)
+* [Authentication](#authentication)
+* [Usage](#using-the-sdk)
+* [Sample Code](#sample-code)
+* [License](#license)
 
-##### 2. Modify the copied files to reflect your SDK
+</details>
 
-This template uses "mysdk" as the SDK/Package name.  You probably will want to change that to something
-more meaningful for your service(s).  Do a search in the template files for "mysdk" and replace with your
-SDK/Package name.
+## Overview
 
-The following specific files will need to be modified after copying them from this template repository:
-* .travis.yml - Update this file as needed to incorporate any required steps for your SDK
+The mysdk Python SDK allows developers to programmatically interact with the mysdk services, in the following ways:
+
+* mysdk subclasses
+
+## Prerequisites
+
+[ibm-cloud-onboarding]: https://cloud.ibm.com/registration?target=%2Fdeveloper%2Fwatson&
+
+* An [IBM Cloud][ibm-cloud-onboarding] account.
+* An IAM API key to allow the SDK to access your account. Create one [here](https://cloud.ibm.com/iam/apikeys).
+* An installation of Python 3 on your local machine.
+
+## Installation
+
+To install, use `pip` or `easy_install`:
+
+```bash
+pip install --upgrade platform-services
+```
+
+or
+
+```bash
+easy_install --upgrade platform-services
+```
+
+## Authentication
+
+mysdk uses token-based [Identity and Access Management (IAM) authentication](https://cloud.ibm.com/docs/iam?topic=iam-getstarted).
+
+IAM authentication uses a service API key to get an access token that is passed with the call.
+Access tokens are valid for a limited amount of time and must be regenerated.
+
+To provide credentials to the SDK, you supply either an IAM service **API key** or an **access token**:
+
+- Use the API key to have the SDK manage the lifecycle of the access token. The SDK requests an access token, ensures that the access token is valid, and refreshes it if necessary.
+- Use the access token if you want to manage the lifecycle yourself. For details, see [Authenticating with IAM tokens](https://cloud.ibm.com/docs/services/watson/getting-started-iam.html).
 
 
-* common.py - Python SDKs built with the IBM OpenAPI SDK Generator
-need to include a common.py file which contains a function called `get_sdk_headers`.  
-The `get_sdk_headers` function is invoked by the generated service methods and should be modified to suit the
-needs of your particular SDK.
+Supplying the IAM API key:
 
-##### 3. Generate the Python code with the IBM OpenAPI SDK Generator
-This is the step that you've been waiting for!
+```python
+from mysdk import IAMAuthenticator
 
-In this step, you'll invoke the IBM OpenAPI SDK Generator to process your API definition.
+# In your API endpoint use this to generate new bearer tokens
+iam_token_manager = IAMAuthenticator(apikey='<apikey>')
+token = iam_token_manager.get_token()
+```
 
-This will generate a collection of Go source files which will be included in your SDK project.
-You'll find instructions on how to do this [here](https://github.ibm.com/CloudEngineering/openapi-sdkgen/wiki).
+Supplying the access token:
+
+```python
+from mysdk import mysdk
+from ibm_cloud_sdk_core.authenticators import BearerTokenAuthenticator
+
+# in the constructor, assuming control of managing the token
+authenticator = BearerTokenAuthenticator('your token')
+mysdk_service = mysdk(authenticator=authenticator)
+```
+
+## Using the SDK
+
+The mysdk Python SDK supports only synchronous (blocking) execution of service methods.  Use this SDK to perform the basic mysdk creation operation as follows, with the installation and initialization instructions from above:
+
+```python
+from mysdk import mysdk
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
+authenticator = IAMAuthenticator(apikey='your apikey')
+mysdk_data = mysdk(authenticator=authenticator)
+
+response = mysdk_data.list_data()
+print(response)
+```
+
+This would give an output of `DetailedResponse` having the structure:
+
+```
+{
+    'result': <response returned by service>,
+    'headers': { <http response headers> },
+    'status_code': <http status code>
+}
+```
+
+You can use the `get_result()`, `get_headers()`, and `get_status_code()` to return the result, headers, and status code respectively.
+
+### Sending request headers
+
+Custom headers can be passed in any request in the form of a `dict` as:
+```python
+headers = {
+    'Custom-Header': 'custom_value'
+}
+```
+For example, to send a header called `Custom-Header` to a call in mysdk, pass the headers parameter as:
+
+```python
+from mysdk import mysdk
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
+authenticator = IAMAuthenticator('your apikey')
+mysdk_service = mysdk(authenticator=authenticator)
+
+response = mysdk_service.list_data(headers={'Custom-Header': 'custom_value'}).get_result()
+```
+
+## Sample Code
+
+See [Samples](Samples).
+
+## License
+
+The mysdk Python SDK is released under the Apache 2.0 license. The license's full text can be found in [LICENSE](LICENSE).

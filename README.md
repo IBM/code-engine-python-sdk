@@ -34,13 +34,13 @@ The mysdk Python SDK allows developers to programmatically interact with the mys
 To install, use `pip` or `easy_install`:
 
 ```bash
-pip install --upgrade platform-services
+pip install --upgrade "mysdk>=0.0.1"
 ```
 
 or
 
 ```bash
-easy_install --upgrade platform-services
+easy_install --upgrade "mysdk>=0.0.1"
 ```
 
 ## Authentication
@@ -56,36 +56,45 @@ To provide credentials to the SDK, you supply either an IAM service **API key** 
 - Use the access token if you want to manage the lifecycle yourself. For details, see [Authenticating with IAM tokens](https://cloud.ibm.com/docs/services/watson/getting-started-iam.html).
 
 
-Supplying the IAM API key:
+#### Supplying the IAM API key:
+
+```python
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
+authenticator = IAMAuthenticator('apikey')
+mysdk_service = mysdk(authenticator=authenticator)
+```
+
+#### Generating bearer tokens using the IAM API key:
 
 ```python
 from mysdk import IAMAuthenticator
 
 # In your API endpoint use this to generate new bearer tokens
-iam_token_manager = IAMAuthenticator(apikey='<apikey>')
+iam_token_manager = IAMAuthenticator('<apikey>')
 token = iam_token_manager.get_token()
 ```
 
-Supplying the access token:
+#### Supplying the access token:
 
 ```python
 from mysdk import mysdk
-from ibm_cloud_sdk_core.authenticators import BearerTokenAuthenticator
+from ibm_cloud_sdk_core.authenticators import BearerAuthenticator
 
 # in the constructor, assuming control of managing the token
-authenticator = BearerTokenAuthenticator('your token')
+authenticator = BearerAuthenticator('your token')
 mysdk_service = mysdk(authenticator=authenticator)
 ```
 
 ## Using the SDK
 
-The mysdk Python SDK supports only synchronous (blocking) execution of service methods.  Use this SDK to perform the basic mysdk creation operation as follows, with the installation and initialization instructions from above:
+The mysdk Python SDK supports only synchronous (blocking) execution of service methods. The return value from all service methods is a DetailedResponse object. Use this SDK to perform the basic mysdk creation operation as follows, with the installation and initialization instructions from above:
 
 ```python
 from mysdk import mysdk
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
-authenticator = IAMAuthenticator(apikey='your apikey')
+authenticator = IAMAuthenticator('your apikey')
 mysdk_data = mysdk(authenticator=authenticator)
 
 response = mysdk_data.list_data()
@@ -122,6 +131,31 @@ authenticator = IAMAuthenticator('your apikey')
 mysdk_service = mysdk(authenticator=authenticator)
 
 response = mysdk_service.list_data(headers={'Custom-Header': 'custom_value'}).get_result()
+```
+
+### Error Handling
+
+The mysdk Python SDK generates an exception for any unsuccessful method invocation.
+If the method receives an error response from an API call to the service, it will generate an
+`ApiException` with the following fields.
+
+| NAME | DESCRIPTION |
+| ----- | ----------- |
+| code | The HTTP response code that is returned. |
+| message	| A message that describes the error. |
+| info	| A dictionary of additional information about the error. |
+
+
+Exceptions that may be returned from a mysdk Python SDK method can be handled in the following way:
+
+```python
+from mysdk import ApiException
+try:
+  # Invoke an SDK method
+  self.mysdk.method('does not exist')
+except ApiException as e:
+  # Handle exception
+  print "Method failed with status code " + str(e.code) + ": " + e.message)
 ```
 
 ## Sample Code

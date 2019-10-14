@@ -79,10 +79,10 @@ token = iam_token_manager.get_token()
 
 ```python
 from mysdk import mysdk
-from ibm_cloud_sdk_core.authenticators import BearerAuthenticator
+from ibm_cloud_sdk_core.authenticators import BearerTokenAuthenticator
 
 # in the constructor, assuming control of managing the token
-authenticator = BearerAuthenticator('your token')
+authenticator = BearerTokenAuthenticator('your token')
 mysdk_service = mysdk(authenticator=authenticator)
 ```
 

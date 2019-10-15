@@ -43,7 +43,7 @@ def get_user_agent():
 USER_AGENT = '{0}-{1} {2}'.format(SDK_NAME, __version__, get_system_info())
 
 
-def get_sdk_headers():
+def get_sdk_headers(service_name, service_version, operation_id):
     """
     Get the request headers to be sent in requests by the SDK
     """

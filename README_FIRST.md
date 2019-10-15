@@ -6,11 +6,11 @@ You can use the contents of this repository to create your own Python SDKs.
 
 ## How to use this repository
 
-##### 1. Copy the repository
+#### 1. Copy the repository
 Copy the files contained in this repository as a starting point when building your own Python SDK
 for one or more IBM Cloud services.
 
-##### 2. Modify the copied files to reflect your SDK
+#### 2. Modify the copied files to reflect your SDK
 
 This template uses "mysdk" as the SDK/Package name.  You will need to change that to something
 more meaningful for your service(s).  Do a search in the template files for "mysdk" and replace with your
@@ -31,7 +31,7 @@ The following specific files will need to be modified after copying them from th
 
 If needed, update your dependencies in the `requirements.txt` or `requirements-dev.text`
 
-##### 3. Generate the Python code with the IBM OpenAPI SDK Generator
+#### 3. Generate the Python code with the IBM OpenAPI SDK Generator
 This is the step that you've been waiting for!
 
 In this step, you'll invoke the IBM OpenAPI SDK Generator to process your API definition.
@@ -40,5 +40,22 @@ This will generate a collection of Python source files which you will need to in
 
 You'll find instructions on how to do this on the [generator repository wiki](https://github.ibm.com/CloudEngineering/openapi-sdkgen/wiki/Usage-Instructions).
 
-##### 4. Test your SDK
-Install the dev requirements using `pip3 install requirements.txt` and use `pytest` to run your unit tests.
+#### 4. Test your SDK
+SDK tests are organized into *unit* and *integration* tests, which live in `test/unit/` and `test/integration/`, respectively. Unit tests mock the request framework and test that request objects are constructed properly. Integration tests make requests to live service instances and test that the SDK works as intended from end to end.
+
+This repository uses [Pytest](https://docs.pytest.org/en/latest/) for its testing and mocking framework. To use the tests, use the following commands:
+
+```bash
+pip3 install -r requirements.text
+pip3 install .
+pytest - run all tests
+```
+
+#### Integration tests
+Integration tests must be written by hand for each service, if desired. For integration tests to run, service credentials must be specified in a `.env` file, the contents of which are shown below:
+
+`VCAP_SERVICES={"example_service_v1":[{"credentials":{"apikey":"abcdefghi"}}]}`
+
+An example integration test is located at `test/integration/test_example_service_v1.py`. This example contains the imports necessary to run an integration test suite, including the **setUp** and **tearDown** functions.
+
+Any additional files needed for testing (like an image to send to a visual recognition service) should be placed in `test/resources/`.

@@ -27,7 +27,9 @@ The following specific files will need to be modified after copying them from th
 
 * __init__.py - This will need to be updated to reference the source code that you generate in Step #3.
 
-* test/unit/test_common.py - put your unit tests for your services in here.
+* test/unit/ - Put your unit tests for your services in here. Basic unit tests will be generated
+
+* test/integration/ - Put your integration tests for your services in here.
 
 If needed, update your dependencies in the `requirements.txt` or `requirements-dev.text`
 
@@ -48,7 +50,7 @@ This repository uses [Pytest](https://docs.pytest.org/en/latest/) for its testin
 ```bash
 pip3 install -r requirements.text
 pip3 install .
-pytest - run all tests
+python3 setup.py test
 ```
 
 #### Integration tests

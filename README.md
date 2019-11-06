@@ -27,7 +27,7 @@ The mysdk Python SDK allows developers to programmatically interact with the mys
 
 * An [IBM Cloud][ibm-cloud-onboarding] account.
 * An IAM API key to allow the SDK to access your account. Create one [here](https://cloud.ibm.com/iam/apikeys).
-* An installation of Python 3 on your local machine.
+* An installation of Python >=3.5 on your local machine.
 
 ## Installation
 

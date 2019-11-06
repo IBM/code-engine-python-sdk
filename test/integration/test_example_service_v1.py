@@ -22,25 +22,29 @@ import pytest
 import unittest
 import os
 import mysdk
-from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+from ibm_cloud_sdk_core.authenticators import NoAuthAuthenticator
+
 
 @pytest.mark.skipif(
     os.getenv('VCAP_SERVICES') is None, reason='requires VCAP_SERVICES')
 class TestExampleServiceV1(unittest.TestCase):
     def setUp(self):
-        authenticator = IAMAuthenticator("")
+        authenticator = NoAuthAuthenticator()
         self.example_service = mysdk.ExampleServiceV1(authenticator)
-        self.id = self.example_service.create_resource("555", "Montana").get_result()
+        self.example_service.set_service_url("http://localhost:3000")
 
     def tearDown(self):
         # Delete the resources
         print("Clean up complete.")
 
     def test_get_resource(self):
-        env = self.example_service.get_resource(self.id).get_result()
+        env = self.example_service.get_resource("1").get_result()
         assert env is not None
 
-
     def test_list_resources(self):
-        env = self.example_service.list_resources(self.id).get_result()
+        env = self.example_service.list_resources().get_result()
+        assert env is not None
+
+    def test_create_resource(self):
+        env = self.example_service.create_resource(3, "To Kill a Mockingbird", tag="Book").get_result()
         assert env is not None

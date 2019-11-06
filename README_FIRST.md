@@ -58,6 +58,8 @@ Integration tests must be written by hand for each service, if desired. For inte
 
 `VCAP_SERVICES={"example_service_v1":[{"credentials":{"apikey":"abcdefghi"}}]}`
 
+To set up and run the integration tests, clone the [Example Service repo](https://github.ibm.com/CloudEngineering/example-service) and follow the instructions there for how to start up an instance of the example service.
+
 An example integration test is located at `test/integration/test_example_service_v1.py`. This example contains the imports necessary to run an integration test suite, including the **setUp** and **tearDown** functions.
 
 Any additional files needed for testing (like an image to send to a visual recognition service) should be placed in `test/resources/`.

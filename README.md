@@ -133,6 +133,10 @@ mysdk_service = mysdk(authenticator=authenticator)
 response = mysdk_service.list_data(headers={'Custom-Header': 'custom_value'}).get_result()
 ```
 
+### Transaction IDs
+
+Every call from the SDK will receive a response which will contain a transaction ID, accessible via the `x-global-transaction-id` header.  This transaction ID is useful for troubleshooting and accessing relevant logs from your service instance.
+
 ### Error Handling
 
 The mysdk Python SDK generates an exception for any unsuccessful method invocation.

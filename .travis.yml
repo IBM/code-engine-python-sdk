@@ -7,8 +7,9 @@ matrix:
       dist: xenial
 cache: pip
 before_install:
-- '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && openssl aes-256-cbc -K $encrypted_key
-  -iv $encrypted_iv -in .env.enc -out .env -d || true'
+- '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && openssl aes-256-cbc -K $encrypted_12345_key
+  -iv $encrypted_12345_iv -in .env.enc -out .env -d || true'
+- source .env
 - npm install npm@latest -g
 install:
 - pip install tox-travis

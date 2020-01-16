@@ -66,3 +66,6 @@ test/__init__.py
 
 .sfdx/tools/apex.db
 .pytest_cache/
+
+# env.enc produced by scripts/update-auth-file.sh
+.env.enc

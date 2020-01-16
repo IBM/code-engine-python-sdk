@@ -63,3 +63,38 @@ To set up and run the integration tests, clone the [Example Service repo](https:
 An example integration test is located at `test/integration/test_example_service_v1.py`. This example contains the imports necessary to run an integration test suite, including the **setUp** and **tearDown** functions.
 
 Any additional files needed for testing (like an image to send to a visual recognition service) should be placed in `test/resources/`.
+
+#### Continuous Integration
+This repository is set up to use [Travis](https://travis-ci.org/) for continuous integration.
+
+Note - to run integration tests on Travis, the `.env` file must be encrypted and the key stored in the Travis settings as an environment variable. Run the script `scripts/update-auth-file.sh` to generate an encrypted file and automatically set the key in Travis. To do this:
+
+1. Enable Travis-CI for your repository in Travis.
+2. Make sure Ruby and Ruby Gem are installed and up to date on your local machine. You can [install Ruby here](https://www.ruby-lang.org/en/documentation/installation/)
+3. Install Travis CLI (`gem install travis`). To verify installation, type `travis -v`
+4. Log into Travis through CLI. Depending on whether you're trying to connect to Travis Enterprise, or Public Travis, the commands will be different.
+
+Here's the command for logging into Travis Enterprise:
+```sh
+travis login -X --github-token <your-github-enterprise-token> --api-endpoint https://travis.ibm.com/api
+```
+
+Here's the command for logging into Public Travis
+```sh
+travis login --github-token <your-public-github-token> --com
+```
+
+5. From the root of the python-sdk-template project, run the script in `scripts/update-auth-file.sh`
+6. The script will generate a file called `.env.enc` in the project folder root directory. Commit the file to your repository
+7. Terminal should print out a command to add to your build script. In that command is a string with the format similar to `encrypted_12345_key`. Copy that string
+8. Replace the string `encrypted_12345_key` with the name of your generated environment variable from the last step
+9. Also replace the string `encrypted_12345_iv` with the name of your generated environment variable, but modify the string from `_key` to `_iv`
+10. Commit the changes you made to the `.travis.yml` file and push to Github. Travis-CI pipeline should automatically start running
+
+The config file `.travis.yml` contains all the instructions necessary to run the recommended build. Each step is described below.
+
+The `before_install` step runs the instructions to decrypt the `.env.enc` file and run the `.env` file to set `VCAP_SERVICES` as an environment variable. It only does for *pushes* to a branch. This is done so that integration tests only run on *push* builds and not on *pull request* builds. The mechanism works because if there is no `VCAP_SERVICES` environment variable, the example integration test in `test_example_service_v1.py` skip all of the tests.
+
+The `script` section runs the instructions needed to verify the quality of the code by running unit tests, integration tests and reporting code coverage. It first installs and upgrades `python-dotenv`. Then, it runs the command to set up the python environment for python 3.5, 3.6 and 3.7 and run tests using pytest and codecov. For more details please see the [tox.ini](tox.ini) file.
+
+The `deploy` section is the last step of the build and triggers the automated release management. The repository uses [semantic-release](https://semantic-release.gitbook.io/semantic-release/) for automated release management. The tool will determine if a release is warranted or not using the [commit messages](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#commit). Note that the format of your commit messages must comply with the requirements defined in the referenced page, or the release will not work as intended. If a release is warranted, the tool will determine what kind of release (patch, minor, or major) and proceed with the deployment. The tool is configured in this repository to publish to [PyPI](https://pypi.org/) and update the changelog. To run these deployments, you must add a `GH_TOKEN`, `PYPI_USER` and `PYPI_PASSWORD` as environment variables to the Travis settings.

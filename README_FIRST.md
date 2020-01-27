@@ -16,6 +16,15 @@ This template uses "mysdk" as the SDK/Package name.  You will need to change tha
 more meaningful for your service(s).  Do a search in the template files for "mysdk" and replace with your
 SDK/Package name.  In particular, you will need to update `setup.py` to reflect your package name using Python conventions.
 
+You will need to add the `apiPackage` [configuration option](https://github.ibm.com/CloudEngineering/openapi-sdkgen/wiki/Config-Options)
+to your API definition. Configuration options are added to the `info` section of the API definition using the `x-codegen-config` property.
+Using the example below, replace "mysdk" with your SDK/Package name.
+
+    info:
+        x-codegen-config:
+            python:
+                apiPackage: 'mysdk'
+
 The following specific files will need to be modified after copying them from this template repository:
 * .travis.yml - Update this file as needed to incorporate any required steps for your SDK.
 
@@ -41,6 +50,9 @@ In this step, you'll invoke the IBM OpenAPI SDK Generator to process your API de
 This will generate a collection of Python source files which you will need to include in your SDK project, in a directory with your package name.
 
 You'll find instructions on how to do this on the [generator repository wiki](https://github.ibm.com/CloudEngineering/openapi-sdkgen/wiki/Usage-Instructions).
+
+Set the ouput location for the generated files to the root directory of the project. If the `apiPackage` configuration option in your API definition matches the SDK/Package name of of the directory
+that holds your services (initially named "mysdk"), the generated files will be generated in that directory.
 
 #### 4. Test your SDK
 SDK tests are organized into *unit* and *integration* tests, which live in `test/unit/` and `test/integration/`, respectively. Unit tests mock the request framework and test that request objects are constructed properly. Integration tests make requests to live service instances and test that the SDK works as intended from end to end.

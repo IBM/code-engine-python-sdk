@@ -17,7 +17,8 @@ install:
 - npm install @semantic-release/exec
 script:
 - pip install -U python-dotenv
-- tox
+- tox -- test/unit
+- tox -- test/integration
 before_deploy:
 - sudo apt-get update
 - pip install -r requirements.txt

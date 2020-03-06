@@ -17,8 +17,15 @@ from setuptools import setup
 from setuptools.command.test import test as TestCommand
 import os
 import sys
+import pkg_resources
 
 __version__ = '0.0.1'
+PACKAGE_NAME = 'mysdk'
+
+with open('requirements.txt') as f:
+    install_requires = [str(req) for req in pkg_resources.parse_requirements(f)]
+with open('requirements-dev.txt') as f:
+    tests_require = [str(req) for req in pkg_resources.parse_requirements(f)]
 
 if sys.argv[-1] == 'publish':
     # test server
@@ -58,21 +65,29 @@ class PyTest(TestCommand):
         errcode = pytest.main(self.test_args)
         sys.exit(errcode)
 
+class PyTestUnit(PyTest):
+    def finalize_options(self):
+        self.test_args = ['--strict', '--verbose', '--tb=long', 'test/unit']
 
-setup(name='mysdk',
+class PyTestIntegration(PyTest):
+    def finalize_options(self):
+        self.test_args = ['--strict', '--verbose', '--tb=long', 'test/integration']
+
+
+setup(name=PACKAGE_NAME,
       version=__version__,
       description='MySDK client library',
       license='Apache 2.0',
-      install_requires=['requests>=2.0, <3.0', 'python_dateutil>=2.5.3', 'websocket-client==0.48.0', 'ibm_cloud_sdk_core>=0.2.0'],
-      tests_require=['responses>=0.10', 'pytest', 'python_dotenv', 'pytest-rerunfailures', 'tox'],
-      cmdclass={'test': PyTest},
+      install_requires=install_requires,
+      tests_require=tests_require,
+      cmdclass={'test': PyTest, 'test_unit': PyTestUnit, 'test_integration': PyTestIntegration},
       author='IBM',
       author_email='author_email@us.ibm.com',
       long_description=read_md('README.md'),
       url='https://github.com/mysdk/python-sdk',
-      packages=['mysdk'],
+      packages=[PACKAGE_NAME],
       include_package_data=True,
-      keywords='mysdk',
+      keywords=PACKAGE_NAME,
       classifiers=[
           'Programming Language :: Python',
           'Programming Language :: Python :: 3',

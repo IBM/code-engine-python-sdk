@@ -69,3 +69,8 @@ test/__init__.py
 
 # env.enc produced by scripts/update-auth-file.sh
 .env.enc
+
+# openapi-sdkgen
+.openapi-generator/
+.openapi-generator-ignore
+/.pydevproject

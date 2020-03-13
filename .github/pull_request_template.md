@@ -1,15 +1,36 @@
-<!--
-Thank you for your pull request!
+## PR summary
+<!-- please include a brief summary of the changes in this PR -->
 
-Please provide a description above and review the requirements below.
+**Fixes:** <! -- link to issue -->
 
-Bug fixes and new features should include tests whenever possible.
--->
+## PR Checklist
+Please make sure that your PR fulfills the following requirements:  
+- [ ] The commit message follows the [Angular Commit Message Guidelines](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#-commit-message-guidelines).
+- [ ] Tests for the changes have been added (for bug fixes / features)
+- [ ] Docs have been added / updated (for bug fixes / features)
 
-##### Checklist
-<!-- Remove items that do not apply. For completed items, change [ ] to [x]. -->
+## PR Type  
+<!-- Please check the one that applies to this PR using "x". -->
+- [ ] Bugfix
+- [ ] Feature
+- [ ] Code style update (formatting, local variables)
+- [ ] Refactoring (no functional changes, no api changes)
+- [ ] New tests
+- [ ] Build/CI related changes
+- [ ] Documentation content changes
+- [ ] Other (please describe)
 
-- [ ] `pytest` passes
-- [ ] tests are included
-- [ ] documentation is changed or added
-- [ ] link to public docs when adding new a service or new features for an existing service
+## What is the current behavior?  
+<!-- Please describe the current behavior that you are modifying. -->
+
+## What is the new behavior?  
+<!-- Please describe the new behavior after your change. -->
+
+## Does this PR introduce a breaking change?    
+- [ ] Yes
+- [ ] No
+
+<!-- If this PR contains a breaking change, please describe the impact and migration path for existing applications below. -->
+
+## Other information
+<!-- Please add any additional information that would help reviewers evaluate your PR -->

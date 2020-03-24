@@ -23,6 +23,7 @@ Python client library to interact with various [MySDK Service APIs](https://clou
 - [Installation](#installation)
 - [Using the SDK](#using-the-sdk)
 - [Questions](#questions)
+- [Issues](#issues)
 - [Open source @ IBM](#open-source--ibm)
 - [Contributing](#contributing)
 - [License](#license)
@@ -68,6 +69,11 @@ For general SDK usage information, please see [this link](https://github.com/IBM
 If you are having difficulties using this SDK or have a question about the IBM Cloud services,
 please ask a question at [dW Answers](https://developer.ibm.com/answers/questions/ask/?topics=ibm-cloud) or
 [Stack Overflow](http://stackoverflow.com/questions/ask?tags=ibm-cloud).
+
+## Issues
+If you encounter an issue with the project, you are welcome to submit a
+[bug report](<github-repo-url>/issues).
+Before that, please search for similar issues. It's possible that someone has already reported the problem.
 
 ## Open source @ IBM
 Find more open source projects on the [IBM Github Page](http://ibm.github.io/)

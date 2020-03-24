@@ -33,4 +33,15 @@ class TestCommon(unittest.TestCase):
         headers = common.get_sdk_headers('example_service', 'V1', 'operation1')
         self.assertIsNotNone(headers)
         self.assertIsNotNone(headers.get('User-Agent'))
-        self.assertIn('python-sdk-template', headers.get('User-Agent'))
+        self.assertIn('my-python-sdk', headers.get('User-Agent'))
+
+    def test_get_system_info(self):
+        """
+        Test the get_system_info method
+        """
+        system_info = common.get_system_info()
+        self.assertIsNotNone(system_info)
+        self.assertIn('lang=', system_info)
+        self.assertIn('arch=', system_info)
+        self.assertIn('os=', system_info)
+        self.assertIn('python.version=', system_info)

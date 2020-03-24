@@ -22,30 +22,45 @@ import platform
 from mysdk.version import __version__
 
 HEADER_NAME_USER_AGENT = 'User-Agent'
-SDK_NAME = 'python-sdk-template'
+SDK_NAME = 'my-python-sdk'
 
 def get_system_info():
     """
-    Get information about the system to be inserted into the User-Agent header
+    Get information about the system to be inserted into the User-Agent header.
     """
-    return '{0} {1} {2}'.format(platform.system(), # OS
-                                platform.release(), # OS version
+    return 'lang={0}; arch={1}; os={2}; python.version={3}'.format('python',
+                                platform.machine(), # Architecture
+                                platform.system(), # OS
                                 platform.python_version()) # Python version
 
 
 def get_user_agent():
     """
-    Get the value to be sent in the User-Agent header
+    Get the value to be sent in the User-Agent header.
     """
     return USER_AGENT
 
 
-USER_AGENT = '{0}-{1} {2}'.format(SDK_NAME, __version__, get_system_info())
+USER_AGENT = '{0}/{1} ({2})'.format(SDK_NAME, __version__, get_system_info())
 
 
 def get_sdk_headers(service_name, service_version, operation_id):
     """
-    Get the request headers to be sent in requests by the SDK
+    Get the request headers to be sent in requests by the SDK.
+    
+    If you plan to gather metrics for your SDK, the User-Agent header value must
+    be a string similar to the following:
+    my-python-sdk/0.0.1 (lang=python; arch=x86_64; os=Linux; python.version=3.7.4)
+
+    In the example above, the analytics tool will parse the user-agent header and
+    use the following properties:
+    "my-python-sdk" - the name of your sdk
+    "0.0.1"- the version of your sdk
+    "lang=python" - the language of the current sdk
+    "arch=x86_64; os=Linux; python.version=3.7.4" - system information
+
+    Note: It is very important that the sdk name ends with the string `-sdk`,
+    as the analytics data collector uses this to gather usage data.
     """
     headers = {}
     headers[HEADER_NAME_USER_AGENT] = get_user_agent()

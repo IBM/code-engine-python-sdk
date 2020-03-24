@@ -60,7 +60,7 @@ SDK tests are organized into *unit* and *integration* tests, which live in `test
 This repository uses [Pytest](https://docs.pytest.org/en/latest/) for its testing and mocking framework. To use the tests, use the following commands:
 
 ```bash
-pip3 install -r requirements.text
+pip3 install -r requirements.txt
 pip3 install .
 python3 setup.py test
 ```
@@ -129,3 +129,30 @@ or the release will not work as intended.
 If a release is warranted, the tool will determine what kind of release (patch, minor, or major) and proceed with the deployment.
 The tool is configured in this repository to publish to [PyPI](https://pypi.org/) and update the changelog.
 To run these deployments, you must add a `GH_TOKEN`, `PYPI_USER` and `PYPI_PASSWORD` as environment variables to the Travis settings.
+
+## Setting the ``User-Agent`` Header In Preparation for SDK Metrics Gathering
+
+If you plan to gather metrics for your SDK, the `User-Agent` header value must be
+a string similar to the following:
+   `my-python-sdk/0.0.1 (lang=python; arch=x86_64; os=Linux; python.version=3.7.4)`
+
+The key parts are the sdk name (`my-python-sdk`), version (`0.0.1`) and the
+language name (`lang=python`).
+This is required because the analytics data collector uses the User-Agent header included
+with each request to gather usage data for IBM Cloud services.
+
+The default implementation of the `get_sdk_headers` method provided in this SDK template
+repository will need to be modified slightly for your SDK.
+Replace the `my-python-sdk/0.0.1` part with the name and version of your
+Python SDK. The rest of the system information should remain as-is.
+
+For example, suppose your Python SDK project is called `platform-services-python-sdk` and its
+version is `2.3.1`.
+The `User-Agent` header value should be:
+   `platform-services-python-sdk/2.3.1 (lang=python; arch=x86_64; os=Linux; python.version=3.7.4)`
+
+__Note__: It is very important that the sdk name ends with the string `-sdk`,
+as the analytics data collector uses this to gather usage data.
+
+More information about the analytics tool, and other steps you should take to start gathering
+metrics for your SDK can be found [here](https://github.ibm.com/CloudEngineering/sdk-analytics).

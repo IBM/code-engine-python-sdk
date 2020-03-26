@@ -9,7 +9,7 @@ You can use the contents of this repository to create your own Python SDK reposi
 
 ### 1. Create your new github repository from this template
 This SDK template repository is implemented as a
-[github template{https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template),
+[github template](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template),
 which makes it easy to create new projects from it.
 
 To create a new SDK repository from this template, follow these instructions:  
@@ -122,8 +122,7 @@ from your project.  Remove the following files:
   - mysdk/example_service_v1.py
 
 - The root of the project contains a directory named `mysdk` which represents the python package
-where all the generated service files will eventually be located.
-
+where all the generated service files will eventually be located.  
 Rename this directory to reflect the service category associated with your SDK project
 (e.g. `platform_services`, `database_services`, `networking_services`, etc.).   Choose your package
 name wisely as it will also be used as the package name when publishing your project build outputs
@@ -146,8 +145,7 @@ In the instructions that follow, your project's package name will be referred to
 included in your project.  This is helpful because the SDK generator will use this configuration
 property as the package into which the generated service code will be written.
 Otherwise, you will need to use the equivalent `--api-package <package>` 
-command-line option when running the SDK generator to generate each service into the project.
-
+command-line option when running the SDK generator to generate each service into the project.  
 Here's an example of the configuration properties that you can add to each API definition:
 ```yaml
   info:
@@ -155,14 +153,14 @@ Here's an example of the configuration properties that you can add to each API d
       python:
         apiPackage: '<package>'
 ```
-
 Details about SDK generator configuration properties can be found
 [here](https://github.ibm.com/CloudEngineering/openapi-sdkgen/wiki/Config-Options)
 
 - Next, here is a list of the various files within the project with comments
 that will guide you in the required modifications:  
   - `<package>/version.py`:
-    - set __version__ to `0.0.1`; modify the comment to reflect your package name.
+    - set `__version__`h to `0.0.1`
+    - modify the comment to reflect your package name.
   
   - `<package>/common.py`:  
     - modify SDK_NAME to reflect the name of your SDK project (e.g. `platform-services-python-sdk`)
@@ -174,7 +172,7 @@ that will guide you in the required modifications:
       import for each service added to your project).
     
   - `pylint.sh`: modify `mysdk` to be `<package>`
-  https://github.com/IBM/python-sdk-core/releases
+
   - `requirements.txt`: make sure that the version specified for the `ibm_cloud_sdk_core` dependency
     is the most recent available by looking [here](https://github.com/IBM/python-sdk-core/releases).
 
@@ -242,6 +240,8 @@ an import statement for the newly-generated service, like this:
 ```python
 from .my_service_v1 import MyServiceV1
 ```
+
+Also, update the service table in the `README.md` file to add an entry for the new service.
 
 Repeat the steps in this section for each service to be included in your project.
 

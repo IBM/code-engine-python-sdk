@@ -69,12 +69,11 @@ python3 setup.py test
 Integration tests must be developed by hand.
 For integration tests to run properly with an actual running instance of the service,
 credentials (e.g. IAM api key, etc.) must be provided as external configuration properties.
-Details about this can be found [here](https://github.com/IBM/ibm-cloud-sdk-common/blob/master/README.md).
+Details about this can be found
+[here](https://github.com/IBM/ibm-cloud-sdk-common/blob/master/README.md#using-external-configuration).
 
 An example integration test is located at `test/integration/test_example_service_v1.py`.
-This example contains the imports necessary to run an integration test suite,
-including the **setUp** and **tearDown** functions.
-Note that in order to run the "example service" integration test provided with this template repository,
+In order to run the "example service" integration test,
 you'll need an actual running instance of the example service.
 To run this service, clone the [Example Service repo](https://github.ibm.com/CloudEngineering/example-service)
 and follow the instructions there for how to start up an instance of the example service.
@@ -96,21 +95,22 @@ For details related to the `travis.yml` file, see
 The `.travis.yml` file included in this template repository is configured to
 perform automated release management with
 [semantic-release](https://semantic-release.gitbook.io/semantic-release/).
-When you configure your SDK project in Travis, be sure to set the `GH_TOKEN` environment variable in the
-Travis build settings.
-The value should be the Github oauth token for a user having "push" access
-to your repository.  
-Also, if you are using Travis Enterprise (travis.ibm.com), you'll need to add these environment variables
-as well:
-- GH_URL: set this to the string `https://github.ibm.com`
-- GH_PREFIX: set this to the string `/api/v3`
+
+When you configure your SDK project in Travis, be sure to set this environment variable in your
+Travis build settings:  
+- `GH_TOKEN`: set this to the Github oauth token for a user having "push" access to your repository
+
+If you are using Travis Enterprise (travis.ibm.com), you'll need to add these environment variables
+as well:  
+- `GH_URL`: set this to the string `https://github.ibm.com`
+- `GH_PREFIX`: set this to the string `/api/v3`
 
 ##### Publishing build outputs to PyPI
 If you will be publishing your build outputs to
-[PyPI](https://pypi.org/), you'll need to add these environment variables to your Travis build settings
-as well:
-- PYPI_USER: set this to the string `__token__`
-- PYPI_PASSWORD: set this to your [PyPI API token](https://pypi.org/help/#apitoken)
+[PyPI](https://pypi.org/), you'll need to add these environment variables to your
+Travis build settings:  
+- `PYPI_USER`: set this to the string `__token__`
+- `PYPI_PASSWORD`: set this to your [PyPI API token](https://pypi.org/help/#apitoken)
 
 ## Encrypting secrets
 To run integration tests within a Travis build, you'll need to encrypt the file containing the

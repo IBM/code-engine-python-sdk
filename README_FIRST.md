@@ -159,7 +159,7 @@ Details about SDK generator configuration properties can be found
 - Next, here is a list of the various files within the project with comments
 that will guide you in the required modifications:  
   - `<package>/version.py`:
-    - set `__version__`h to `0.0.1`
+    - set `__version__` to `0.0.1`
     - modify the comment to reflect your package name.
   
   - `<package>/common.py`:  

@@ -57,12 +57,13 @@ that holds your services (initially named "mysdk"), the generated files will be 
 #### 4. Test your SDK
 SDK tests are organized into *unit* and *integration* tests, which live in `test/unit/` and `test/integration/`, respectively. Unit tests mock the request framework and test that request objects are constructed properly. Integration tests make requests to live service instances and test that the SDK works as intended from end to end.
 
-This repository uses [Pytest](https://docs.pytest.org/en/latest/) for its testing and mocking framework. To use the tests, use the following commands:
+This repository uses [Pytest](https://docs.pytest.org/en/latest/) for its testing and mocking
+framework. To use the tests, use the following commands:
 
 ```bash
-pip3 install -r requirements.txt
-pip3 install .
-python3 setup.py test
+pip install -r requirements.txt
+pip install .
+pytest test
 ```
 
 #### Integration tests

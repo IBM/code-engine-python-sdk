@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Python client library for the IBM Cloud MySDK Services"""
+
 from ibm_cloud_sdk_core import IAMTokenManager, DetailedResponse, BaseService, ApiException
 
 from .common import get_sdk_headers

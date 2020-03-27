@@ -177,6 +177,8 @@ that will guide you in the required modifications:
       (e.g. `platform-services-python-sdk`).
     
   - `<package>/__init__.py`:
+    - modify module docstring to contain description for your package
+      (e.g. `"""Python client library for the IBM Cloud Platform Services"""`)
     - comment out the import for `ExampleServiceV1` (later, you'll add a similar
       import for each service added to your project).
     

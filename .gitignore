@@ -52,6 +52,7 @@ venv/
 # python 3 virtual env
 python3/
 
+*.env
 .env
 
 # resources

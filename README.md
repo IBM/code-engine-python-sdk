@@ -2,7 +2,7 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 # IBM Cloud MySDK Python SDK Version 0.0.1
 
-Python client library to interact with various [MySDK Service APIs](https://cloud.ibm.com/apidocs?category=<service-category>).
+Python client library to interact with various [IBM Cloud MySDK Service APIs](https://cloud.ibm.com/apidocs?category=<service-category>).
 
 ## Table of Contents
 
@@ -67,7 +67,7 @@ For general SDK usage information, please see [this link](https://github.com/IBM
 ## Questions
 
 If you are having difficulties using this SDK or have a question about the IBM Cloud services,
-please ask a question at [dW Answers](https://developer.ibm.com/answers/questions/ask/?topics=ibm-cloud) or
+please ask a question
 [Stack Overflow](http://stackoverflow.com/questions/ask?tags=ibm-cloud).
 
 ## Issues

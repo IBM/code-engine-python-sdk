@@ -146,7 +146,7 @@ In the instructions that follow, your project's package name will be referred to
 included in your project.  This is helpful because the SDK generator will use this configuration
 property as the package into which the generated service code will be written.
 Otherwise, you will need to use the equivalent `--api-package <package>` 
-command-line option when running the SDK generator to generate each service into the project.  
+command-line option when running the SDK generator to generate each service into the project.
 Here's an example of the configuration properties that you can add to each API definition:
 ```yaml
   info:

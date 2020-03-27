@@ -137,6 +137,7 @@ reflect the new package name:
   - tox.ini
   - mysdk/common.py
   - mysdk/version.py
+  - test/unit/test_common.py
 
 In the instructions that follow, your project's package name will be referred to as `<package>`.
 
@@ -157,7 +158,11 @@ Details about SDK generator configuration properties can be found
 [here](https://github.ibm.com/CloudEngineering/openapi-sdkgen/wiki/Config-Options)
 
 - Next, here is a list of the various files within the project with comments
-that will guide you in the required modifications:  
+that will guide you in the required modifications:
+
+  - `.bumpversion.cfg`:
+    - modify instances of `mysdk` to be `<package>`
+
   - `<package>/version.py`:
     - set `__version__` to `0.0.1`
     - modify the comment to reflect your package name.
@@ -166,12 +171,17 @@ that will guide you in the required modifications:
     - modify SDK_NAME to reflect the name of your SDK project (e.g. `platform-services-python-sdk`)
     - modify instances of `mysdk` to be `<package>`.
     - follow the instructions in the `get_sdk_headers()` function.
+
+  - `test/unit/test_common.py`
+    - modify the code in `test_get_sdk_headers` to reflect the correct name of your project
+      (e.g. `platform-services-python-sdk`).
     
   - `<package>/__init__.py`:
     - comment out the import for `ExampleServiceV1` (later, you'll add a similar
       import for each service added to your project).
     
-  - `pylint.sh`: modify `mysdk` to be `<package>`
+  - `pylint.sh`:
+    - modify `mysdk` to be `<package>`
 
   - `requirements.txt`: make sure that the version specified for the `ibm_cloud_sdk_core` dependency
     is the most recent available by looking [here](https://github.com/IBM/python-sdk-core/releases).
@@ -188,6 +198,8 @@ that will guide you in the required modifications:
 
   - `README.md`:
     - Change the title to reflect your project; leave the version in the title as `0.0.1`
+    - Change the `cloud.ibm.com/apidocs` link to reflect the correct service category
+      (e.g. `platform-services`)
     - Change instances of `mysdk` to be `<package>`
     - In the Overview section, modify `IBM Cloud MySDK Python SDK` to reflect your project
       (e.g. `IBM Cloud Platform Services Python SDK`)
@@ -204,7 +216,13 @@ that will guide you in the required modifications:
 
 At this point, it's probably a good idea to commit the changes that you have made so far.
 Be sure to use proper commit messages when committing changes (follow the link in `CONTRIBUTING.md`
-to the common CONTRIBUTING document).
+to the common CONTRIBUTING document).  
+Example:
+```sh
+cd <project-root>
+git add .
+git commit -m "chore: initial SDK project setup"
+```
 
 ### 3. Generate the Python code with the IBM OpenAPI SDK Generator
 This is the step that you've been waiting for!

@@ -154,7 +154,7 @@ Here's an example of the configuration properties that you can add to each API d
       python:
         apiPackage: '<package>'
 ```
-Details about SDK generator configuration properties can be found
+  Details about SDK generator configuration properties can be found
 [here](https://github.ibm.com/CloudEngineering/openapi-sdkgen/wiki/Config-Options)
 
 - Next, here is a list of the various files within the project with comments

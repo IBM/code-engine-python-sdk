@@ -211,7 +211,7 @@ that will guide you in the required modifications:
     - In the "Issues" section, modify `<github-repo-url>` to reflect the Github URL for your project.
     - Note that the README.md file contains a link to a common README document where general
       SDK usage information can be found.
-    - When finished read through the document and make any other changes that might be necessary.
+    - When finished, read through the document and make any other changes that might be necessary.
 
   - `CONTRIBUTING.md`:
     - In the "Issues" section, modify `<github-repo-url>` to reflect the Github URL for your project.
@@ -323,10 +323,9 @@ as well:
 
 ### Publishing build outputs to PyPI
 If you will be publishing your build outputs to
-[PyPI](https://pypi.org/), you'll need to add these environment variables to your
+[PyPI](https://pypi.org/), you'll need to add this environment variable to your
 Travis build settings:  
-- `PYPI_USER`: set this to the string `__token__`
-- `PYPI_PASSWORD`: set this to your [PyPI API token](https://pypi.org/help/#apitoken)
+- `PYPI_TOKEN`: set this to your [PyPI API token](https://pypi.org/help/#apitoken)
 
 ### Encrypting secrets
 To run integration tests within a Travis build, you'll need to encrypt the file containing the

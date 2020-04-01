@@ -21,6 +21,7 @@ import pkg_resources
 
 __version__ = '0.0.1'
 PACKAGE_NAME = 'mysdk'
+PACKAGE_DESC = 'Python client library for IBM Cloud MYSDK Services'
 
 with open('requirements.txt') as f:
     install_requires = [str(req) for req in pkg_resources.parse_requirements(f)]
@@ -36,23 +37,6 @@ if sys.argv[-1] == 'publish':
     os.system('python setup.py register -r pypi')
     os.system('python setup.py sdist upload -r pypi')
     sys.exit()
-
-# Convert README.md to README.rst for pypi
-try:
-    from pypandoc import convert_file
-
-    def read_md(f):
-        return convert_file(f, 'rst')
-
-    # read_md = lambda f: convert(f, 'rst')
-except:
-    print('warning: pypandoc module not found, '
-          'could not convert Markdown to RST')
-
-    def read_md(f):
-        return open(f, 'rb').read().decode(encoding='utf-8')
-    # read_md = lambda f: open(f, 'rb').read().decode(encoding='utf-8')
-
 
 class PyTest(TestCommand):
     def finalize_options(self):
@@ -73,17 +57,20 @@ class PyTestIntegration(PyTest):
     def finalize_options(self):
         self.test_args = ['--strict', '--verbose', '--tb=long', 'test/integration']
 
+with open("README.md", "r") as fh:
+    readme = fh.read()
 
-setup(name=PACKAGE_NAME,
+setup(name=PACKAGE_NAME.replace('_', '-'),
       version=__version__,
-      description='MySDK client library',
+      description=PACKAGE_DESC,
       license='Apache 2.0',
       install_requires=install_requires,
       tests_require=tests_require,
       cmdclass={'test': PyTest, 'test_unit': PyTestUnit, 'test_integration': PyTestIntegration},
       author='IBM',
-      author_email='author_email@us.ibm.com',
-      long_description=read_md('README.md'),
+      author_email='devexdev@us.ibm.com',
+      long_description=readme,
+      long_description_content_type='text/markdown',
       url='https://github.com/mysdk/python-sdk',
       packages=[PACKAGE_NAME],
       include_package_data=True,
@@ -91,13 +78,16 @@ setup(name=PACKAGE_NAME,
       classifiers=[
           'Programming Language :: Python',
           'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.5',
+          'Programming Language :: Python :: 3.6',
+          'Programming Language :: Python :: 3.7',
+          'Programming Language :: Python :: 3.8',
           'Development Status :: 4 - Beta',
           'Intended Audience :: Developers',
           'License :: OSI Approved :: Apache Software License',
           'Operating System :: OS Independent',
           'Topic :: Software Development :: Libraries :: Python Modules',
-          'Topic :: Software Development :: Libraries :: Application '
-          'Frameworks',
+          'Topic :: Software Development :: Libraries :: Application Frameworks',
       ],
       zip_safe=True
      )

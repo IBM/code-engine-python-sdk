@@ -124,9 +124,9 @@ from your project.  Remove the following files:
 - The root of the project contains a directory named `mysdk` which represents the python package
 where all the generated service files will eventually be located.  
 Rename this directory to reflect the service category associated with your SDK project
-(e.g. `platform_services`, `database_services`, `networking_services`, etc.).   Choose your package
-name wisely as it will also be used as the package name when publishing your project build outputs
-to [PyPI](https://pypi.org/).
+(e.g. `ibm_platform_services`, `ibm_database_services`, `ibm_networking_services`, etc.).
+Choose your package name wisely as it will also be used to form the package name when
+publishing your package to [PyPI](https://pypi.org/).
 
 - After renaming the `mysdk` package directory, you'll need to modify various files to
 reflect the new package name:
@@ -177,7 +177,7 @@ that will guide you in the required modifications:
       (e.g. `platform-services-python-sdk`).
     
   - `<package>/__init__.py`:
-    - modify module docstring to contain description for your package
+    - modify module docstring to contain a description for your package
       (e.g. `"""Python client library for the IBM Cloud Platform Services"""`)
     - comment out the import for `ExampleServiceV1` (later, you'll add a similar
       import for each service added to your project).

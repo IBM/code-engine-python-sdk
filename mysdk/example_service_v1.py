@@ -105,18 +105,22 @@ class ExampleServiceV1(BaseService):
         return response
 
 
-    def create_resource(self, *, resource_id: str = None, name: str = None, tag: str = None, **kwargs) -> DetailedResponse:
+    def create_resource(self, resource_id: str, name: str, *, tag: str = None, **kwargs) -> DetailedResponse:
         """
         Create a resource.
 
-        :param str resource_id: (optional) The id of the resource.
-        :param str name: (optional) The name of the resource.
+        :param str resource_id: The id of the resource.
+        :param str name: The name of the resource.
         :param str tag: (optional) A tag value for the resource.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Resource` object
         """
 
+        if resource_id is None:
+            raise ValueError('resource_id must be provided')
+        if name is None:
+            raise ValueError('name must be provided')
         headers = {}
         sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME, service_version='V1', operation_id='create_resource')
         headers.update(sdk_headers)
@@ -186,7 +190,7 @@ class Resource():
     :attr str read_only: (optional) This is a read only string.
     """
 
-    def __init__(self, resource_id: str, name: str, *, tag: str = None) -> None:
+    def __init__(self, resource_id: str, name: str, *, tag: str = None, read_only: str = None) -> None:
         """
         Initialize a Resource object.
 
@@ -197,6 +201,7 @@ class Resource():
         self.resource_id = resource_id
         self.name = name
         self.tag = tag
+        self.read_only = read_only
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'Resource':

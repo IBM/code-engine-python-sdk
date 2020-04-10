@@ -1,12 +1,5 @@
 language: python
 
-matrix:
-  include:
-    - python: 3.5
-    - python: 3.6
-    - python: 3.7
-    - python: 3.8
-
 dist: xenial
 
 cache: pip
@@ -23,8 +16,21 @@ install:
 # before_script:
 # - 'openssl aes-256-cbc -K $my_key -iv $my_iv -in myservice.env.enc -out myservice.env -d || true'
 
-script:
-- tox
+script: tox
+
+jobs:
+  include:
+    - stage: Run tox tests
+      python: "3.5"
+    - python: "3.6"
+    - python: "3.7"
+    - python: "3.8"
+    - stage: Run system test with template
+      script: 
+        - git clone git@github.ibm.com:CloudEngineering/sdkgen-systest.git
+        - cd sdkgen-systest
+        - ./install_scripts/install_deps_ubuntu.sh
+        - ./setup_and_generate.sh -l ibm-python -t $TRAVIS_BRANCH
 
 before_deploy:
 - pip install bump2version

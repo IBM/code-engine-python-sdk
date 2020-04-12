@@ -135,6 +135,7 @@ reflect the new package name:
   - README.md
   - setup.py
   - tox.ini
+  - .travis.yml
   - mysdk/common.py
   - mysdk/version.py
   - test/unit/test_common.py
@@ -198,6 +199,10 @@ that will guide you in the required modifications:
   - `tox.ini`:
     - change `mysdk` to be `<package>`
 
+  - `.travis.yml`:
+    - Uncomment the `matrix` section.
+    - Remove the `jobs` section as this is only applicable to the template repository's build.
+    
   - `README.md`:
     - Change the title to reflect your project; leave the version in the title as `0.0.1`
     - Change the `cloud.ibm.com/apidocs` link to reflect the correct service category

@@ -5,6 +5,33 @@ This repository serves as a template for Python SDKs that are produced with the
 
 You can use the contents of this repository to create your own Python SDK repository.
 
+## Table of Contents
+<!--
+  The TOC below is generated using the `markdown-toc` node package.
+
+      https://github.com/jonschlinkert/markdown-toc
+
+  You should regenerate the TOC after making changes to this file.
+
+      markdown-toc -i --maxdepth 4 README_FIRST.md
+  -->
+
+<!-- toc -->
+
+- [How to use this repository](#how-to-use-this-repository)
+  * [1. Create your new github repository from this template](#1-create-your-new-github-repository-from-this-template)
+  * [2. Modify selected files](#2-modify-selected-files)
+  * [3. Add one or more services to the project](#3-add-one-or-more-services-to-the-project)
+  * [4. Test your SDK](#4-test-your-sdk)
+- [Integration tests](#integration-tests)
+- [Continuous Integration](#continuous-integration)
+  * [Release management with semantic-release](#release-management-with-semantic-release)
+  * [Publishing build outputs to PyPI](#publishing-build-outputs-to-pypi)
+  * [Encrypting secrets](#encrypting-secrets)
+- [Setting the ``User-Agent`` Header In Preparation for SDK Metrics Gathering](#setting-the-user-agent-header-in-preparation-for-sdk-metrics-gathering)
+
+<!-- tocstop -->
+
 ## How to use this repository
 
 ### 1. Create your new github repository from this template
@@ -231,44 +258,10 @@ git add .
 git commit -m "chore: initial SDK project setup"
 ```
 
-### 3. Generate the Python code with the IBM OpenAPI SDK Generator
-This is the step that you've been waiting for!
+### 3. Add one or more services to the project
+For each service that you'd like to add to your SDK project, follow
+[these instructions](https://github.com/IBM/ibm-cloud-sdk-common/blob/master/CONTRIBUTING_python.md#adding-a-new-service).
 
-In this step, you'll invoke the IBM OpenAPI SDK Generator to process your API definition(s).
-
-This will generate a collection of Python source files which you will need to include in your SDK project,
-in a directory with your package name.
-
-You'll find instructions on how to do this on the [generator repository wiki](https://github.ibm.com/CloudEngineering/openapi-sdkgen/wiki/Usage-Instructions).
-
-Set the output location for the generated files to the root directory of the project.
-If you did not configure the `apiPackage` configuration property in your API definition file(s), then
-be sure to use the `--api-package <package>` command line option when running the generator to ensure that
-the generated source files are written to the correct directory.
-
-Here is an example of how to generate the SDK code for an API definition.
-Suppose your API definition file is named `my-service.json` and contains the definition of the "My Service"
-service.
-To generate the code into your project, run these commands:
-```sh
-cd <project-root>
-
-openapi-sdkgen.sh generate -g ibm-python -i my-service.json -o . --api-package <package>
-
-```
-The generated service code should be written to the `<package>` directory, along with the generated
-unit test for your service in `test/unit`.
-
-After generating the code for your service, be sure to update `<package>/__init__.py` to add
-an import statement for the newly-generated service, like this:  
-
-```python
-from .my_service_v1 import MyServiceV1
-```
-
-Also, update the service table in the `README.md` file to add an entry for the new service.
-
-Repeat the steps in this section for each service to be included in your project.
 
 ### 4. Test your SDK
 SDK tests are organized into *unit* and *integration* tests, which are located in
@@ -278,10 +271,11 @@ Integration tests make requests to live service instances and test that the SDK 
 from end to end.
 
 This repository uses [Pytest](https://docs.pytest.org/en/latest/) for its testing and mocking
-framework. To use the tests, use the following commands:
+framework. To run the tests, use the following commands:
 
 ```bash
 pip install -r requirements.txt
+pip install -r requirements-dev.txt
 pip install .
 pytest test
 ```

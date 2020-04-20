@@ -32,7 +32,7 @@ suggestion-mode=yes
 
 # Only show warnings with the listed confidence levels. Leave empty to show
 # all. Valid levels: HIGH, INFERENCE, INFERENCE_FAILURE, UNDEFINED.
-confidence=HIGH
+confidence=
 
 # Disable the message, report, category or checker with the given id(s). You
 # can either give multiple identifiers separated by comma (,) or put this
@@ -43,7 +43,15 @@ confidence=HIGH
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
-disable=print-statement,
+disable=too-many-arguments,
+        too-many-public-methods,
+        too-few-public-methods,
+        too-many-instance-attributes,
+        too-many-locals,
+        too-many-branches,
+        bad-continuation,
+        similarities,
+        print-statement,
         parameter-unpacking,
         unpacking-in-except,
         old-raise-syntax,

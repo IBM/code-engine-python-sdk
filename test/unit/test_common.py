@@ -30,7 +30,7 @@ class TestCommon(unittest.TestCase):
         """
         Test the get_sdk_headers method
         """
-        headers = common.get_sdk_headers('example_service', 'V1', 'operation1')
+        headers = common.get_sdk_headers(service_name='example_service', service_version='V1', operation_id='operation1')
         self.assertIsNotNone(headers)
         self.assertIsNotNone(headers.get('User-Agent'))
         self.assertIn('my-python-sdk', headers.get('User-Agent'))

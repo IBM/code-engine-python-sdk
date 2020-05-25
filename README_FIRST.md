@@ -144,8 +144,8 @@ the proper names and settings for your specific project.
 
 - The template repository comes with an example service included, but this should be removed
 from your project.  Remove the following files:
-  - test/unit/test_example_v1.py
-  - test/integration/test_example_v1.py
+  - test/unit/test_example_service_v1.py
+  - test/integration/test_example_service_v1.py
   - mysdk/example_service_v1.py
 
 - The root of the project contains a directory named `mysdk` which represents the python package

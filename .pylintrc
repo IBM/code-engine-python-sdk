@@ -32,7 +32,7 @@ suggestion-mode=yes
 
 # Only show warnings with the listed confidence levels. Leave empty to show
 # all. Valid levels: HIGH, INFERENCE, INFERENCE_FAILURE, UNDEFINED.
-confidence=
+confidence=HIGH
 
 # Disable the message, report, category or checker with the given id(s). You
 # can either give multiple identifiers separated by comma (,) or put this
@@ -49,6 +49,8 @@ disable=too-many-arguments,
         too-many-instance-attributes,
         too-many-locals,
         too-many-branches,
+        too-many-lines,
+        line-too-long,
         bad-continuation,
         similarities,
         print-statement,
@@ -59,6 +61,7 @@ disable=too-many-arguments,
         long-suffix,
         old-ne-operator,
         old-octal-literal,
+        import-error,
         import-star-module-level,
         non-ascii-bytes-literal,
         raw-checker-failed,
@@ -130,7 +133,7 @@ disable=too-many-arguments,
         deprecated-sys-function,
         exception-escape,
         comprehension-escape,
-	invalid-name
+        invalid-name
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

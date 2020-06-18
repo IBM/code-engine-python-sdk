@@ -52,7 +52,7 @@ To create a new SDK repository from this template, follow these instructions:
     - `<service-category>` refers to the IBM Cloud service category associated with the services that
 	  will be included in the project (e.g. `platform-services`)
     - `<language>` is the language associated with the SDK project (e.g. `python`)
-	
+
 4. Click the `Create repository from template` button to create the new repository  
 If your goal is to create the new SDK repository on the `Github Enterprise` server (github.ibm.com),
 then you are finished creating the new repository and you can proceed to section 2.
@@ -98,7 +98,7 @@ Resolving deltas: 100% (1/1), done.
 [/work/demos]
 $ cd my-python-sdk
 [/work/demos/my-python-sdk]
-$ 
+$
 ```
 
 8. Remove the existing remote:  
@@ -139,6 +139,33 @@ server since it will no longer be used now that you have created your repository
 
 ### 2. Modify selected files
 
+#### Automatic Script
+
+Use the `prepare_project.sh` script to perform the below modifications automatically.
+It will delete the `example service` files and update the corresponding sections with the specified values.
+Read through the manual steps below to understand the changes performed by the `prepare_project.sh` script.
+
+Here is a description of the various options that you can pass to the script:
+```bash
+prepare_project.sh -n <sdk-project-name-pypi> -d <project-description> \
+        -g <git-repo-url> -s <service-category-description> -a <author-email> -c <service-category-name>
+```
+
+Here is an example of how to run the script for the `platform-services-go-sdk` project:  
+```bash
+cd <project-root>
+./prepare_project.sh -n platform-services-python-sdk -d "IBM Cloud Platform Services Go SDK" \
+       -g https://github.com/IBM/platform-services-python-sdk -s "Platform Services" -a email@ibm.com -c platform-services
+```
+
+- To list the files changed by the script, run : `git status`  
+- To view the changes made by this script, run: `git diff`  
+- To discard the changes made by the script, run `git checkout .`, or `git stash`  
+- If satisfied with the changes, then just commit the changes (e.g. `git commit -a -m "chore: prepare SDK project"`)
+
+
+#### Manual Steps
+
 - In this section, you'll modify various files within your new SDK repository to reflect
 the proper names and settings for your specific project.
 
@@ -173,7 +200,7 @@ In the instructions that follow, your project's package name will be referred to
 `apiPackage` configuration property within the API definition for each of the services that will be
 included in your project.  This is helpful because the SDK generator will use this configuration
 property as the package into which the generated service code will be written.
-Otherwise, you will need to use the equivalent `--api-package <package>` 
+Otherwise, you will need to use the equivalent `--api-package <package>`
 command-line option when running the SDK generator to generate each service into the project.
 Here's an example of the configuration properties that you can add to each API definition:
 ```yaml
@@ -194,7 +221,7 @@ that will guide you in the required modifications:
   - `<package>/version.py`:
     - set `__version__` to `0.0.1`
     - modify the comment to reflect your package name.
-  
+
   - `<package>/common.py`:  
     - modify SDK_NAME to reflect the name of your SDK project (e.g. `platform-services-python-sdk`)
     - modify instances of `mysdk` to be `<package>`.
@@ -203,13 +230,13 @@ that will guide you in the required modifications:
   - `test/unit/test_common.py`
     - modify the code in `test_get_sdk_headers` to reflect the correct name of your project
       (e.g. `platform-services-python-sdk`).
-    
+
   - `<package>/__init__.py`:
     - modify module docstring to contain a description for your package
       (e.g. `"""Python client library for the IBM Cloud Platform Services"""`)
     - comment out the import for `ExampleServiceV1` (later, you'll add a similar
       import for each service added to your project).
-    
+
   - `pylint.sh`:
     - modify `mysdk` to be `<package>`
 
@@ -223,13 +250,14 @@ that will guide you in the required modifications:
       - `description`
       - `author_email`
       - `url`
+
   - `tox.ini`:
     - change `mysdk` to be `<package>`
 
   - `.travis.yml`:
     - Uncomment the `matrix` section.
     - Remove the `jobs` section as this is only applicable to the template repository's build.
-    
+
   - `README.md`:
     - Change the title to reflect your project; leave the version in the title as `0.0.1`
     - Change the `cloud.ibm.com/apidocs` link to reflect the correct service category
@@ -254,8 +282,7 @@ to the common CONTRIBUTING document).
 Example:
 ```sh
 cd <project-root>
-git add .
-git commit -m "chore: initial SDK project setup"
+git commit -a -m "chore: prepare SDK project"
 ```
 
 ### 3. Add one or more services to the project
@@ -310,6 +337,19 @@ For details related to the `travis.yml` file, see
 The `.travis.yml` file included in this template repository is configured to
 perform automated release management with
 [semantic-release](https://semantic-release.gitbook.io/semantic-release/).
+You can see the deployment-related steps in the `deploy` stage of the `.travis.yml` file.
+
+BEFORE you enable automated builds in Travis and AFTER you perform the initial project preparation,
+you should add an initial tag (`v0.0.1`) to your repo and push it to remote:  
+```sh
+cd <project-root>
+git tag v0.0.1
+git push --tags
+```
+This creates an initial "baseline" which `semantic-release` will use when merging the initial set of
+commits into the master branch.   This tag represents the initial version of the project.
+After adding this tag, be sure to use proper commit messages when making changes to the project.
+See the CONTRIBUTING document for information about commit messages.
 
 When you configure your SDK project in Travis, be sure to set this environment variable in your
 Travis build settings:  
@@ -319,6 +359,15 @@ If you are using `Travis Enterprise` (travis.ibm.com), you'll need to add these 
 as well:  
 - `GH_URL`: set this to the string `https://github.ibm.com`
 - `GH_PREFIX`: set this to the string `/api/v3`
+
+As a final step, be sure to uncomment the `deploy` stage within `.travis.yml`.
+
+Once these steps have been completed, your project should be ready for automated release management
+with `semantic-release`.  This means that whenever you merge a PR into the master branch, the commit
+messages are analyzed by `semantic-release` to determine the next version number for the project
+(i.e. a new patch, minor or major version).  Once that is determined, `semantic-release` will perform
+actions to modify certain files within the project to reflect the new version, as well as
+build a new entry in the project's changelog and add a tag for the new version.
 
 ### Publishing build outputs to PyPI
 If you will be publishing your build outputs to

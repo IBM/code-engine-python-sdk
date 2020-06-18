@@ -1,1 +1,0 @@
-travis encrypt-file .env

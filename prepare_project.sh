@@ -45,8 +45,10 @@ else
     printf "\n>>>>> Example Service files removed."
 
     # Update directory name
-    mv mysdk $SDK_PACKAGE_NAME
-    printf "\n>>>>> Directory structure updated."
+    if [[ $SDK_PACKAGE_NAME != "mysdk" ]]; then
+        mv mysdk $SDK_PACKAGE_NAME
+        printf "\n>>>>> Directory structure updated."
+    fi
 
     # Update gitignore
     sed -i.bak 's/^example-service/# example-service/' .gitignore

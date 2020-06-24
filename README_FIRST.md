@@ -147,14 +147,14 @@ Read through the manual steps below to understand the changes performed by the `
 
 Here is a description of the various options that you can pass to the script:
 ```bash
-prepare_project.sh -n <sdk-project-name-pypi> -d <project-description> \
+prepare_project.sh -n <sdk-package-name> -d <project-description> \
         -g <git-repo-url> -s <service-category-description> -a <author-email> -c <service-category-name>
 ```
 
 Here is an example of how to run the script for the `platform-services-go-sdk` project:  
 ```bash
 cd <project-root>
-./prepare_project.sh -n platform-services-python-sdk -d "IBM Cloud Platform Services Go SDK" \
+./prepare_project.sh -n ibm_platform_services -d "IBM Cloud Platform Services Python SDK" \
        -g https://github.com/IBM/platform-services-python-sdk -s "Platform Services" -a email@ibm.com -c platform-services
 ```
 

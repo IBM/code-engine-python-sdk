@@ -114,6 +114,7 @@ else
     sed -i.bak "s/mysdk/${PYPI_NAME}/" README.md
     sed -i.bak "s/<service-category>/${SERVICE_CATEGORY}/" README.md
     sed -i.bak "s~<github-repo-url>~${PROJECT_GIT_URL}~" README.md
+    sed -i.bak "s~https://github.ibm.com/CloudEngineering/python-sdk-template~${PROJECT_GIT_URL}~" README.md
     sed -i.bak "s~^\[Example Service\].*~<!-- [Example Service](https://cloud.ibm.com/apidocs/example-service) | exampleservicev1 -->~" README.md
     GH_SLUG="$( sed 's~.*.com/~~' <<< "$PROJECT_GIT_URL" )"
     sed -i.bak "s~CloudEngineering/python-sdk-template~${GH_SLUG}~g" README.md

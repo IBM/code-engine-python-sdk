@@ -82,9 +82,9 @@ Before that, please search for similar issues. It's possible that someone has al
 Find more open source projects on the [IBM Github Page](http://ibm.github.io/)
 
 ## Contributing
-See [CONTRIBUTING](CONTRIBUTING.md).
+See [CONTRIBUTING.md](https://github.ibm.com/CloudEngineering/python-sdk-template/blob/master/CONTRIBUTING.md).
 
 ## License
 
 This SDK is released under the Apache 2.0 license.
-The license's full text can be found in [LICENSE](LICENSE).
+The license's full text can be found in [LICENSE](https://github.ibm.com/CloudEngineering/python-sdk-template/blob/master/LICENSE).

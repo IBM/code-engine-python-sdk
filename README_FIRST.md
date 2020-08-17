@@ -39,28 +39,28 @@ This SDK template repository is implemented as a
 [github template](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template),
 which makes it easy to create new projects from it.
 
-To create a new SDK repository from this template, follow these instructions:  
+To create a new SDK repository from this template, follow these instructions:
 1. In your browser, open the link for this
 [template repository](https://github.ibm.com/CloudEngineering/python-sdk-template).
 
 2. Click on the `Use this template` button that appears next to the `Clone or download` button.
 
-3. In the next window:  
+3. In the next window:
 - Select the `Owner`. This is the github id or organization where the new repository should be created
-- Enter the respository name (e.g. `platform-services-python-sdk`):  
-  - Recommendation: use a name of the form `<service-category>-<language>-sdk`, where:  
+- Enter the respository name (e.g. `platform-services-python-sdk`):
+  - Recommendation: use a name of the form `<service-category>-<language>-sdk`, where:
     - `<service-category>` refers to the IBM Cloud service category associated with the services that
 	  will be included in the project (e.g. `platform-services`)
     - `<language>` is the language associated with the SDK project (e.g. `python`)
 
-4. Click the `Create repository from template` button to create the new repository  
+4. Click the `Create repository from template` button to create the new repository
 If your goal is to create the new SDK repository on the `Github Enterprise` server (github.ibm.com),
 then you are finished creating the new repository and you can proceed to section 2.
 
 On the other hand, if your goal is to create the new SDK repository on the `Public Github` server (github.com),
 then perform these additional steps:
 
-5. Create a new **EMPTY** repository on the Public Github server:  
+5. Create a new **EMPTY** repository on the Public Github server:
 - Select "No template" for the "Repository template" option
 - Select the `Owner` (your personal id or an organization)
 - Enter the same respository name that you used when creating the new repository above (e.g. my-python-sdk)
@@ -78,7 +78,7 @@ git push -u origin master
 - Take note of the two git commands listed above for your new repository, as we'll execute these later
 
 6. Clone your new `Github Enterprise` repository (created in steps 1-3 above)
-to your local development environment:  
+to your local development environment:
 
 ```sh
 [/work/demos]
@@ -101,7 +101,7 @@ $ cd my-python-sdk
 $
 ```
 
-8. Remove the existing remote:  
+8. Remove the existing remote:
 ```sh
 [/work/demos/my-python-sdk]
 $ git remote remove origin
@@ -114,7 +114,7 @@ $ git remote remove origin
 $ git remote add origin git@github.com:padamstx/my-python-sdk.git
 ```
 
-10. Push your local repository to the new remote (Public Github):  
+10. Push your local repository to the new remote (Public Github):
 
 ```sh
 [/work/demos/my-python-sdk]
@@ -151,16 +151,16 @@ prepare_project.sh -n <sdk-package-name> -d <project-description> \
         -g <git-repo-url> -s <service-category-description> -a <author-email> -c <service-category-name>
 ```
 
-Here is an example of how to run the script for the `platform-services-go-sdk` project:  
+Here is an example of how to run the script for the `platform-services-go-sdk` project:
 ```bash
 cd <project-root>
 ./prepare_project.sh -n ibm_platform_services -d "IBM Cloud Platform Services Python SDK" \
        -g https://github.com/IBM/platform-services-python-sdk -s "Platform Services" -a email@ibm.com -c platform-services
 ```
 
-- To list the files changed by the script, run : `git status`  
-- To view the changes made by this script, run: `git diff`  
-- To discard the changes made by the script, run `git checkout .`, or `git stash`  
+- To list the files changed by the script, run : `git status`
+- To view the changes made by this script, run: `git diff`
+- To discard the changes made by the script, run `git checkout .`, or `git stash`
 - If satisfied with the changes, then just commit the changes (e.g. `git commit -a -m "chore: prepare SDK project"`)
 
 
@@ -176,7 +176,7 @@ from your project.  Remove the following files:
   - mysdk/example_service_v1.py
 
 - The root of the project contains a directory named `mysdk` which represents the python package
-where all the generated service files will eventually be located.  
+where all the generated service files will eventually be located.
 Rename this directory to reflect the service category associated with your SDK project
 (e.g. `ibm_platform_services`, `ibm_database_services`, `ibm_networking_services`, etc.).
 Choose your package name wisely as it will also be used to form the package name when
@@ -222,7 +222,7 @@ that will guide you in the required modifications:
     - set `__version__` to `0.0.1`
     - modify the comment to reflect your package name.
 
-  - `<package>/common.py`:  
+  - `<package>/common.py`:
     - modify SDK_NAME to reflect the name of your SDK project (e.g. `platform-services-python-sdk`)
     - modify instances of `mysdk` to be `<package>`.
     - follow the instructions in the `get_sdk_headers()` function.
@@ -278,7 +278,7 @@ that will guide you in the required modifications:
 
 At this point, it's probably a good idea to commit the changes that you have made so far.
 Be sure to use proper commit messages when committing changes (follow the link in `CONTRIBUTING.md`
-to the common CONTRIBUTING document).  
+to the common CONTRIBUTING document).
 Example:
 ```sh
 cd <project-root>
@@ -345,7 +345,7 @@ perform automated release management with
 You can see the deployment-related steps in the `deploy` stage of the `.travis.yml` file.
 
 BEFORE you enable automated builds in Travis and AFTER you perform the initial project preparation,
-you should add an initial tag (`v0.0.1`) to your repo and push it to remote:  
+you should add an initial tag (`v0.0.1`) to your repo and push it to remote:
 ```sh
 cd <project-root>
 git tag v0.0.1
@@ -357,11 +357,11 @@ After adding this tag, be sure to use proper commit messages when making changes
 See the CONTRIBUTING document for information about commit messages.
 
 When you configure your SDK project in Travis, be sure to set this environment variable in your
-Travis build settings:  
+Travis build settings:
 - `GH_TOKEN`: set this to the Github oauth token for a user having "push" access to your repository
 
 If you are using `Travis Enterprise` (travis.ibm.com), you'll need to add these environment variables
-as well:  
+as well:
 - `GH_URL`: set this to the string `https://github.ibm.com`
 - `GH_PREFIX`: set this to the string `/api/v3`
 
@@ -377,7 +377,7 @@ build a new entry in the project's changelog and add a tag for the new version.
 ### Publishing build outputs to PyPI
 If you will be publishing your build outputs to
 [PyPI](https://pypi.org/), you'll need to add this environment variable to your
-Travis build settings:  
+Travis build settings:
 - `PYPI_TOKEN`: set this to your [PyPI API token](https://pypi.org/help/#apitoken)
 
 ### Encrypting secrets

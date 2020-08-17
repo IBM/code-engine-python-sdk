@@ -35,11 +35,11 @@ Changes might occur which impact applications that use this SDK.
 
 ## Overview
 
-The IBM Cloud MySDK Python SDK allows developers to programmatically interact with the following 
+The IBM Cloud MySDK Python SDK allows developers to programmatically interact with the following
 IBM Cloud services:
 
 Service Name | Imported Class Name
---- | --- 
+--- | ---
 [Example Service](https://cloud.ibm.com/apidocs/example-service) | ExampleServiceV1
 
 ## Prerequisites

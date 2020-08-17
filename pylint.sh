@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pylint mysdk test --exit-zero
+python -m pylint mysdk test --exit-zero

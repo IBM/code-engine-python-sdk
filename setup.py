@@ -20,8 +20,8 @@ import sys
 import pkg_resources
 
 __version__ = '0.0.1'
-PACKAGE_NAME = 'mysdk'
-PACKAGE_DESC = 'Python client library for IBM Cloud MYSDK Services'
+PACKAGE_NAME = 'ibm-code-engine-sdk'
+PACKAGE_DESC = 'Python SDK for IBM Cloud Code Engine'
 
 with open('requirements.txt') as f:
     install_requires = [str(req) for req in pkg_resources.parse_requirements(f)]
@@ -68,10 +68,10 @@ setup(name=PACKAGE_NAME.replace('_', '-'),
       tests_require=tests_require,
       cmdclass={'test': PyTest, 'test_unit': PyTestUnit, 'test_integration': PyTestIntegration},
       author='IBM',
-      author_email='devexdev@us.ibm.com',
+      author_email='coligo@de.ibm.com',
       long_description=readme,
       long_description_content_type='text/markdown',
-      url='https://github.com/mysdk/python-sdk',
+      url='https://github.com/IBM/code-engine-python-sdk',
       packages=[PACKAGE_NAME],
       include_package_data=True,
       keywords=PACKAGE_NAME,

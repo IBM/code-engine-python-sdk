@@ -19,7 +19,7 @@ Test methods in the common module
 """
 
 import unittest
-from ibm-code-engine-sdk import common
+from ibm_code_engine_sdk import common
 
 class TestCommon(unittest.TestCase):
     """

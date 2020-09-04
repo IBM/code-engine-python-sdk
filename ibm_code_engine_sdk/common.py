@@ -19,7 +19,7 @@ This module provides common methods for use across all service modules.
 """
 
 import platform
-from ibm-code-engine-sdk.version import __version__
+from ibm_code_engine_sdk.version import __version__
 
 HEADER_NAME_USER_AGENT = 'User-Agent'
 SDK_NAME = 'code-engine-python-sdk'

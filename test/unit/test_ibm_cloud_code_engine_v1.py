@@ -24,7 +24,7 @@ import pytest
 import re
 import responses
 import urllib
-from ibm-code-engine-sdk.ibm_cloud_code_engine_v1 import *
+from ibm_code_engine_sdk.ibm_cloud_code_engine_v1 import *
 
 
 service = IbmCloudCodeEngineV1(

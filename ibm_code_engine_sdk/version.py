@@ -15,6 +15,6 @@
 # limitations under the License.
 
 """
-Version of ibm-code-engine-sdk
+Version of ibm_code_engine_sdk
 """
 __version__ = '0.0.1'

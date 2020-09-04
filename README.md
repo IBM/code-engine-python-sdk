@@ -57,13 +57,13 @@ Service Name | Imported Class Name
 To install, use `pip` or `easy_install`:
 
 ```bash
-pip install --upgrade "ibm-code-engine-sdk>=0.0.1"
+pip install --upgrade "ibm_code_engine_sdk>=0.0.1"
 ```
 
 or
 
 ```bash
-easy_install --upgrade "ibm-code-engine-sdk>=0.0.1"
+easy_install --upgrade "ibm_code_engine_sdk>=0.0.1"
 ```
 
 ## Using the SDK

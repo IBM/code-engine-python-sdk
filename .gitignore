@@ -71,5 +71,8 @@ test/__init__.py
 # openapi-sdkgen
 .openapi-generator/
 .openapi-generator-ignore
+openapi-sdkgen
+swagger.json
 /.pydevproject
+
 /.settings/

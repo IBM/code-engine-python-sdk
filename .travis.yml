@@ -1,18 +1,17 @@
+os: linux
 language: python
-
 dist: xenial
-
 cache: pip
 
 notifications:
   email: true
 
- matrix:
-   include:
-     - python: 3.5
-     - python: 3.6
-     - python: 3.7
-     - python: 3.8
+matrix:
+  include:
+    - python: 3.5
+    - python: 3.6
+    - python: 3.7
+    - python: 3.8
 
 before_install:
 - npm install npm@latest -g
@@ -23,9 +22,15 @@ before_install:
 
 install:
 - pip install tox-travis
+- pip install -r requirements.txt
+- pip install -r requirements-dev.txt
+- pip install .
+- python setup.py build
 
-script: tox
-
+script:
+- tox
+- pytest test
+- ./test-integration.sh
 
 # To enable semantic-release, uncomment these sections.
 # before_deploy:

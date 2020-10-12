@@ -3,6 +3,11 @@ language: python
 dist: xenial
 cache: pip
 
+# Only run on main (still tests PRs)
+branches:
+  only:
+  - main
+
 notifications:
   email: true
 

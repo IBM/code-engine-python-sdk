@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (C) Copyright IBM Corp. 2020.
+# (C) Copyright IBM Corp. 2021.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -48,7 +48,6 @@ class TestListKubeconfig():
         """
         Preprocess the request URL to ensure the mock response will be found.
         """
-        request_url = urllib.parse.quote(request_url, safe=':/')
         if re.fullmatch('.*/+', request_url) is None:
             return request_url
         else:
@@ -61,14 +60,17 @@ class TestListKubeconfig():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/namespaces/testString/config')
+        mock_response = '"operation_response"'
         responses.add(responses.GET,
                       url,
+                      body=mock_response,
+                      content_type='text/plain',
                       status=200)
 
         # Set up parameter values
         refresh_token = 'testString'
         id = 'testString'
-        accept = 'application/json'
+        accept = 'text/plain'
 
         # Invoke method
         response = service.list_kubeconfig(
@@ -90,8 +92,11 @@ class TestListKubeconfig():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/namespaces/testString/config')
+        mock_response = '"operation_response"'
         responses.add(responses.GET,
                       url,
+                      body=mock_response,
+                      content_type='text/plain',
                       status=200)
 
         # Set up parameter values
@@ -117,8 +122,11 @@ class TestListKubeconfig():
         """
         # Set up mock
         url = self.preprocess_url(base_url + '/namespaces/testString/config')
+        mock_response = '"operation_response"'
         responses.add(responses.GET,
                       url,
+                      body=mock_response,
+                      content_type='text/plain',
                       status=200)
 
         # Set up parameter values
@@ -134,6 +142,112 @@ class TestListKubeconfig():
             req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
             with pytest.raises(ValueError):
                 service.list_kubeconfig(**req_copy)
+
+
+
+class TestGetKubeconfig():
+    """
+    Test Class for get_kubeconfig
+    """
+
+    def preprocess_url(self, request_url: str):
+        """
+        Preprocess the request URL to ensure the mock response will be found.
+        """
+        if re.fullmatch('.*/+', request_url) is None:
+            return request_url
+        else:
+            return re.compile(request_url.rstrip('/') + '/+')
+
+    @responses.activate
+    def test_get_kubeconfig_all_params(self):
+        """
+        get_kubeconfig()
+        """
+        # Set up mock
+        url = self.preprocess_url(base_url + '/project/testString/config')
+        mock_response = '"operation_response"'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='text/plain',
+                      status=200)
+
+        # Set up parameter values
+        x_delegated_refresh_token = 'testString'
+        id = 'testString'
+        accept = 'text/plain'
+
+        # Invoke method
+        response = service.get_kubeconfig(
+            x_delegated_refresh_token,
+            id,
+            accept=accept,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+
+    @responses.activate
+    def test_get_kubeconfig_required_params(self):
+        """
+        test_get_kubeconfig_required_params()
+        """
+        # Set up mock
+        url = self.preprocess_url(base_url + '/project/testString/config')
+        mock_response = '"operation_response"'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='text/plain',
+                      status=200)
+
+        # Set up parameter values
+        x_delegated_refresh_token = 'testString'
+        id = 'testString'
+
+        # Invoke method
+        response = service.get_kubeconfig(
+            x_delegated_refresh_token,
+            id,
+            headers={}
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+
+    @responses.activate
+    def test_get_kubeconfig_value_error(self):
+        """
+        test_get_kubeconfig_value_error()
+        """
+        # Set up mock
+        url = self.preprocess_url(base_url + '/project/testString/config')
+        mock_response = '"operation_response"'
+        responses.add(responses.GET,
+                      url,
+                      body=mock_response,
+                      content_type='text/plain',
+                      status=200)
+
+        # Set up parameter values
+        x_delegated_refresh_token = 'testString'
+        id = 'testString'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "x_delegated_refresh_token": x_delegated_refresh_token,
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key:val if key is not param else None for (key,val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                service.get_kubeconfig(**req_copy)
 
 
 

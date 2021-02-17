@@ -5,8 +5,6 @@ Example of IBM Cloud Code Engine SDK usage
 import os
 import tempfile
 import kubernetes
-import requests
-import json
 from ibm_code_engine_sdk.ibm_cloud_code_engine_v1 import IbmCloudCodeEngineV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
@@ -31,21 +29,12 @@ ce_client.set_service_url(
     'https://api.' + os.environ.get('CE_PROJECT_REGION') + '.codeengine.cloud.ibm.com/api/v1'
 )
 
-# Get a Delegated Refresh Token from IAM
-iam_response = requests.post('https://iam.cloud.ibm.com/identity/token', headers={
-    'Content-Type': 'application/x-www-form-urlencoded'
-}, data={
-    'grant_type': 'urn:ibm:params:oauth:grant-type:apikey',
-    'apikey': os.environ.get('CE_API_KEY'),
-    'response_type': 'delegated_refresh_token',
-    'receiver_client_ids': 'ce',
-    'delegated_refresh_token_expiry': '3600'
-})
-delegated_refresh_token = iam_response.json()['delegated_refresh_token']
+# Get IAM tokens using the authenticator
+refresh_token = authenticator.token_manager.request_token().get('refresh_token')
 
 # Get Code Engine project config using the Code Engine client.
-kubeconfig_response = ce_client.get_kubeconfig(
-    x_delegated_refresh_token=delegated_refresh_token,
+kubeconfig_response = ce_client.list_kubeconfig(
+    refresh_token=refresh_token,
     id=os.environ.get('CE_PROJECT_ID'),
 )
 kubeconfig_string = kubeconfig_response.get_result().content

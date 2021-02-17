@@ -5,7 +5,7 @@
 
 ## PR Checklist
 Please make sure that your PR fulfills the following requirements:  
-- [ ] The commit message follows the [Angular Commit Message Guidelines](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#-commit-message-guidelines).
+- [ ] The commit message follows the [Angular Commit Message Guidelines](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#-commit-message-guidelines).
 - [ ] Tests for the changes have been added (for bug fixes / features)
 - [ ] Docs have been added / updated (for bug fixes / features)
 

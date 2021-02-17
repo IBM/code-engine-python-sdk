@@ -60,7 +60,7 @@ class IbmCloudCodeEngineV1(BaseService):
         Construct a new client for the IBM Cloud Code Engine service.
 
         :param Authenticator authenticator: The authenticator specifies the authentication mechanism.
-               Get up to date information from https://github.com/IBM/python-sdk-core/blob/master/README.md
+               Get up to date information from https://github.com/IBM/python-sdk-core/blob/main/README.md
                about initializing the authenticator of your choice.
         """
         BaseService.__init__(self,

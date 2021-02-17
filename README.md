@@ -69,7 +69,7 @@ easy_install --upgrade "ibm_code_engine_sdk>=0.0.1"
 ## Using the SDK
 Examples and a demo are available in the [example](/example) folder.
 
-For general SDK usage information, please see [this link](https://github.com/IBM/ibm-cloud-sdk-common/blob/master/README.md)
+For general SDK usage information, please see [this link](https://github.com/IBM/ibm-cloud-sdk-common/blob/main/README.md)
 
 ## Questions
 
@@ -86,9 +86,9 @@ Before that, please search for similar issues. It's possible that someone has al
 Find more open source projects on the [IBM Github Page](http://ibm.github.io/)
 
 ## Contributing
-See [CONTRIBUTING.md](https://github.com/IBM/code-engine-python-sdk/blob/master/CONTRIBUTING.md).
+See [CONTRIBUTING.md](https://github.com/IBM/code-engine-python-sdk/blob/main/CONTRIBUTING.md).
 
 ## License
 
 This SDK is released under the Apache 2.0 license.
-The license's full text can be found in [LICENSE](https://github.com/IBM/code-engine-python-sdk/blob/master/LICENSE).
+The license's full text can be found in [LICENSE](https://github.com/IBM/code-engine-python-sdk/blob/main/LICENSE).

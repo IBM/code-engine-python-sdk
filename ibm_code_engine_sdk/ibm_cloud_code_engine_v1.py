@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # IBM OpenAPI SDK Code Generator Version: 3.15.0-45841b53-20201019-214802
- 
+
 """
 The purpose is to provide an API to get Kubeconfig file for IBM Cloud Code Engine Project
 """
@@ -32,6 +32,7 @@ from .common import get_sdk_headers
 # Service
 ##############################################################################
 
+
 class IbmCloudCodeEngineV1(BaseService):
     """The IBM Cloud Code Engine V1 service."""
 
@@ -39,23 +40,23 @@ class IbmCloudCodeEngineV1(BaseService):
     DEFAULT_SERVICE_NAME = 'ibm_cloud_code_engine'
 
     @classmethod
-    def new_instance(cls,
-                     service_name: str = DEFAULT_SERVICE_NAME,
-                    ) -> 'IbmCloudCodeEngineV1':
+    def new_instance(
+        cls,
+        service_name: str = DEFAULT_SERVICE_NAME,
+    ) -> 'IbmCloudCodeEngineV1':
         """
         Return a new client for the IBM Cloud Code Engine service using the
                specified parameters and external configuration.
         """
         authenticator = get_authenticator_from_environment(service_name)
-        service = cls(
-            authenticator
-            )
+        service = cls(authenticator)
         service.configure_service(service_name)
         return service
 
-    def __init__(self,
-                 authenticator: Authenticator = None,
-                ) -> None:
+    def __init__(
+        self,
+        authenticator: Authenticator = None,
+    ) -> None:
         """
         Construct a new client for the IBM Cloud Code Engine service.
 
@@ -63,23 +64,13 @@ class IbmCloudCodeEngineV1(BaseService):
                Get up to date information from https://github.com/IBM/python-sdk-core/blob/main/README.md
                about initializing the authenticator of your choice.
         """
-        BaseService.__init__(self,
-                             service_url=self.DEFAULT_SERVICE_URL,
-                             authenticator=authenticator)
-
+        BaseService.__init__(self, service_url=self.DEFAULT_SERVICE_URL, authenticator=authenticator)
 
     #########################
     # getKubeconfig
     #########################
 
-
-    def list_kubeconfig(self,
-        refresh_token: str,
-        id: str,
-        *,
-        accept: str = None,
-        **kwargs
-    ) -> DetailedResponse:
+    def list_kubeconfig(self, refresh_token: str, id: str, *, accept: str = None, **kwargs) -> DetailedResponse:
         """
         Deprecated soon: Retrieve KUBECONFIG for a specified project.
 
@@ -103,13 +94,10 @@ class IbmCloudCodeEngineV1(BaseService):
             raise ValueError('refresh_token must be provided')
         if id is None:
             raise ValueError('id must be provided')
-        headers = {
-            'Refresh-Token': refresh_token,
-            'Accept': accept
-        }
-        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
-                                      service_version='V1',
-                                      operation_id='list_kubeconfig')
+        headers = {'Refresh-Token': refresh_token, 'Accept': accept}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME, service_version='V1', operation_id='list_kubeconfig'
+        )
         headers.update(sdk_headers)
 
         if 'headers' in kwargs:
@@ -119,20 +107,13 @@ class IbmCloudCodeEngineV1(BaseService):
         path_param_values = self.encode_path_vars(id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/namespaces/{id}/config'.format(**path_param_dict)
-        request = self.prepare_request(method='GET',
-                                       url=url,
-                                       headers=headers)
+        request = self.prepare_request(method='GET', url=url, headers=headers)
 
         response = self.send(request)
         return response
 
-
-    def get_kubeconfig(self,
-        x_delegated_refresh_token: str,
-        id: str,
-        *,
-        accept: str = None,
-        **kwargs
+    def get_kubeconfig(
+        self, x_delegated_refresh_token: str, id: str, *, accept: str = None, **kwargs
     ) -> DetailedResponse:
         """
         Retrieve KUBECONFIG for a specified project.
@@ -175,13 +156,10 @@ class IbmCloudCodeEngineV1(BaseService):
             raise ValueError('x_delegated_refresh_token must be provided')
         if id is None:
             raise ValueError('id must be provided')
-        headers = {
-            'X-Delegated-Refresh-Token': x_delegated_refresh_token,
-            'Accept': accept
-        }
-        sdk_headers = get_sdk_headers(service_name=self.DEFAULT_SERVICE_NAME,
-                                      service_version='V1',
-                                      operation_id='get_kubeconfig')
+        headers = {'X-Delegated-Refresh-Token': x_delegated_refresh_token, 'Accept': accept}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME, service_version='V1', operation_id='get_kubeconfig'
+        )
         headers.update(sdk_headers)
 
         if 'headers' in kwargs:
@@ -191,9 +169,7 @@ class IbmCloudCodeEngineV1(BaseService):
         path_param_values = self.encode_path_vars(id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/project/{id}/config'.format(**path_param_dict)
-        request = self.prepare_request(method='GET',
-                                       url=url,
-                                       headers=headers)
+        request = self.prepare_request(method='GET', url=url, headers=headers)
 
         response = self.send(request)
         return response
@@ -210,6 +186,7 @@ class ListKubeconfigEnums:
         be specified by including a `charset` parameter. For example,
         'text/plain;charset=utf-8'.
         """
+
         TEXT_PLAIN = 'text/plain'
         APPLICATION_JSON = 'application/json'
 
@@ -225,6 +202,7 @@ class GetKubeconfigEnums:
         be specified by including a `charset` parameter. For example,
         'text/plain;charset=utf-8'.
         """
+
         TEXT_PLAIN = 'text/plain'
         APPLICATION_JSON = 'application/json'
 
@@ -232,4 +210,3 @@ class GetKubeconfigEnums:
 ##############################################################################
 # Models
 ##############################################################################
-

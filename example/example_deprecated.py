@@ -8,12 +8,14 @@ import kubernetes
 from ibm_code_engine_sdk.ibm_cloud_code_engine_v1 import IbmCloudCodeEngineV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
-if (os.environ.get('CE_API_KEY') == None or
-    os.environ.get('CE_PROJECT_REGION') == None or
-    os.environ.get('CE_PROJECT_ID') == None):
+if (
+    os.environ.get('CE_API_KEY') == None
+    or os.environ.get('CE_PROJECT_REGION') == None
+    or os.environ.get('CE_PROJECT_ID') == None
+):
     print(
-        'You must set the envrionment variables CE_API_KEY, CE_PROJECT_REGION and CE_PROJECT_ID ' +
-        'before using the example.'
+        'You must set the envrionment variables CE_API_KEY, CE_PROJECT_REGION and CE_PROJECT_ID '
+        + 'before using the example.'
     )
 
 # Create an IAM authenticator.
@@ -25,9 +27,7 @@ authenticator = IAMAuthenticator(
 
 # Construct the Code Engine client.
 ce_client = IbmCloudCodeEngineV1(authenticator=authenticator)
-ce_client.set_service_url(
-    'https://api.' + os.environ.get('CE_PROJECT_REGION') + '.codeengine.cloud.ibm.com/api/v1'
-)
+ce_client.set_service_url('https://api.' + os.environ.get('CE_PROJECT_REGION') + '.codeengine.cloud.ibm.com/api/v1')
 
 # Get IAM tokens using the authenticator
 refresh_token = authenticator.token_manager.request_token().get('refresh_token')
@@ -49,7 +49,4 @@ kube_client = kubernetes.client.CoreV1Api()
 contexts = kubernetes.config.list_kube_config_contexts(config_file=kubeconfig_filename)[0][0]
 namespace = contexts.get('context').get('namespace')
 configmaps = kube_client.list_namespaced_config_map(namespace)
-print(
-    'Project ' + os.environ.get('CE_PROJECT_ID') +
-    ' has ' + str(len(configmaps.items)) + ' configmaps.'
-)
+print('Project ' + os.environ.get('CE_PROJECT_ID') + ' has ' + str(len(configmaps.items)) + ' configmaps.')

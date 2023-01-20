@@ -6,9 +6,6 @@
 
 Python client library to interact with the [IBM Cloud Code Engine API](https://cloud.ibm.com/apidocs/codeengine).
 
-Disclaimer: this SDK is being released initially as a **pre-release** version.
-Changes might occur which impact applications that use this SDK.
-
 ## Table of Contents
 
 <!--
@@ -42,7 +39,8 @@ IBM Cloud services:
 
 Service Name | Imported Class Name
 --- | ---
-[IBM Cloud Code Engine](https://cloud.ibm.com/apidocs/codeengine) | IbmCloudCodeEngineV1
+[IBM Cloud Code Engine V2](https://cloud.ibm.com/apidocs/codeengine/codeengine-v2.0.0) | CodeEngineV2
+[IBM Cloud Code Engine V1](https://cloud.ibm.com/apidocs/codeengine/codeengine-v1.0.0) | IbmCloudCodeEngineV1
 
 ## Prerequisites
 

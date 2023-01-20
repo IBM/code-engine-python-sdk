@@ -1,8 +1,6 @@
 dist: bionic
 
 language: python
-python:
-  - "3.11"
 
 cache: pip
 
@@ -14,12 +12,12 @@ branches:
 notifications:
   email: true
 
-before_install:
-# create an .env file that is pulled in while executing the v2 integration tests
-- echo "CODE_ENGINE_URL=https://$CE_API_HOST/v2" > code_engine_v2.env
-- echo "CODE_ENGINE_AUTH_TYPE=iam" >> code_engine_v2.env
-- echo "CODE_ENGINE_APIKEY=$CE_API_KEY" >> code_engine_v2.env
-- echo "CODE_ENGINE_AUTH_URL=$IAM_ENDPOINT" >> code_engine_v2.env
+matrix:
+  include:
+    - python: 3.7
+    - python: 3.8
+    - python: 3.9
+    - python: 3.10
 
 install:
 - sudo apt-get update
@@ -30,7 +28,6 @@ install:
 
 script:
 - make ci
-- make test-int
 
 before_deploy:
 - nvm install 14

@@ -42,13 +42,5 @@ deploy:
   script: npm run semantic-release
   skip_cleanup: true
   on:
-    python: '3.7'
     branch: main
-- provider: pypi
-  user: __token__
-  password: $PYPI_TOKEN
-  repository: https://upload.pypi.org/legacy
-  skip_cleanup: true
-  on:
-    python: '3.7'
     tags: true

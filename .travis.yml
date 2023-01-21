@@ -38,9 +38,9 @@ before_deploy:
 - pip install bump2version
 
 deploy:
+# Use semantic release to create a tag and release on each commit to the main branch
 - provider: script
   script: npm run semantic-release
   skip_cleanup: true
   on:
     branch: main
-    tags: true

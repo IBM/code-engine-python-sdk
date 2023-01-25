@@ -1,3 +1,10 @@
+## [2.0.1](https://github.ibm.com/coligo/python-sdk/compare/v2.0.0...v2.0.1) (2023-01-25)
+
+
+### Bug Fixes
+
+* **ci:** added encrypted pypi deploy key ([#8](https://github.ibm.com/coligo/python-sdk/issues/8)) ([729d82b](https://github.ibm.com/coligo/python-sdk/commit/729d82b3fb1bf8e0b550041451d05a3c1d78f80d))
+
 # [2.0.0](https://github.ibm.com/coligo/python-sdk/compare/v1.0.0...v2.0.0) (2023-01-24)
 
 

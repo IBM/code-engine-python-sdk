@@ -1,8 +1,6 @@
 dist: bionic
 
 language: python
-python:
-  - "3.11"
 
 cache: pip
 
@@ -10,16 +8,17 @@ cache: pip
 branches:
   only:
   - main
+  - /v\d+.\d+.\d+/
 
 notifications:
   email: true
 
-before_install:
-# create an .env file that is pulled in while executing the v2 integration tests
-- echo "CODE_ENGINE_URL=https://$CE_API_HOST/v2" > code_engine_v2.env
-- echo "CODE_ENGINE_AUTH_TYPE=iam" >> code_engine_v2.env
-- echo "CODE_ENGINE_APIKEY=$CE_API_KEY" >> code_engine_v2.env
-- echo "CODE_ENGINE_AUTH_URL=$IAM_ENDPOINT" >> code_engine_v2.env
+matrix:
+  include:
+    - python: '3.7'
+    - python: '3.8'
+    - python: '3.9'
+    - python: '3.10'
 
 install:
 - sudo apt-get update
@@ -30,17 +29,14 @@ install:
 
 script:
 - make ci
-- make test-int
-
-before_deploy:
-- nvm install 14
-- npm install
-- pip install bump2version
 
 deploy:
-# Use semantic release to create a tag and release on each commit to the main branch
-- provider: script
-  script: npm run semantic-release
+- provider: pypi
+  user: __token__
+  password:
+    secure: lUZvqL7OY4b6JsZ3w8lbRzx3e1xPGdCaV2eXTZ/fTy+soRWSe8PayK8YkC9oNa9SuNDpJ1n2w24sq24O2KMsjhw7mpJHLPOR9Yj2hVlWL1GSvAT3huI0j4PnBc6LAGXqtFBF2YYr4mIFNV5Zx8WJ0GOT4JNZIaH7M1HrnK224aOkUFNaZXP/a0bwBI9uWFKPLbRoggoYtKU1z7SM18+OINSZOSPzHIyl6ng41pdEWLsdkP+3zt29+LbARMIsocOJ6tLXeM6Dn8G5IxZ9pvJk+royo4MTIKJ1k7QN5s2x19mZoM6SrC/loxSfAFjgypxRDlXK43OWOMRrKnfj7RVl5fW3TIi1RoAq6T6ciC8Yv80ZUr6tIMcBWGkpi7Pbfsc1Z9toYeoGwdc8VSgnl97+Oj8M4WsT03Wc9/Gnlr0MGG1jzUoCH58HjK0ATIP1r5g+KBSHWyJtksonnPXk/JepQQPxDCa6zB2vZz7MnAXTc3hg+6rWpxjy+RpIkmLq2pt5gJZhUnOafLaTsLiCvrD7K6/8wa2FfViK4105y7mVGy6k9Dgnb6HqhWQPdHGkbDiBZMi6NkNYMe3LuJ6Qkd0mKt3VHpJDLU5RRxF1WO9FaX832ER37u9+JCoJnbu4BevMWlkdVNJxqC+vN5yxgNU73/txYMwr52kRJXtcMt1PKMw=
+  repository: https://upload.pypi.org/legacy
   skip_cleanup: true
   on:
-    branch: main
+    python: '3.10'
+    tags: true

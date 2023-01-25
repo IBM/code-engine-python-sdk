@@ -1,3 +1,10 @@
+## [2.0.2](https://github.ibm.com/coligo/python-sdk/compare/v2.0.1...v2.0.2) (2023-01-25)
+
+
+### Bug Fixes
+
+* **ci:** adjusted branch configuration of travis ([dc9e46e](https://github.ibm.com/coligo/python-sdk/commit/dc9e46e2eb4544f2af6e24d607309a422a801a66))
+
 ## [2.0.1](https://github.ibm.com/coligo/python-sdk/compare/v2.0.0...v2.0.1) (2023-01-25)
 
 

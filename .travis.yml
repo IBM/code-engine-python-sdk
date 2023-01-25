@@ -8,6 +8,7 @@ cache: pip
 branches:
   only:
   - main
+  - /v\d+.\d+.\d+/
 
 notifications:
   email: true

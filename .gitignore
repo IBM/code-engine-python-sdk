@@ -76,3 +76,10 @@ swagger.json
 /.pydevproject
 
 /.settings/
+
+# files produced by "npm install" commands during build
+package-lock.json
+node_modules/
+
+# ignore the generated integration test files, as they cannot be used without manual editing
+integration/test_code_engine_v2.py

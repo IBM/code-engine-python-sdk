@@ -4,11 +4,35 @@
 
 setup: deps dev_deps install_project
 
+all: upgrade_pip setup test-unit lint
+
+ci: setup test-unit lint
+
+upgrade_pip:
+	python -m pip install --upgrade pip
+
 deps:
-	pip install -r requirements.txt
+	python -m pip install -r requirements.txt
 
 dev_deps:
-	pip install -r requirements-dev.txt
+	python -m pip install -r requirements-dev.txt
 
 install_project:
-	pip install -e .
+	python -m pip install -e .
+
+test: test-unit test-int
+
+test-unit:
+	python -m pytest --cov=ibm_code_engine_sdk test/unit
+
+test-int:
+	python -m pytest test/integration
+
+test-examples:
+	python -m pytest example
+
+lint:
+	./pylint.sh && black --check .
+
+lint-fix:
+	black .

@@ -2,12 +2,9 @@
 <!-- 
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 -->
-# Python SDK for IBM Cloud Code Engine 0.1.0
+# Python SDK for IBM Cloud Code Engine 2.0.1
 
 Python client library to interact with the [IBM Cloud Code Engine API](https://cloud.ibm.com/apidocs/codeengine).
-
-Disclaimer: this SDK is being released initially as a **pre-release** version.
-Changes might occur which impact applications that use this SDK.
 
 ## Table of Contents
 
@@ -42,7 +39,8 @@ IBM Cloud services:
 
 Service Name | Imported Class Name
 --- | ---
-[IBM Cloud Code Engine](https://cloud.ibm.com/apidocs/codeengine) | IbmCloudCodeEngineV1
+[IBM Cloud Code Engine V2](https://cloud.ibm.com/apidocs/codeengine/codeengine-v2.0.1) | CodeEngineV2
+[IBM Cloud Code Engine V1](https://cloud.ibm.com/apidocs/codeengine/codeengine-v2.0.1) | IbmCloudCodeEngineV1
 
 ## Prerequisites
 
@@ -50,20 +48,20 @@ Service Name | Imported Class Name
 
 * An [IBM Cloud][ibm-cloud-onboarding] account.
 * An IAM API key to allow the SDK to access your account. Create one [here](https://cloud.ibm.com/iam/apikeys).
-* Python 3.6 or above.
+* Python 3.7 or above.
 
 ## Installation
 
 To install, use `pip` or `easy_install`:
 
 ```bash
-pip install --upgrade "ibm_code_engine_sdk>=0.1.0"
+pip install --upgrade "ibm_code_engine_sdk>=2.0.1"
 ```
 
 or
 
 ```bash
-easy_install --upgrade "ibm_code_engine_sdk>=0.1.0"
+easy_install --upgrade "ibm_code_engine_sdk>=2.0.1"
 ```
 
 ## Using the SDK

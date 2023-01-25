@@ -1,3 +1,10 @@
+## [2.0.3](https://github.ibm.com/coligo/python-sdk/compare/v2.0.2...v2.0.3) (2023-01-25)
+
+
+### Bug Fixes
+
+* **ci:** updated pypi token ([ecfc0ba](https://github.ibm.com/coligo/python-sdk/commit/ecfc0bad61bb7ae88bbbcfdf2326055715febd2f))
+
 ## [2.0.2](https://github.ibm.com/coligo/python-sdk/compare/v2.0.1...v2.0.2) (2023-01-25)
 
 

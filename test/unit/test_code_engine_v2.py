@@ -1241,14 +1241,14 @@ class TestGetAppRevision:
         get_app_revision()
         """
         # Set up mock
-        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions/my-app-001')
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions/my-app-00001')
         mock_response = '{"app_name": "my-app", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-app-00001", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "app_revision_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"actual_instances": 1, "reason": "ready"}}'
         responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         app_name = 'my-app'
-        name = 'my-app-001'
+        name = 'my-app-00001'
 
         # Invoke method
         response = _service.get_app_revision(project_id, app_name, name, headers={})
@@ -1272,14 +1272,14 @@ class TestGetAppRevision:
         test_get_app_revision_value_error()
         """
         # Set up mock
-        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions/my-app-001')
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions/my-app-00001')
         mock_response = '{"app_name": "my-app", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-app-00001", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "app_revision_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"actual_instances": 1, "reason": "ready"}}'
         responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         app_name = 'my-app'
-        name = 'my-app-001'
+        name = 'my-app-00001'
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -1313,13 +1313,13 @@ class TestDeleteAppRevision:
         delete_app_revision()
         """
         # Set up mock
-        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions/my-app-001')
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions/my-app-00001')
         responses.add(responses.DELETE, url, status=202)
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         app_name = 'my-app'
-        name = 'my-app-001'
+        name = 'my-app-00001'
 
         # Invoke method
         response = _service.delete_app_revision(project_id, app_name, name, headers={})
@@ -1343,13 +1343,13 @@ class TestDeleteAppRevision:
         test_delete_app_revision_value_error()
         """
         # Set up mock
-        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions/my-app-001')
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions/my-app-00001')
         responses.add(responses.DELETE, url, status=202)
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         app_name = 'my-app'
-        name = 'my-app-001'
+        name = 'my-app-00001'
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -1423,7 +1423,7 @@ class TestListJobs:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs')
-        mock_response = '{"first": {"href": "href"}, "jobs": [{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "daemon", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        mock_response = '{"first": {"href": "href"}, "jobs": [{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}], "limit": 100, "next": {"href": "href", "start": "start"}}'
         responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
 
         # Set up parameter values
@@ -1459,7 +1459,7 @@ class TestListJobs:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs')
-        mock_response = '{"first": {"href": "href"}, "jobs": [{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "daemon", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        mock_response = '{"first": {"href": "href"}, "jobs": [{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}], "limit": 100, "next": {"href": "href", "start": "start"}}'
         responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
 
         # Set up parameter values
@@ -1488,7 +1488,7 @@ class TestListJobs:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs')
-        mock_response = '{"first": {"href": "href"}, "jobs": [{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "daemon", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        mock_response = '{"first": {"href": "href"}, "jobs": [{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}], "limit": 100, "next": {"href": "href", "start": "start"}}'
         responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
 
         # Set up parameter values
@@ -1519,8 +1519,8 @@ class TestListJobs:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs')
-        mock_response1 = '{"next":{"start":"1"},"total_count":2,"jobs":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-job","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"daemon","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3}],"limit":1}'
-        mock_response2 = '{"total_count":2,"jobs":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-job","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"daemon","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3}],"limit":1}'
+        mock_response1 = '{"next":{"start":"1"},"total_count":2,"jobs":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-job","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3}],"limit":1}'
+        mock_response2 = '{"total_count":2,"jobs":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-job","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3}],"limit":1}'
         responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
         responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
 
@@ -1544,8 +1544,8 @@ class TestListJobs:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs')
-        mock_response1 = '{"next":{"start":"1"},"total_count":2,"jobs":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-job","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"daemon","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3}],"limit":1}'
-        mock_response2 = '{"total_count":2,"jobs":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-job","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"daemon","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3}],"limit":1}'
+        mock_response1 = '{"next":{"start":"1"},"total_count":2,"jobs":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-job","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3}],"limit":1}'
+        mock_response2 = '{"total_count":2,"jobs":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-job","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3}],"limit":1}'
         responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
         responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
 
@@ -1572,7 +1572,7 @@ class TestCreateJob:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "daemon", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
         responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=201)
 
         # Construct a dict representation of a EnvVarPrototype model
@@ -1600,7 +1600,7 @@ class TestCreateJob:
         run_as_user = 1001
         run_commands = ['testString']
         run_env_variables = [env_var_prototype_model]
-        run_mode = 'daemon'
+        run_mode = 'task'
         run_service_account = 'default'
         run_volume_mounts = [volume_mount_prototype_model]
         scale_array_spec = '1-5,7-8,10'
@@ -1644,7 +1644,7 @@ class TestCreateJob:
         assert req_body['run_as_user'] == 1001
         assert req_body['run_commands'] == ['testString']
         assert req_body['run_env_variables'] == [env_var_prototype_model]
-        assert req_body['run_mode'] == 'daemon'
+        assert req_body['run_mode'] == 'task'
         assert req_body['run_service_account'] == 'default'
         assert req_body['run_volume_mounts'] == [volume_mount_prototype_model]
         assert req_body['scale_array_spec'] == '1-5,7-8,10'
@@ -1670,7 +1670,7 @@ class TestCreateJob:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "daemon", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
         responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=201)
 
         # Construct a dict representation of a EnvVarPrototype model
@@ -1698,7 +1698,7 @@ class TestCreateJob:
         run_as_user = 1001
         run_commands = ['testString']
         run_env_variables = [env_var_prototype_model]
-        run_mode = 'daemon'
+        run_mode = 'task'
         run_service_account = 'default'
         run_volume_mounts = [volume_mount_prototype_model]
         scale_array_spec = '1-5,7-8,10'
@@ -1741,7 +1741,7 @@ class TestGetJob:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs/my-job')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "daemon", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
         responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
 
         # Set up parameter values
@@ -1771,7 +1771,7 @@ class TestGetJob:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs/my-job')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "daemon", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
         responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
 
         # Set up parameter values
@@ -1877,7 +1877,7 @@ class TestUpdateJob:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs/my-job')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "daemon", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
         responses.add(responses.PATCH, url, body=mock_response, content_type='application/json', status=200)
 
         # Construct a dict representation of a EnvVarPrototype model
@@ -1904,7 +1904,7 @@ class TestUpdateJob:
         job_patch_model['run_as_user'] = 1001
         job_patch_model['run_commands'] = ['testString']
         job_patch_model['run_env_variables'] = [env_var_prototype_model]
-        job_patch_model['run_mode'] = 'daemon'
+        job_patch_model['run_mode'] = 'task'
         job_patch_model['run_service_account'] = 'default'
         job_patch_model['run_volume_mounts'] = [volume_mount_prototype_model]
         job_patch_model['scale_array_spec'] = '1-5,7-8,10'
@@ -1946,7 +1946,7 @@ class TestUpdateJob:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs/my-job')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "daemon", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
         responses.add(responses.PATCH, url, body=mock_response, content_type='application/json', status=200)
 
         # Construct a dict representation of a EnvVarPrototype model
@@ -1973,7 +1973,7 @@ class TestUpdateJob:
         job_patch_model['run_as_user'] = 1001
         job_patch_model['run_commands'] = ['testString']
         job_patch_model['run_env_variables'] = [env_var_prototype_model]
-        job_patch_model['run_mode'] = 'daemon'
+        job_patch_model['run_mode'] = 'task'
         job_patch_model['run_service_account'] = 'default'
         job_patch_model['run_volume_mounts'] = [volume_mount_prototype_model]
         job_patch_model['scale_array_spec'] = '1-5,7-8,10'
@@ -2023,7 +2023,7 @@ class TestListJobRuns:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs')
-        mock_response = '{"first": {"href": "href"}, "job_runs": [{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "daemon", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        mock_response = '{"first": {"href": "href"}, "job_runs": [{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
         responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
 
         # Set up parameter values
@@ -2061,7 +2061,7 @@ class TestListJobRuns:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs')
-        mock_response = '{"first": {"href": "href"}, "job_runs": [{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "daemon", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        mock_response = '{"first": {"href": "href"}, "job_runs": [{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
         responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
 
         # Set up parameter values
@@ -2090,7 +2090,7 @@ class TestListJobRuns:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs')
-        mock_response = '{"first": {"href": "href"}, "job_runs": [{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "daemon", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        mock_response = '{"first": {"href": "href"}, "job_runs": [{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
         responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
 
         # Set up parameter values
@@ -2121,8 +2121,8 @@ class TestListJobRuns:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs')
-        mock_response1 = '{"next":{"start":"1"},"job_runs":[{"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","job_name":"my-job","name":"my-job-run","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_run_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"daemon","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3,"status":"completed","status_details":{"completion_time":"2022-09-22T17:40:00Z","failed":0,"pending":0,"requested":0,"running":0,"start_time":"2022-09-22T17:34:00Z","succeeded":1,"unknown":0}}],"total_count":2,"limit":1}'
-        mock_response2 = '{"job_runs":[{"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","job_name":"my-job","name":"my-job-run","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_run_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"daemon","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3,"status":"completed","status_details":{"completion_time":"2022-09-22T17:40:00Z","failed":0,"pending":0,"requested":0,"running":0,"start_time":"2022-09-22T17:34:00Z","succeeded":1,"unknown":0}}],"total_count":2,"limit":1}'
+        mock_response1 = '{"next":{"start":"1"},"job_runs":[{"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","job_name":"my-job","name":"my-job-run","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_run_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3,"status":"completed","status_details":{"completion_time":"2022-09-22T17:40:00Z","failed":0,"pending":0,"requested":0,"running":0,"start_time":"2022-09-22T17:34:00Z","succeeded":1,"unknown":0}}],"total_count":2,"limit":1}'
+        mock_response2 = '{"job_runs":[{"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","job_name":"my-job","name":"my-job-run","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_run_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3,"status":"completed","status_details":{"completion_time":"2022-09-22T17:40:00Z","failed":0,"pending":0,"requested":0,"running":0,"start_time":"2022-09-22T17:34:00Z","succeeded":1,"unknown":0}}],"total_count":2,"limit":1}'
         responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
         responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
 
@@ -2147,8 +2147,8 @@ class TestListJobRuns:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs')
-        mock_response1 = '{"next":{"start":"1"},"job_runs":[{"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","job_name":"my-job","name":"my-job-run","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_run_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"daemon","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3,"status":"completed","status_details":{"completion_time":"2022-09-22T17:40:00Z","failed":0,"pending":0,"requested":0,"running":0,"start_time":"2022-09-22T17:34:00Z","succeeded":1,"unknown":0}}],"total_count":2,"limit":1}'
-        mock_response2 = '{"job_runs":[{"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","job_name":"my-job","name":"my-job-run","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_run_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"daemon","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3,"status":"completed","status_details":{"completion_time":"2022-09-22T17:40:00Z","failed":0,"pending":0,"requested":0,"running":0,"start_time":"2022-09-22T17:34:00Z","succeeded":1,"unknown":0}}],"total_count":2,"limit":1}'
+        mock_response1 = '{"next":{"start":"1"},"job_runs":[{"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","job_name":"my-job","name":"my-job-run","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_run_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3,"status":"completed","status_details":{"completion_time":"2022-09-22T17:40:00Z","failed":0,"pending":0,"requested":0,"running":0,"start_time":"2022-09-22T17:34:00Z","succeeded":1,"unknown":0}}],"total_count":2,"limit":1}'
+        mock_response2 = '{"job_runs":[{"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","job_name":"my-job","name":"my-job-run","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_run_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3,"status":"completed","status_details":{"completion_time":"2022-09-22T17:40:00Z","failed":0,"pending":0,"requested":0,"running":0,"start_time":"2022-09-22T17:34:00Z","succeeded":1,"unknown":0}}],"total_count":2,"limit":1}'
         responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
         responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
 
@@ -2176,7 +2176,7 @@ class TestCreateJobRun:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "daemon", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}'
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}'
         responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=202)
 
         # Construct a dict representation of a EnvVarPrototype model
@@ -2205,7 +2205,7 @@ class TestCreateJobRun:
         run_as_user = 1001
         run_commands = ['testString']
         run_env_variables = [env_var_prototype_model]
-        run_mode = 'daemon'
+        run_mode = 'task'
         run_service_account = 'default'
         run_volume_mounts = [volume_mount_prototype_model]
         scale_array_spec = '1-5,7-8,10'
@@ -2251,7 +2251,7 @@ class TestCreateJobRun:
         assert req_body['run_as_user'] == 1001
         assert req_body['run_commands'] == ['testString']
         assert req_body['run_env_variables'] == [env_var_prototype_model]
-        assert req_body['run_mode'] == 'daemon'
+        assert req_body['run_mode'] == 'task'
         assert req_body['run_service_account'] == 'default'
         assert req_body['run_volume_mounts'] == [volume_mount_prototype_model]
         assert req_body['scale_array_spec'] == '1-5,7-8,10'
@@ -2277,7 +2277,7 @@ class TestCreateJobRun:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "daemon", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}'
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}'
         responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=202)
 
         # Construct a dict representation of a EnvVarPrototype model
@@ -2306,7 +2306,7 @@ class TestCreateJobRun:
         run_as_user = 1001
         run_commands = ['testString']
         run_env_variables = [env_var_prototype_model]
-        run_mode = 'daemon'
+        run_mode = 'task'
         run_service_account = 'default'
         run_volume_mounts = [volume_mount_prototype_model]
         scale_array_spec = '1-5,7-8,10'
@@ -2346,13 +2346,13 @@ class TestGetJobRun:
         get_job_run()
         """
         # Set up mock
-        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs/my-job')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "daemon", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}'
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs/my-job-run')
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}'
         responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
-        name = 'my-job'
+        name = 'my-job-run'
 
         # Invoke method
         response = _service.get_job_run(project_id, name, headers={})
@@ -2376,13 +2376,13 @@ class TestGetJobRun:
         test_get_job_run_value_error()
         """
         # Set up mock
-        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs/my-job')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "daemon", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}'
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs/my-job-run')
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}'
         responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
-        name = 'my-job'
+        name = 'my-job-run'
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -2415,12 +2415,12 @@ class TestDeleteJobRun:
         delete_job_run()
         """
         # Set up mock
-        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs/my-job')
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs/my-job-run')
         responses.add(responses.DELETE, url, status=202)
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
-        name = 'my-job'
+        name = 'my-job-run'
 
         # Invoke method
         response = _service.delete_job_run(project_id, name, headers={})
@@ -2444,12 +2444,12 @@ class TestDeleteJobRun:
         test_delete_job_run_value_error()
         """
         # Set up mock
-        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs/my-job')
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs/my-job-run')
         responses.add(responses.DELETE, url, status=202)
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
-        name = 'my-job'
+        name = 'my-job-run'
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -3646,7 +3646,7 @@ class TestCreateConfigMap:
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
-        name = 'my-configmap'
+        name = 'my-config-map'
         data = {'key1': 'testString'}
 
         # Invoke method
@@ -3657,7 +3657,7 @@ class TestCreateConfigMap:
         assert response.status_code == 201
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['name'] == 'my-configmap'
+        assert req_body['name'] == 'my-config-map'
         assert req_body['data'] == {'key1': 'testString'}
 
     def test_create_config_map_all_params_with_retries(self):
@@ -3681,7 +3681,7 @@ class TestCreateConfigMap:
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
-        name = 'my-configmap'
+        name = 'my-config-map'
         data = {'key1': 'testString'}
 
         # Pass in all but one required param and check for a ValueError
@@ -4081,11 +4081,17 @@ class TestCreateSecret:
         mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "resource_type"}'
         responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=201)
 
+        # Construct a dict representation of a SecretDataSSHSecretData model
+        secret_data_model = {}
+        secret_data_model['ssh_key'] = 'testString'
+        secret_data_model['known_hosts'] = 'testString'
+        secret_data_model['foo'] = 'testString'
+
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         format = 'generic'
         name = 'my-secret'
-        data = {'key1': 'testString'}
+        data = secret_data_model
 
         # Invoke method
         response = _service.create_secret(project_id, format, name, data=data, headers={})
@@ -4097,7 +4103,7 @@ class TestCreateSecret:
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
         assert req_body['format'] == 'generic'
         assert req_body['name'] == 'my-secret'
-        assert req_body['data'] == {'key1': 'testString'}
+        assert req_body['data'] == secret_data_model
 
     def test_create_secret_all_params_with_retries(self):
         # Enable retries and run test_create_secret_all_params.
@@ -4118,11 +4124,17 @@ class TestCreateSecret:
         mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "resource_type"}'
         responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=201)
 
+        # Construct a dict representation of a SecretDataSSHSecretData model
+        secret_data_model = {}
+        secret_data_model['ssh_key'] = 'testString'
+        secret_data_model['known_hosts'] = 'testString'
+        secret_data_model['foo'] = 'testString'
+
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         format = 'generic'
         name = 'my-secret'
-        data = {'key1': 'testString'}
+        data = secret_data_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -4229,11 +4241,17 @@ class TestReplaceSecret:
         mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "resource_type"}'
         responses.add(responses.PUT, url, body=mock_response, content_type='application/json', status=200)
 
+        # Construct a dict representation of a SecretDataSSHSecretData model
+        secret_data_model = {}
+        secret_data_model['ssh_key'] = 'testString'
+        secret_data_model['known_hosts'] = 'testString'
+        secret_data_model['foo'] = 'testString'
+
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-secret'
         if_match = 'testString'
-        data = {'key1': 'testString'}
+        data = secret_data_model
         format = 'generic'
 
         # Invoke method
@@ -4244,7 +4262,7 @@ class TestReplaceSecret:
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['data'] == {'key1': 'testString'}
+        assert req_body['data'] == secret_data_model
         assert req_body['format'] == 'generic'
 
     def test_replace_secret_all_params_with_retries(self):
@@ -4266,11 +4284,17 @@ class TestReplaceSecret:
         mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "resource_type"}'
         responses.add(responses.PUT, url, body=mock_response, content_type='application/json', status=200)
 
+        # Construct a dict representation of a SecretDataSSHSecretData model
+        secret_data_model = {}
+        secret_data_model['ssh_key'] = 'testString'
+        secret_data_model['known_hosts'] = 'testString'
+        secret_data_model['foo'] = 'testString'
+
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-secret'
         if_match = 'testString'
-        data = {'key1': 'testString'}
+        data = secret_data_model
         format = 'generic'
 
         # Pass in all but one required param and check for a ValueError
@@ -4398,27 +4422,15 @@ class TestModel_App:
         volume_mount_model['type'] = 'secret'
 
         app_status_model = {}  # AppStatus
-        app_status_model['latest_created_revision'] = 'my-app-00001'
-        app_status_model['latest_ready_revision'] = 'my-app-00001'
-        app_status_model['reason'] = 'ready'
 
         # Construct a json representation of a App model
         app_model_json = {}
-        app_model_json['created_at'] = '2022-09-13T11:41:35+02:00'
-        app_model_json['endpoint'] = 'https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud'
-        app_model_json['endpoint_internal'] = 'http://my-app.vg67hzldruk.svc.cluster.local'
         app_model_json['entity_tag'] = '2385407409'
-        app_model_json[
-            'href'
-        ] = 'https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app'
-        app_model_json['id'] = 'e33b1cv7-7390-4437-a5c2-130d5ccdddc3'
         app_model_json['image_port'] = 8080
         app_model_json['image_reference'] = 'icr.io/codeengine/helloworld'
         app_model_json['image_secret'] = 'my-secret'
         app_model_json['managed_domain_mappings'] = 'local_public'
         app_model_json['name'] = 'my-app'
-        app_model_json['project_id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
-        app_model_json['resource_type'] = 'app_v2'
         app_model_json['run_arguments'] = ['testString']
         app_model_json['run_as_user'] = 1001
         app_model_json['run_commands'] = ['testString']
@@ -4434,7 +4446,6 @@ class TestModel_App:
         app_model_json['scale_memory_limit'] = '4G'
         app_model_json['scale_min_instances'] = 1
         app_model_json['scale_request_timeout'] = 300
-        app_model_json['status'] = 'ready'
         app_model_json['status_details'] = app_status_model
 
         # Construct a model instance of App by calling from_dict on the json representation
@@ -4480,26 +4491,14 @@ class TestModel_AppList:
         volume_mount_model['type'] = 'secret'
 
         app_status_model = {}  # AppStatus
-        app_status_model['latest_created_revision'] = 'my-app-00001'
-        app_status_model['latest_ready_revision'] = 'my-app-00001'
-        app_status_model['reason'] = 'ready'
 
         app_model = {}  # App
-        app_model['created_at'] = '2022-11-15T22:07:55+01:00'
-        app_model['endpoint'] = 'https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud'
-        app_model['endpoint_internal'] = 'http://my-app.vg67hzldruk.svc.cluster.local'
         app_model['entity_tag'] = '1'
-        app_model[
-            'href'
-        ] = 'https://api.us-east.codeengine.cloud.ibm.com/v2/projects/230828b4-4f15-40a9-b183-1268c6ab88d5/apps/my-app'
-        app_model['id'] = '230828b4-4f15-40a9-b183-1268c6ab88d5'
         app_model['image_port'] = 8080
         app_model['image_reference'] = 'icr.io/codeengine/helloworld'
         app_model['image_secret'] = 'my-secret'
         app_model['managed_domain_mappings'] = 'local_public'
         app_model['name'] = 'my-app'
-        app_model['project_id'] = '15314cc3-85b4-4338-903f-c28cdee6d005'
-        app_model['resource_type'] = 'app_v2'
         app_model['run_arguments'] = []
         app_model['run_as_user'] = 1001
         app_model['run_commands'] = []
@@ -4515,7 +4514,6 @@ class TestModel_AppList:
         app_model['scale_memory_limit'] = '4G'
         app_model['scale_min_instances'] = 0
         app_model['scale_request_timeout'] = 300
-        app_model['status'] = 'ready'
         app_model['status_details'] = app_status_model
 
         list_first_metadata_model = {}  # ListFirstMetadata
@@ -4639,23 +4637,13 @@ class TestModel_AppRevision:
         volume_mount_model['type'] = 'secret'
 
         app_revision_status_model = {}  # AppRevisionStatus
-        app_revision_status_model['actual_instances'] = 1
-        app_revision_status_model['reason'] = 'ready'
 
         # Construct a json representation of a AppRevision model
         app_revision_model_json = {}
         app_revision_model_json['app_name'] = 'my-app'
-        app_revision_model_json['created_at'] = '2022-09-13T11:41:35+02:00'
-        app_revision_model_json[
-            'href'
-        ] = 'https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001'
-        app_revision_model_json['id'] = 'e33b1cv7-7390-4437-a5c2-130d5ccdddc3'
         app_revision_model_json['image_port'] = 8080
         app_revision_model_json['image_reference'] = 'icr.io/codeengine/helloworld'
         app_revision_model_json['image_secret'] = 'my-secret'
-        app_revision_model_json['name'] = 'my-app-00001'
-        app_revision_model_json['project_id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
-        app_revision_model_json['resource_type'] = 'app_revision_v2'
         app_revision_model_json['run_arguments'] = ['testString']
         app_revision_model_json['run_as_user'] = 1001
         app_revision_model_json['run_commands'] = ['testString']
@@ -4671,7 +4659,6 @@ class TestModel_AppRevision:
         app_revision_model_json['scale_memory_limit'] = '4G'
         app_revision_model_json['scale_min_instances'] = 1
         app_revision_model_json['scale_request_timeout'] = 300
-        app_revision_model_json['status'] = 'ready'
         app_revision_model_json['status_details'] = app_revision_status_model
 
         # Construct a model instance of AppRevision by calling from_dict on the json representation
@@ -4724,22 +4711,12 @@ class TestModel_AppRevisionList:
         volume_mount_model['type'] = 'secret'
 
         app_revision_status_model = {}  # AppRevisionStatus
-        app_revision_status_model['actual_instances'] = 1
-        app_revision_status_model['reason'] = 'ready'
 
         app_revision_model = {}  # AppRevision
         app_revision_model['app_name'] = 'my-app'
-        app_revision_model['created_at'] = '2022-11-15T22:07:55+01:00'
-        app_revision_model[
-            'href'
-        ] = 'https://api.us-east.codeengine.cloud.ibm.com/v2/projects/230828b4-4f15-40a9-b183-1268c6ab88d5/apps/my-app/revisions/my-app-00001'
-        app_revision_model['id'] = 'b63b3e28-2c1b-4784-9cd6-18c201fc6806'
         app_revision_model['image_port'] = 8080
         app_revision_model['image_reference'] = 'icr.io/codeengine/helloworld'
         app_revision_model['image_secret'] = 'my-secret'
-        app_revision_model['name'] = 'my-app-00001'
-        app_revision_model['project_id'] = '230828b4-4f15-40a9-b183-1268c6ab88d5'
-        app_revision_model['resource_type'] = 'app_revision_v2'
         app_revision_model['run_arguments'] = []
         app_revision_model['run_as_user'] = 1001
         app_revision_model['run_commands'] = []
@@ -4755,7 +4732,6 @@ class TestModel_AppRevisionList:
         app_revision_model['scale_memory_limit'] = '4G'
         app_revision_model['scale_min_instances'] = 0
         app_revision_model['scale_request_timeout'] = 300
-        app_revision_model['status'] = 'ready'
         app_revision_model['status_details'] = app_revision_status_model
 
         # Construct a json representation of a AppRevisionList model
@@ -4793,8 +4769,6 @@ class TestModel_AppRevisionStatus:
 
         # Construct a json representation of a AppRevisionStatus model
         app_revision_status_model_json = {}
-        app_revision_status_model_json['actual_instances'] = 1
-        app_revision_status_model_json['reason'] = 'ready'
 
         # Construct a model instance of AppRevisionStatus by calling from_dict on the json representation
         app_revision_status_model = AppRevisionStatus.from_dict(app_revision_status_model_json)
@@ -4824,9 +4798,6 @@ class TestModel_AppStatus:
 
         # Construct a json representation of a AppStatus model
         app_status_model_json = {}
-        app_status_model_json['latest_created_revision'] = 'my-app-00001'
-        app_status_model_json['latest_ready_revision'] = 'my-app-00001'
-        app_status_model_json['reason'] = 'ready'
 
         # Construct a model instance of AppStatus by calling from_dict on the json representation
         app_status_model = AppStatus.from_dict(app_status_model_json)
@@ -4857,27 +4828,18 @@ class TestModel_Build:
         # Construct dict forms of any model objects needed in order to build this model.
 
         build_status_model = {}  # BuildStatus
-        build_status_model['reason'] = 'registered'
 
         # Construct a json representation of a Build model
         build_model_json = {}
-        build_model_json['created_at'] = '2022-09-13T11:41:35+02:00'
         build_model_json['entity_tag'] = '2385407409'
-        build_model_json[
-            'href'
-        ] = 'https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build'
-        build_model_json['id'] = 'e33b1cv7-7390-4437-a5c2-130d5ccdddc3'
         build_model_json['name'] = 'my-build'
         build_model_json['output_image'] = 'private.de.icr.io/icr_namespace/image-name'
         build_model_json['output_secret'] = 'ce-auto-icr-private-eu-de'
-        build_model_json['project_id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
-        build_model_json['resource_type'] = 'build_v2'
         build_model_json['source_context_dir'] = 'some/subfolder'
         build_model_json['source_revision'] = 'main'
         build_model_json['source_secret'] = 'testString'
         build_model_json['source_type'] = 'git'
         build_model_json['source_url'] = 'https://github.com/IBM/CodeEngine'
-        build_model_json['status'] = 'ready'
         build_model_json['status_details'] = build_status_model
         build_model_json['strategy_size'] = 'medium'
         build_model_json['strategy_spec_file'] = 'Dockerfile'
@@ -4913,26 +4875,17 @@ class TestModel_BuildList:
         # Construct dict forms of any model objects needed in order to build this model.
 
         build_status_model = {}  # BuildStatus
-        build_status_model['reason'] = 'registered'
 
         build_model = {}  # Build
-        build_model['created_at'] = '2022-11-15T11:31:27+01:00'
         build_model['entity_tag'] = '2385407409'
-        build_model[
-            'href'
-        ] = 'https://api.us-east.codeengine.cloud.ibm.com/v2/projects/230828b4-4f15-40a9-b183-1268c6ab88d5/builds/my-build'
-        build_model['id'] = '27587824-aba8-4f70-8c1d-416326907049'
         build_model['name'] = 'my-build'
         build_model['output_image'] = 'private.de.icr.io/icr_namespace/test-image-1'
         build_model['output_secret'] = 'ce-auto-icr-private-eu-de'
-        build_model['project_id'] = '230828b4-4f15-40a9-b183-1268c6ab88d5'
-        build_model['resource_type'] = 'build_v2'
         build_model['source_context_dir'] = 'some/subfolder'
         build_model['source_revision'] = 'main'
         build_model['source_secret'] = 'testString'
         build_model['source_type'] = 'git'
         build_model['source_url'] = 'https://github.com/IBM/CodeEngine'
-        build_model['status'] = 'ready'
         build_model['status_details'] = build_status_model
         build_model['strategy_size'] = 'medium'
         build_model['strategy_spec_file'] = 'Dockerfile'
@@ -5022,33 +4975,19 @@ class TestModel_BuildRun:
         # Construct dict forms of any model objects needed in order to build this model.
 
         build_run_status_model = {}  # BuildRunStatus
-        build_run_status_model['completion_time'] = '2022-09-22T17:40:00Z'
-        build_run_status_model[
-            'output_digest'
-        ] = 'sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384'
-        build_run_status_model['reason'] = 'succeeded'
-        build_run_status_model['start_time'] = '2022-09-22T17:34:00Z'
 
         # Construct a json representation of a BuildRun model
         build_run_model_json = {}
         build_run_model_json['build_name'] = 'testString'
-        build_run_model_json['created_at'] = '2022-09-13T11:41:35+02:00'
-        build_run_model_json[
-            'href'
-        ] = 'https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run'
-        build_run_model_json['id'] = 'e33b1cv7-7390-4437-a5c2-130d5ccdddc3'
         build_run_model_json['name'] = 'my-build-run'
         build_run_model_json['output_image'] = 'private.de.icr.io/icr_namespace/image-name'
         build_run_model_json['output_secret'] = 'ce-auto-icr-private-eu-de'
-        build_run_model_json['project_id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
-        build_run_model_json['resource_type'] = 'build_run_v2'
         build_run_model_json['service_account'] = 'default'
         build_run_model_json['source_context_dir'] = 'some/subfolder'
         build_run_model_json['source_revision'] = 'main'
         build_run_model_json['source_secret'] = 'testString'
         build_run_model_json['source_type'] = 'git'
         build_run_model_json['source_url'] = 'https://github.com/IBM/CodeEngine'
-        build_run_model_json['status'] = 'succeeded'
         build_run_model_json['status_details'] = build_run_status_model
         build_run_model_json['strategy_size'] = 'medium'
         build_run_model_json['strategy_spec_file'] = 'Dockerfile'
@@ -5084,32 +5023,18 @@ class TestModel_BuildRunList:
         # Construct dict forms of any model objects needed in order to build this model.
 
         build_run_status_model = {}  # BuildRunStatus
-        build_run_status_model['completion_time'] = '2022-09-22T17:40:00Z'
-        build_run_status_model[
-            'output_digest'
-        ] = 'sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384'
-        build_run_status_model['reason'] = 'succeeded'
-        build_run_status_model['start_time'] = '2022-09-22T17:34:00Z'
 
         build_run_model = {}  # BuildRun
         build_run_model['build_name'] = 'my-build'
-        build_run_model['created_at'] = '2022-06-20T10:10:00+02:00'
-        build_run_model[
-            'href'
-        ] = 'https://api.us-east.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-buildrun-1'
-        build_run_model['id'] = 'ca151bf7-b1bf-4e18-a1cb-857329c2d097'
         build_run_model['name'] = 'my-buildrun-1'
         build_run_model['output_image'] = 'private.de.icr.io/icr_namespace/image-name'
         build_run_model['output_secret'] = 'ce-auto-icr-private-eu-de'
-        build_run_model['project_id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
-        build_run_model['resource_type'] = 'build_run_v2'
         build_run_model['service_account'] = 'default'
         build_run_model['source_context_dir'] = 'some/subfolder'
         build_run_model['source_revision'] = 'main'
         build_run_model['source_secret'] = 'testString'
         build_run_model['source_type'] = 'git'
         build_run_model['source_url'] = 'https://github.com/IBM/CodeEngine'
-        build_run_model['status'] = 'succeeded'
         build_run_model['status_details'] = build_run_status_model
         build_run_model['strategy_size'] = 'medium'
         build_run_model['strategy_spec_file'] = 'Dockerfile'
@@ -5158,12 +5083,6 @@ class TestModel_BuildRunStatus:
 
         # Construct a json representation of a BuildRunStatus model
         build_run_status_model_json = {}
-        build_run_status_model_json['completion_time'] = '2022-09-22T17:40:00Z'
-        build_run_status_model_json[
-            'output_digest'
-        ] = 'sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384'
-        build_run_status_model_json['reason'] = 'succeeded'
-        build_run_status_model_json['start_time'] = '2022-09-22T17:34:00Z'
 
         # Construct a model instance of BuildRunStatus by calling from_dict on the json representation
         build_run_status_model = BuildRunStatus.from_dict(build_run_status_model_json)
@@ -5193,7 +5112,6 @@ class TestModel_BuildStatus:
 
         # Construct a json representation of a BuildStatus model
         build_status_model_json = {}
-        build_status_model_json['reason'] = 'registered'
 
         # Construct a model instance of BuildStatus by calling from_dict on the json representation
         build_status_model = BuildStatus.from_dict(build_status_model_json)
@@ -5223,16 +5141,9 @@ class TestModel_ConfigMap:
 
         # Construct a json representation of a ConfigMap model
         config_map_model_json = {}
-        config_map_model_json['created_at'] = '2022-09-13T11:41:35+02:00'
         config_map_model_json['data'] = {'key1': 'testString'}
         config_map_model_json['entity_tag'] = '2385407409'
-        config_map_model_json[
-            'href'
-        ] = 'https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map'
-        config_map_model_json['id'] = 'e33b1cv7-7390-4437-a5c2-130d5ccdddc3'
         config_map_model_json['name'] = 'my-config-map'
-        config_map_model_json['project_id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
-        config_map_model_json['resource_type'] = 'config_map_v2'
 
         # Construct a model instance of ConfigMap by calling from_dict on the json representation
         config_map_model = ConfigMap.from_dict(config_map_model_json)
@@ -5263,16 +5174,9 @@ class TestModel_ConfigMapList:
         # Construct dict forms of any model objects needed in order to build this model.
 
         config_map_model = {}  # ConfigMap
-        config_map_model['created_at'] = '2022-11-15T21:45:49+01:00'
         config_map_model['data'] = {'key1': 'testString'}
         config_map_model['entity_tag'] = '2386238209'
-        config_map_model[
-            'href'
-        ] = 'https://api.us-east.codeengine.cloud.ibm.com/v2/projects/230828b4-4f15-40a9-b183-1268c6ab88d5/config_maps/my-config-map'
-        config_map_model['id'] = 'b8376985-d6df-43c5-8feb-194d45390bc8'
         config_map_model['name'] = 'my-config-map'
-        config_map_model['project_id'] = '230828b4-4f15-40a9-b183-1268c6ab88d5'
-        config_map_model['resource_type'] = 'config_map_v2'
 
         list_first_metadata_model = {}  # ListFirstMetadata
         list_first_metadata_model['href'] = 'testString'
@@ -5402,22 +5306,15 @@ class TestModel_Job:
 
         # Construct a json representation of a Job model
         job_model_json = {}
-        job_model_json['created_at'] = '2022-09-13T11:41:35+02:00'
         job_model_json['entity_tag'] = '2385407409'
-        job_model_json[
-            'href'
-        ] = 'https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job'
-        job_model_json['id'] = 'e33b1cv7-7390-4437-a5c2-130d5ccdddc3'
         job_model_json['image_reference'] = 'icr.io/codeengine/helloworld'
         job_model_json['image_secret'] = 'my-secret'
         job_model_json['name'] = 'my-job'
-        job_model_json['project_id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
-        job_model_json['resource_type'] = 'job_v2'
         job_model_json['run_arguments'] = ['testString']
         job_model_json['run_as_user'] = 1001
         job_model_json['run_commands'] = ['testString']
         job_model_json['run_env_variables'] = [env_var_model]
-        job_model_json['run_mode'] = 'daemon'
+        job_model_json['run_mode'] = 'task'
         job_model_json['run_service_account'] = 'default'
         job_model_json['run_volume_mounts'] = [volume_mount_model]
         job_model_json['scale_array_spec'] = '1-5,7-8,10'
@@ -5473,17 +5370,10 @@ class TestModel_JobList:
         volume_mount_model['type'] = 'secret'
 
         job_model = {}  # Job
-        job_model['created_at'] = '2022-11-15T21:40:40+01:00'
         job_model['entity_tag'] = '2386231540'
-        job_model[
-            'href'
-        ] = 'https://api.us-east.codeengine.cloud.ibm.com/v2/projects/230828b4-4f15-40a9-b183-1268c6ab88d5/jobs/my-job'
-        job_model['id'] = '7e49dd78-09d0-45c7-ad7e-cd968e0e7747'
         job_model['image_reference'] = 'icr.io/codeengine/helloworld'
         job_model['image_secret'] = 'my-secret'
         job_model['name'] = 'my-job'
-        job_model['project_id'] = '230828b4-4f15-40a9-b183-1268c6ab88d5'
-        job_model['resource_type'] = 'job_v2'
         job_model['run_arguments'] = []
         job_model['run_as_user'] = 1001
         job_model['run_commands'] = []
@@ -5559,7 +5449,7 @@ class TestModel_JobPatch:
         job_patch_model_json['run_as_user'] = 1001
         job_patch_model_json['run_commands'] = ['testString']
         job_patch_model_json['run_env_variables'] = [env_var_prototype_model]
-        job_patch_model_json['run_mode'] = 'daemon'
+        job_patch_model_json['run_mode'] = 'task'
         job_patch_model_json['run_service_account'] = 'default'
         job_patch_model_json['run_volume_mounts'] = [volume_mount_prototype_model]
         job_patch_model_json['scale_array_spec'] = '1-5,7-8,10'
@@ -5612,33 +5502,18 @@ class TestModel_JobRun:
         volume_mount_model['type'] = 'secret'
 
         job_run_status_model = {}  # JobRunStatus
-        job_run_status_model['completion_time'] = '2022-09-22T17:40:00Z'
-        job_run_status_model['failed'] = 0
-        job_run_status_model['pending'] = 0
-        job_run_status_model['requested'] = 0
-        job_run_status_model['running'] = 0
-        job_run_status_model['start_time'] = '2022-09-22T17:34:00Z'
-        job_run_status_model['succeeded'] = 1
-        job_run_status_model['unknown'] = 0
 
         # Construct a json representation of a JobRun model
         job_run_model_json = {}
-        job_run_model_json['created_at'] = '2022-09-13T11:41:35+02:00'
-        job_run_model_json[
-            'href'
-        ] = 'https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run'
-        job_run_model_json['id'] = 'e33b1cv7-7390-4437-a5c2-130d5ccdddc3'
         job_run_model_json['image_reference'] = 'icr.io/codeengine/helloworld'
         job_run_model_json['image_secret'] = 'my-secret'
         job_run_model_json['job_name'] = 'my-job'
         job_run_model_json['name'] = 'my-job-run'
-        job_run_model_json['project_id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
-        job_run_model_json['resource_type'] = 'job_run_v2'
         job_run_model_json['run_arguments'] = ['testString']
         job_run_model_json['run_as_user'] = 1001
         job_run_model_json['run_commands'] = ['testString']
         job_run_model_json['run_env_variables'] = [env_var_model]
-        job_run_model_json['run_mode'] = 'daemon'
+        job_run_model_json['run_mode'] = 'task'
         job_run_model_json['run_service_account'] = 'default'
         job_run_model_json['run_volume_mounts'] = [volume_mount_model]
         job_run_model_json['scale_array_spec'] = '1-5,7-8,10'
@@ -5647,7 +5522,6 @@ class TestModel_JobRun:
         job_run_model_json['scale_max_execution_time'] = 7200
         job_run_model_json['scale_memory_limit'] = '4G'
         job_run_model_json['scale_retry_limit'] = 3
-        job_run_model_json['status'] = 'completed'
         job_run_model_json['status_details'] = job_run_status_model
 
         # Construct a model instance of JobRun by calling from_dict on the json representation
@@ -5696,27 +5570,12 @@ class TestModel_JobRunList:
         volume_mount_model['type'] = 'secret'
 
         job_run_status_model = {}  # JobRunStatus
-        job_run_status_model['completion_time'] = '2022-09-22T17:40:00Z'
-        job_run_status_model['failed'] = 0
-        job_run_status_model['pending'] = 0
-        job_run_status_model['requested'] = 0
-        job_run_status_model['running'] = 0
-        job_run_status_model['start_time'] = '2022-09-22T17:34:00Z'
-        job_run_status_model['succeeded'] = 1
-        job_run_status_model['unknown'] = 0
 
         job_run_model = {}  # JobRun
-        job_run_model['created_at'] = '2022-11-15T22:06:21+01:00'
-        job_run_model[
-            'href'
-        ] = 'https://api.us-east.codeengine.cloud.ibm.com/v2/projects/230828b4-4f15-40a9-b183-1268c6ab88d5/jobs/my-job-run-1'
-        job_run_model['id'] = 'ced5039e-b1d3-4c51-aa29-8dbde3531ace'
         job_run_model['image_reference'] = 'icr.io/codeengine/helloworld'
         job_run_model['image_secret'] = 'my-secret'
         job_run_model['job_name'] = 'my-job'
         job_run_model['name'] = 'my-job-run-1'
-        job_run_model['project_id'] = '230828b4-4f15-40a9-b183-1268c6ab88d5'
-        job_run_model['resource_type'] = 'job_run_v2'
         job_run_model['run_arguments'] = []
         job_run_model['run_as_user'] = 1001
         job_run_model['run_commands'] = []
@@ -5730,7 +5589,6 @@ class TestModel_JobRunList:
         job_run_model['scale_max_execution_time'] = 7200
         job_run_model['scale_memory_limit'] = '4G'
         job_run_model['scale_retry_limit'] = 3
-        job_run_model['status'] = 'completed'
         job_run_model['status_details'] = job_run_status_model
 
         list_next_metadata_model = {}  # ListNextMetadata
@@ -5772,14 +5630,6 @@ class TestModel_JobRunStatus:
 
         # Construct a json representation of a JobRunStatus model
         job_run_status_model_json = {}
-        job_run_status_model_json['completion_time'] = '2022-09-22T17:40:00Z'
-        job_run_status_model_json['failed'] = 0
-        job_run_status_model_json['pending'] = 0
-        job_run_status_model_json['requested'] = 0
-        job_run_status_model_json['running'] = 0
-        job_run_status_model_json['start_time'] = '2022-09-22T17:34:00Z'
-        job_run_status_model_json['succeeded'] = 1
-        job_run_status_model_json['unknown'] = 0
 
         # Construct a model instance of JobRunStatus by calling from_dict on the json representation
         job_run_status_model = JobRunStatus.from_dict(job_run_status_model_json)
@@ -5870,20 +5720,8 @@ class TestModel_Project:
 
         # Construct a json representation of a Project model
         project_model_json = {}
-        project_model_json['account_id'] = '4329073d16d2f3663f74bfa955259139'
-        project_model_json['created_at'] = '2021-03-29T12:18:13.992359829Z'
-        project_model_json[
-            'crn'
-        ] = 'crn:v1:bluemix:public:codeengine:eu-de:a/4329073d16d2f3663f74bfa955259139:4e49b3e0-27a8-48d2-a784-c7ee48bb863b::'
-        project_model_json[
-            'href'
-        ] = 'https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
-        project_model_json['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
         project_model_json['name'] = 'project-name'
-        project_model_json['region'] = 'us-east'
         project_model_json['resource_group_id'] = '5c49eabcf5e85881a37e2d100a33b3df'
-        project_model_json['resource_type'] = 'project_v2'
-        project_model_json['status'] = 'active'
 
         # Construct a model instance of Project by calling from_dict on the json representation
         project_model = Project.from_dict(project_model_json)
@@ -5921,20 +5759,8 @@ class TestModel_ProjectList:
         list_next_metadata_model['start'] = 'testString'
 
         project_model = {}  # Project
-        project_model['account_id'] = 'f9f1030ebf674eda8d57bdbc2b9e536a'
-        project_model['created_at'] = '2021-03-29T12:18:13.992359829Z'
-        project_model[
-            'crn'
-        ] = 'crn:v1:bluemix:public:codeengine:us-east:a/4329073d16d2f3663f74bfa955259139:15314cc3-85b4-4338-903f-c28cdee6d005::'
-        project_model[
-            'href'
-        ] = 'https://api.us-east.codeengine.cloud.ibm.com/v2/projects/15314cc3-85b4-4338-903f-c28cdee6d005'
-        project_model['id'] = '15314cc3-85b4-4338-903f-c28cdee6d005'
         project_model['name'] = 'test_project'
-        project_model['region'] = 'us-east'
         project_model['resource_group_id'] = 'b91e849cedb04e7e92bd68c040c672dc'
-        project_model['resource_type'] = 'project_v2'
-        project_model['status'] = 'active'
 
         # Construct a json representation of a ProjectList model
         project_list_model_json = {}
@@ -5971,17 +5797,10 @@ class TestModel_Secret:
 
         # Construct a json representation of a Secret model
         secret_model_json = {}
-        secret_model_json['created_at'] = '2022-09-13T11:41:35+02:00'
         secret_model_json['data'] = {'key1': 'testString'}
         secret_model_json['entity_tag'] = '2385407409'
         secret_model_json['format'] = 'generic'
-        secret_model_json[
-            'href'
-        ] = 'https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret'
-        secret_model_json['id'] = 'e33b1cv7-7390-4437-a5c2-130d5ccdddc3'
         secret_model_json['name'] = 'my-secret'
-        secret_model_json['project_id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
-        secret_model_json['resource_type'] = 'testString'
 
         # Construct a model instance of Secret by calling from_dict on the json representation
         secret_model = Secret.from_dict(secret_model_json)
@@ -6019,17 +5838,10 @@ class TestModel_SecretList:
         list_next_metadata_model['start'] = 'testString'
 
         secret_model = {}  # Secret
-        secret_model['created_at'] = '2022-11-15T21:59:08+01:00'
         secret_model['data'] = {'key1': 'testString'}
         secret_model['entity_tag'] = '2386255530'
         secret_model['format'] = 'generic'
-        secret_model[
-            'href'
-        ] = 'https://api.us-east.codeengine.cloud.ibm.com/v2/projects/230828b4-4f15-40a9-b183-1268c6ab88d5/secrets/my-secret'
-        secret_model['id'] = '36e3a621-4895-4bd1-b7e8-1163ab49a28f'
         secret_model['name'] = 'my-secret'
-        secret_model['project_id'] = '230828b4-4f15-40a9-b183-1268c6ab88d5'
-        secret_model['resource_type'] = 'secret_generic_v2'
 
         # Construct a json representation of a SecretList model
         secret_list_model_json = {}
@@ -6118,6 +5930,238 @@ class TestModel_VolumeMountPrototype:
         # Convert model instance back to dict and verify no loss of data
         volume_mount_prototype_model_json2 = volume_mount_prototype_model.to_dict()
         assert volume_mount_prototype_model_json2 == volume_mount_prototype_model_json
+
+
+class TestModel_SecretDataBasicAuthSecretData:
+    """
+    Test Class for SecretDataBasicAuthSecretData
+    """
+
+    def test_secret_data_basic_auth_secret_data_serialization(self):
+        """
+        Test serialization/deserialization for SecretDataBasicAuthSecretData
+        """
+
+        # Construct a json representation of a SecretDataBasicAuthSecretData model
+        secret_data_basic_auth_secret_data_model_json = {}
+        secret_data_basic_auth_secret_data_model_json['username'] = 'testString'
+        secret_data_basic_auth_secret_data_model_json['password'] = 'testString'
+        secret_data_basic_auth_secret_data_model_json['foo'] = 'testString'
+
+        # Construct a model instance of SecretDataBasicAuthSecretData by calling from_dict on the json representation
+        secret_data_basic_auth_secret_data_model = SecretDataBasicAuthSecretData.from_dict(
+            secret_data_basic_auth_secret_data_model_json
+        )
+        assert secret_data_basic_auth_secret_data_model != False
+
+        # Construct a model instance of SecretDataBasicAuthSecretData by calling from_dict on the json representation
+        secret_data_basic_auth_secret_data_model_dict = SecretDataBasicAuthSecretData.from_dict(
+            secret_data_basic_auth_secret_data_model_json
+        ).__dict__
+        secret_data_basic_auth_secret_data_model2 = SecretDataBasicAuthSecretData(
+            **secret_data_basic_auth_secret_data_model_dict
+        )
+
+        # Verify the model instances are equivalent
+        assert secret_data_basic_auth_secret_data_model == secret_data_basic_auth_secret_data_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        secret_data_basic_auth_secret_data_model_json2 = secret_data_basic_auth_secret_data_model.to_dict()
+        assert secret_data_basic_auth_secret_data_model_json2 == secret_data_basic_auth_secret_data_model_json
+
+        # Test get_properties and set_properties methods.
+        secret_data_basic_auth_secret_data_model.set_properties({})
+        actual_dict = secret_data_basic_auth_secret_data_model.get_properties()
+        assert actual_dict == {}
+
+        expected_dict = {'foo': 'testString'}
+        secret_data_basic_auth_secret_data_model.set_properties(expected_dict)
+        actual_dict = secret_data_basic_auth_secret_data_model.get_properties()
+        assert actual_dict == expected_dict
+
+
+class TestModel_SecretDataGenericSecretData:
+    """
+    Test Class for SecretDataGenericSecretData
+    """
+
+    def test_secret_data_generic_secret_data_serialization(self):
+        """
+        Test serialization/deserialization for SecretDataGenericSecretData
+        """
+
+        # Construct a json representation of a SecretDataGenericSecretData model
+        secret_data_generic_secret_data_model_json = {}
+        secret_data_generic_secret_data_model_json['foo'] = 'testString'
+
+        # Construct a model instance of SecretDataGenericSecretData by calling from_dict on the json representation
+        secret_data_generic_secret_data_model = SecretDataGenericSecretData.from_dict(
+            secret_data_generic_secret_data_model_json
+        )
+        assert secret_data_generic_secret_data_model != False
+
+        # Construct a model instance of SecretDataGenericSecretData by calling from_dict on the json representation
+        secret_data_generic_secret_data_model_dict = SecretDataGenericSecretData.from_dict(
+            secret_data_generic_secret_data_model_json
+        ).__dict__
+        secret_data_generic_secret_data_model2 = SecretDataGenericSecretData(
+            **secret_data_generic_secret_data_model_dict
+        )
+
+        # Verify the model instances are equivalent
+        assert secret_data_generic_secret_data_model == secret_data_generic_secret_data_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        secret_data_generic_secret_data_model_json2 = secret_data_generic_secret_data_model.to_dict()
+        assert secret_data_generic_secret_data_model_json2 == secret_data_generic_secret_data_model_json
+
+        # Test get_properties and set_properties methods.
+        secret_data_generic_secret_data_model.set_properties({})
+        actual_dict = secret_data_generic_secret_data_model.get_properties()
+        assert actual_dict == {}
+
+        expected_dict = {'foo': 'testString'}
+        secret_data_generic_secret_data_model.set_properties(expected_dict)
+        actual_dict = secret_data_generic_secret_data_model.get_properties()
+        assert actual_dict == expected_dict
+
+
+class TestModel_SecretDataRegistrySecretData:
+    """
+    Test Class for SecretDataRegistrySecretData
+    """
+
+    def test_secret_data_registry_secret_data_serialization(self):
+        """
+        Test serialization/deserialization for SecretDataRegistrySecretData
+        """
+
+        # Construct a json representation of a SecretDataRegistrySecretData model
+        secret_data_registry_secret_data_model_json = {}
+        secret_data_registry_secret_data_model_json['username'] = 'testString'
+        secret_data_registry_secret_data_model_json['password'] = 'testString'
+        secret_data_registry_secret_data_model_json['server'] = 'testString'
+        secret_data_registry_secret_data_model_json['email'] = 'testString'
+        secret_data_registry_secret_data_model_json['foo'] = 'testString'
+
+        # Construct a model instance of SecretDataRegistrySecretData by calling from_dict on the json representation
+        secret_data_registry_secret_data_model = SecretDataRegistrySecretData.from_dict(
+            secret_data_registry_secret_data_model_json
+        )
+        assert secret_data_registry_secret_data_model != False
+
+        # Construct a model instance of SecretDataRegistrySecretData by calling from_dict on the json representation
+        secret_data_registry_secret_data_model_dict = SecretDataRegistrySecretData.from_dict(
+            secret_data_registry_secret_data_model_json
+        ).__dict__
+        secret_data_registry_secret_data_model2 = SecretDataRegistrySecretData(
+            **secret_data_registry_secret_data_model_dict
+        )
+
+        # Verify the model instances are equivalent
+        assert secret_data_registry_secret_data_model == secret_data_registry_secret_data_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        secret_data_registry_secret_data_model_json2 = secret_data_registry_secret_data_model.to_dict()
+        assert secret_data_registry_secret_data_model_json2 == secret_data_registry_secret_data_model_json
+
+        # Test get_properties and set_properties methods.
+        secret_data_registry_secret_data_model.set_properties({})
+        actual_dict = secret_data_registry_secret_data_model.get_properties()
+        assert actual_dict == {}
+
+        expected_dict = {'foo': 'testString'}
+        secret_data_registry_secret_data_model.set_properties(expected_dict)
+        actual_dict = secret_data_registry_secret_data_model.get_properties()
+        assert actual_dict == expected_dict
+
+
+class TestModel_SecretDataSSHSecretData:
+    """
+    Test Class for SecretDataSSHSecretData
+    """
+
+    def test_secret_data_ssh_secret_data_serialization(self):
+        """
+        Test serialization/deserialization for SecretDataSSHSecretData
+        """
+
+        # Construct a json representation of a SecretDataSSHSecretData model
+        secret_data_ssh_secret_data_model_json = {}
+        secret_data_ssh_secret_data_model_json['ssh_key'] = 'testString'
+        secret_data_ssh_secret_data_model_json['known_hosts'] = 'testString'
+        secret_data_ssh_secret_data_model_json['foo'] = 'testString'
+
+        # Construct a model instance of SecretDataSSHSecretData by calling from_dict on the json representation
+        secret_data_ssh_secret_data_model = SecretDataSSHSecretData.from_dict(secret_data_ssh_secret_data_model_json)
+        assert secret_data_ssh_secret_data_model != False
+
+        # Construct a model instance of SecretDataSSHSecretData by calling from_dict on the json representation
+        secret_data_ssh_secret_data_model_dict = SecretDataSSHSecretData.from_dict(
+            secret_data_ssh_secret_data_model_json
+        ).__dict__
+        secret_data_ssh_secret_data_model2 = SecretDataSSHSecretData(**secret_data_ssh_secret_data_model_dict)
+
+        # Verify the model instances are equivalent
+        assert secret_data_ssh_secret_data_model == secret_data_ssh_secret_data_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        secret_data_ssh_secret_data_model_json2 = secret_data_ssh_secret_data_model.to_dict()
+        assert secret_data_ssh_secret_data_model_json2 == secret_data_ssh_secret_data_model_json
+
+        # Test get_properties and set_properties methods.
+        secret_data_ssh_secret_data_model.set_properties({})
+        actual_dict = secret_data_ssh_secret_data_model.get_properties()
+        assert actual_dict == {}
+
+        expected_dict = {'foo': 'testString'}
+        secret_data_ssh_secret_data_model.set_properties(expected_dict)
+        actual_dict = secret_data_ssh_secret_data_model.get_properties()
+        assert actual_dict == expected_dict
+
+
+class TestModel_SecretDataTLSSecretData:
+    """
+    Test Class for SecretDataTLSSecretData
+    """
+
+    def test_secret_data_tls_secret_data_serialization(self):
+        """
+        Test serialization/deserialization for SecretDataTLSSecretData
+        """
+
+        # Construct a json representation of a SecretDataTLSSecretData model
+        secret_data_tls_secret_data_model_json = {}
+        secret_data_tls_secret_data_model_json['tls_cert'] = 'testString'
+        secret_data_tls_secret_data_model_json['tls_key'] = 'testString'
+        secret_data_tls_secret_data_model_json['foo'] = 'testString'
+
+        # Construct a model instance of SecretDataTLSSecretData by calling from_dict on the json representation
+        secret_data_tls_secret_data_model = SecretDataTLSSecretData.from_dict(secret_data_tls_secret_data_model_json)
+        assert secret_data_tls_secret_data_model != False
+
+        # Construct a model instance of SecretDataTLSSecretData by calling from_dict on the json representation
+        secret_data_tls_secret_data_model_dict = SecretDataTLSSecretData.from_dict(
+            secret_data_tls_secret_data_model_json
+        ).__dict__
+        secret_data_tls_secret_data_model2 = SecretDataTLSSecretData(**secret_data_tls_secret_data_model_dict)
+
+        # Verify the model instances are equivalent
+        assert secret_data_tls_secret_data_model == secret_data_tls_secret_data_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        secret_data_tls_secret_data_model_json2 = secret_data_tls_secret_data_model.to_dict()
+        assert secret_data_tls_secret_data_model_json2 == secret_data_tls_secret_data_model_json
+
+        # Test get_properties and set_properties methods.
+        secret_data_tls_secret_data_model.set_properties({})
+        actual_dict = secret_data_tls_secret_data_model.get_properties()
+        assert actual_dict == {}
+
+        expected_dict = {'foo': 'testString'}
+        secret_data_tls_secret_data_model.set_properties(expected_dict)
+        actual_dict = secret_data_tls_secret_data_model.get_properties()
+        assert actual_dict == expected_dict
 
 
 # endregion

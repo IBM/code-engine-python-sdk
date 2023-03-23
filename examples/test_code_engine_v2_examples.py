@@ -277,7 +277,7 @@ class TestCodeEngineV2Examples:
             response = code_engine_service.get_app_revision(
                 project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
                 app_name='my-app',
-                name='my-app-001',
+                name='my-app-00001',
             )
             app_revision = response.get_result()
 
@@ -444,7 +444,7 @@ class TestCodeEngineV2Examples:
 
             response = code_engine_service.get_job_run(
                 project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
-                name='my-job',
+                name='my-job-run',
             )
             job_run = response.get_result()
 
@@ -662,7 +662,7 @@ class TestCodeEngineV2Examples:
 
             response = code_engine_service.create_config_map(
                 project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
-                name='my-configmap',
+                name='my-config-map',
             )
             config_map = response.get_result()
 
@@ -860,7 +860,7 @@ class TestCodeEngineV2Examples:
             response = code_engine_service.delete_app_revision(
                 project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
                 app_name='my-app',
-                name='my-app-001',
+                name='my-app-00001',
             )
 
             # end-delete_app_revision
@@ -898,7 +898,7 @@ class TestCodeEngineV2Examples:
 
             response = code_engine_service.delete_job_run(
                 project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
-                name='my-job',
+                name='my-job-run',
             )
 
             # end-delete_job_run

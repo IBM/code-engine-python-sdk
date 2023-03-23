@@ -1,3 +1,45 @@
+# [3.0.0](https://github.ibm.com/coligo/python-sdk/compare/v2.0.3...v3.0.0) (2023-03-23)
+
+
+### Features
+
+* **oneOf:** addeed type support for secret data types ([#9](https://github.ibm.com/coligo/python-sdk/issues/9)) ([6dd33d2](https://github.ibm.com/coligo/python-sdk/commit/6dd33d2dca8663d65d00c4e5694bfa11abbb5d22))
+
+
+### BREAKING CHANGES
+
+* **oneOf:** new classes for each secret data type added
+
+* test fix
+
+* test fix
+
+* added more secret examples
+
+* updated to latest openAPI, added oneOf for secret updates
+
+* udpated timeout on int test
+
+* increase timeout
+
+* adjust timeout
+
+* removed retries
+
+* set retries to 0
+
+* udpated retry interval
+
+* sleep adjust
+
+* removed loop, depending on python retry
+
+* increased project sleep to 2 minutes before trying get
+
+* moved sleep
+
+* fixed timestamp name, will removed security alerts
+
 ## [2.0.3](https://github.ibm.com/coligo/python-sdk/compare/v2.0.2...v2.0.3) (2023-01-25)
 
 

@@ -1,3 +1,10 @@
+# [3.1.0](https://github.ibm.com/coligo/python-sdk/compare/v3.0.0...v3.1.0) (2023-03-24)
+
+
+### Features
+
+* **api:** added support to retrieve egress ips ([dcc340f](https://github.ibm.com/coligo/python-sdk/commit/dcc340f4f177bb31faa2de3acff97304cf8bce1f))
+
 # [3.0.0](https://github.ibm.com/coligo/python-sdk/compare/v2.0.3...v3.0.0) (2023-03-23)
 
 

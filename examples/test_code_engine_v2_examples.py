@@ -142,6 +142,27 @@ class TestCodeEngineV2Examples:
             pytest.fail(str(e))
 
     @needscredentials
+    def test_get_project_egress_ips_example(self):
+        """
+        get_project_egress_ips request example
+        """
+        try:
+            print('\nget_project_egress_ips() result:')
+            # begin-get_project_egress_ips
+
+            response = code_engine_service.get_project_egress_ips(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+            )
+            project_egress_ip_addresses = response.get_result()
+
+            print(json.dumps(project_egress_ip_addresses, indent=2))
+
+            # end-get_project_egress_ips
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
     def test_list_apps_example(self):
         """
         list_apps request example

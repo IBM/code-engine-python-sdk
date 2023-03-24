@@ -133,6 +133,16 @@ class TestCodeEngineV2:
         assert obtained_project['status'] == 'active'
 
     @needscredentials
+    def test_get_project_egress_ips(self):
+        response = self.code_engine_service.get_project_egress_ips(
+            project_id=pytest.e2e_test_project_id,
+        )
+
+        assert response.get_status_code() == 200
+        project_egress_ip_addresses = response.get_result()
+        assert project_egress_ip_addresses is not None
+
+    @needscredentials
     def test_list_apps(self):
         response = self.code_engine_service.list_apps(
             project_id=pytest.e2e_test_project_id,

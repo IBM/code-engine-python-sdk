@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# IBM OpenAPI SDK Code Generator Version: 3.64.0-959a5845-20230112-195144
+# IBM OpenAPI SDK Code Generator Version: 3.66.0-d6c2d7e0-20230215-221247
 
 """
 REST API for Code Engine
@@ -228,6 +228,41 @@ class CodeEngineV2(BaseService):
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/projects/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE', url=url, headers=headers)
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_project_egress_ips(self, project_id: str, **kwargs) -> DetailedResponse:
+        """
+        List egress IP addresses.
+
+        Lists all egress IP addresses (public and private) that are used by components
+        running in this project.
+
+        :param str project_id: The ID of the project.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ProjectEgressIPAddresses` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME, service_version='V2', operation_id='get_project_egress_ips'
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id']
+        path_param_values = self.encode_path_vars(project_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/egress_ips'.format(**path_param_dict)
+        request = self.prepare_request(method='GET', url=url, headers=headers)
 
         response = self.send(request, **kwargs)
         return response
@@ -7255,6 +7290,68 @@ class Project:
         PREPARING = 'preparing'
         CREATING = 'creating'
         CREATION_FAILED = 'creation_failed'
+
+
+class ProjectEgressIPAddresses:
+    """
+    Describes the model of egress IP addresses.
+
+    :attr List[str] private: (optional) List of IBM private network IP addresses.
+    :attr List[str] public: (optional) List of public IP addresses.
+    """
+
+    def __init__(self, *, private: List[str] = None, public: List[str] = None) -> None:
+        """
+        Initialize a ProjectEgressIPAddresses object.
+
+        :param List[str] private: (optional) List of IBM private network IP
+               addresses.
+        :param List[str] public: (optional) List of public IP addresses.
+        """
+        self.private = private
+        self.public = public
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ProjectEgressIPAddresses':
+        """Initialize a ProjectEgressIPAddresses object from a json dictionary."""
+        args = {}
+        if 'private' in _dict:
+            args['private'] = _dict.get('private')
+        if 'public' in _dict:
+            args['public'] = _dict.get('public')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ProjectEgressIPAddresses object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'private') and self.private is not None:
+            _dict['private'] = self.private
+        if hasattr(self, 'public') and self.public is not None:
+            _dict['public'] = self.public
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ProjectEgressIPAddresses object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ProjectEgressIPAddresses') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ProjectEgressIPAddresses') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 
 class ProjectList:

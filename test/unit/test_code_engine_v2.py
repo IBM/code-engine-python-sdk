@@ -412,6 +412,72 @@ class TestDeleteProject:
         self.test_delete_project_value_error()
 
 
+class TestGetProjectEgressIps:
+    """
+    Test Class for get_project_egress_ips
+    """
+
+    @responses.activate
+    def test_get_project_egress_ips_all_params(self):
+        """
+        get_project_egress_ips()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/egress_ips')
+        mock_response = '{"private": ["private"], "public": ["public"]}'
+        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+
+        # Invoke method
+        response = _service.get_project_egress_ips(project_id, headers={})
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_project_egress_ips_all_params_with_retries(self):
+        # Enable retries and run test_get_project_egress_ips_all_params.
+        _service.enable_retries()
+        self.test_get_project_egress_ips_all_params()
+
+        # Disable retries and run test_get_project_egress_ips_all_params.
+        _service.disable_retries()
+        self.test_get_project_egress_ips_all_params()
+
+    @responses.activate
+    def test_get_project_egress_ips_value_error(self):
+        """
+        test_get_project_egress_ips_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/egress_ips')
+        mock_response = '{"private": ["private"], "public": ["public"]}'
+        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.get_project_egress_ips(**req_copy)
+
+    def test_get_project_egress_ips_value_error_with_retries(self):
+        # Enable retries and run test_get_project_egress_ips_value_error.
+        _service.enable_retries()
+        self.test_get_project_egress_ips_value_error()
+
+        # Disable retries and run test_get_project_egress_ips_value_error.
+        _service.disable_retries()
+        self.test_get_project_egress_ips_value_error()
+
+
 # endregion
 ##############################################################################
 # End of Service: Projects
@@ -5737,6 +5803,39 @@ class TestModel_Project:
         # Convert model instance back to dict and verify no loss of data
         project_model_json2 = project_model.to_dict()
         assert project_model_json2 == project_model_json
+
+
+class TestModel_ProjectEgressIPAddresses:
+    """
+    Test Class for ProjectEgressIPAddresses
+    """
+
+    def test_project_egress_ip_addresses_serialization(self):
+        """
+        Test serialization/deserialization for ProjectEgressIPAddresses
+        """
+
+        # Construct a json representation of a ProjectEgressIPAddresses model
+        project_egress_ip_addresses_model_json = {}
+        project_egress_ip_addresses_model_json['private'] = ['testString']
+        project_egress_ip_addresses_model_json['public'] = ['testString']
+
+        # Construct a model instance of ProjectEgressIPAddresses by calling from_dict on the json representation
+        project_egress_ip_addresses_model = ProjectEgressIPAddresses.from_dict(project_egress_ip_addresses_model_json)
+        assert project_egress_ip_addresses_model != False
+
+        # Construct a model instance of ProjectEgressIPAddresses by calling from_dict on the json representation
+        project_egress_ip_addresses_model_dict = ProjectEgressIPAddresses.from_dict(
+            project_egress_ip_addresses_model_json
+        ).__dict__
+        project_egress_ip_addresses_model2 = ProjectEgressIPAddresses(**project_egress_ip_addresses_model_dict)
+
+        # Verify the model instances are equivalent
+        assert project_egress_ip_addresses_model == project_egress_ip_addresses_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        project_egress_ip_addresses_model_json2 = project_egress_ip_addresses_model.to_dict()
+        assert project_egress_ip_addresses_model_json2 == project_egress_ip_addresses_model_json
 
 
 class TestModel_ProjectList:

@@ -1,3 +1,10 @@
+## [3.1.1](https://github.ibm.com/coligo/python-sdk/compare/v3.1.0...v3.1.1) (2023-03-27)
+
+
+### Bug Fixes
+
+* **ci:** updated travis config ([#13](https://github.ibm.com/coligo/python-sdk/issues/13)) ([f80f5b4](https://github.ibm.com/coligo/python-sdk/commit/f80f5b4c0fef6ed33a9c64e5e5238076f8243d36))
+
 # [3.1.0](https://github.ibm.com/coligo/python-sdk/compare/v3.0.0...v3.1.0) (2023-03-24)
 
 

@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# IBM OpenAPI SDK Code Generator Version: 3.64.0-959a5845-20230112-195144
+# IBM OpenAPI SDK Code Generator Version: 3.66.0-d6c2d7e0-20230215-221247
 
 """
 REST API for Code Engine
@@ -228,6 +228,41 @@ class CodeEngineV2(BaseService):
         path_param_dict = dict(zip(path_param_keys, path_param_values))
         url = '/projects/{id}'.format(**path_param_dict)
         request = self.prepare_request(method='DELETE', url=url, headers=headers)
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_project_egress_ips(self, project_id: str, **kwargs) -> DetailedResponse:
+        """
+        List egress IP addresses.
+
+        Lists all egress IP addresses (public and private) that are used by components
+        running in this project.
+
+        :param str project_id: The ID of the project.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `ProjectEgressIPAddresses` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME, service_version='V2', operation_id='get_project_egress_ips'
+        )
+        headers.update(sdk_headers)
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id']
+        path_param_values = self.encode_path_vars(project_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/egress_ips'.format(**path_param_dict)
+        request = self.prepare_request(method='GET', url=url, headers=headers)
 
         response = self.send(request, **kwargs)
         return response
@@ -796,7 +831,8 @@ class CodeEngineV2(BaseService):
                private registry when you download the container image. If the image
                reference points to a registry that requires authentication, the job / job
                runs will be created but submitted job runs will fail, until this property
-               is provided, too.
+               is provided, too. This property must not be set on a job run, which
+               references a job template.
         :param List[str] run_arguments: (optional) Set arguments for the job that
                are passed to start job run containers. If not specified an empty string
                array will be applied and the arguments specified by the container image,
@@ -811,12 +847,13 @@ class CodeEngineV2(BaseService):
                references to config maps, secrets or a literal values.
         :param str run_mode: (optional) The mode for runs of the job. Valid values
                are `task` and `daemon`. In `task` mode, the `max_execution_time` and
-               `retry_limit` options apply. In `daemon` mode, since there is no timeout
+               `retry_limit` properties apply. In `daemon` mode, since there is no timeout
                and failed instances are restarted indefinitely, the `max_execution_time`
-               and `retry_limit` options are not allowed.
+               and `retry_limit` properties are not allowed.
         :param str run_service_account: (optional) The name of the service account.
                For built-in service accounts, you can use the shortened names `manager`,
-               `none`, `reader`, and `writer`.
+               `none`, `reader`, and `writer`. This property must not be set on a job run,
+               which references a job template.
         :param List[VolumeMountPrototype] run_volume_mounts: (optional) Optional
                mounts of config maps or a secrets.
         :param str scale_array_spec: (optional) Define a custom set of array
@@ -835,8 +872,8 @@ class CodeEngineV2(BaseService):
                information see [Units of
                measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
         :param int scale_max_execution_time: (optional) The maximum execution time
-               in seconds for runs of the job. This option can only be specified if `mode`
-               is `task`.
+               in seconds for runs of the job. This property can only be specified if
+               `run_mode` is `task`.
         :param str scale_memory_limit: (optional) Optional amount of memory set for
                the instance of the job. For valid values see [Supported memory and CPU
                combinations](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo).
@@ -845,8 +882,8 @@ class CodeEngineV2(BaseService):
                [Units of
                measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
         :param int scale_retry_limit: (optional) The number of times to rerun an
-               instance of the job before the job is marked as failed. This option can
-               only be specified if `mode` is `task`.
+               instance of the job before the job is marked as failed. This property can
+               only be specified if `run_mode` is `task`.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Job` object
@@ -1120,7 +1157,8 @@ class CodeEngineV2(BaseService):
                private registry when you download the container image. If the image
                reference points to a registry that requires authentication, the job / job
                runs will be created but submitted job runs will fail, until this property
-               is provided, too.
+               is provided, too. This property must not be set on a job run, which
+               references a job template.
         :param str job_name: (optional) Optional name of the job on which this job
                run is based on. If specified, the job run will inherit the configuration
                of the referenced job.
@@ -1140,12 +1178,13 @@ class CodeEngineV2(BaseService):
                references to config maps, secrets or a literal values.
         :param str run_mode: (optional) The mode for runs of the job. Valid values
                are `task` and `daemon`. In `task` mode, the `max_execution_time` and
-               `retry_limit` options apply. In `daemon` mode, since there is no timeout
+               `retry_limit` properties apply. In `daemon` mode, since there is no timeout
                and failed instances are restarted indefinitely, the `max_execution_time`
-               and `retry_limit` options are not allowed.
+               and `retry_limit` properties are not allowed.
         :param str run_service_account: (optional) The name of the service account.
                For built-in service accounts, you can use the shortened names `manager`,
-               `none`, `reader`, and `writer`.
+               `none`, `reader`, and `writer`. This property must not be set on a job run,
+               which references a job template.
         :param List[VolumeMountPrototype] run_volume_mounts: (optional) Optional
                mounts of config maps or a secrets.
         :param str scale_array_spec: (optional) Define a custom set of array
@@ -1164,8 +1203,8 @@ class CodeEngineV2(BaseService):
                information see [Units of
                measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
         :param int scale_max_execution_time: (optional) The maximum execution time
-               in seconds for runs of the job. This option can only be specified if `mode`
-               is `task`.
+               in seconds for runs of the job. This property can only be specified if
+               `run_mode` is `task`.
         :param str scale_memory_limit: (optional) Optional amount of memory set for
                the instance of the job. For valid values see [Supported memory and CPU
                combinations](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo).
@@ -1174,8 +1213,8 @@ class CodeEngineV2(BaseService):
                [Units of
                measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
         :param int scale_retry_limit: (optional) The number of times to rerun an
-               instance of the job before the job is marked as failed. This option can
-               only be specified if `mode` is `task`.
+               instance of the job before the job is marked as failed. This property can
+               only be specified if `run_mode` is `task`.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `JobRun` object
@@ -2118,7 +2157,7 @@ class CodeEngineV2(BaseService):
         return response
 
     def create_secret(
-        self, project_id: str, format: str, name: str, *, data: dict = None, **kwargs
+        self, project_id: str, format: str, name: str, *, data: 'SecretData' = None, **kwargs
     ) -> DetailedResponse:
         """
         Create a secret.
@@ -2128,11 +2167,11 @@ class CodeEngineV2(BaseService):
         :param str project_id: The ID of the project.
         :param str format: Specify the format of the secret.
         :param str name: The name of the secret.
-        :param dict data: (optional) Data container that allows to specify config
-               parameters and their values as a key-value map. Each key field must consist
-               of alphanumeric characters, `-`, `_` or `.` and must not be exceed a max
-               length of 253 characters. Each value field can consists of any character
-               and must not be exceed a max length of 1048576 characters.
+        :param SecretData data: (optional) Data container that allows to specify
+               config parameters and their values as a key-value map. Each key field must
+               consist of alphanumeric characters, `-`, `_` or `.` and must not be exceed
+               a max length of 253 characters. Each value field can consists of any
+               character and must not be exceed a max length of 1048576 characters.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Secret` object
@@ -2144,6 +2183,8 @@ class CodeEngineV2(BaseService):
             raise ValueError('format must be provided')
         if name is None:
             raise ValueError('name must be provided')
+        if data is not None:
+            data = convert_model(data)
         headers = {}
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME, service_version='V2', operation_id='create_secret'
@@ -2211,7 +2252,7 @@ class CodeEngineV2(BaseService):
         return response
 
     def replace_secret(
-        self, project_id: str, name: str, if_match: str, *, data: dict = None, format: str = None, **kwargs
+        self, project_id: str, name: str, if_match: str, *, data: 'SecretData' = None, format: str = None, **kwargs
     ) -> DetailedResponse:
         """
         Update a secret.
@@ -2225,11 +2266,11 @@ class CodeEngineV2(BaseService):
                secret. This value helps identifying parallel usage of this API. Pass * to
                indicate to update any version available. This might result in stale
                updates.
-        :param dict data: (optional) Data container that allows to specify config
-               parameters and their values as a key-value map. Each key field must consist
-               of alphanumeric characters, `-`, `_` or `.` and must not be exceed a max
-               length of 253 characters. Each value field can consists of any character
-               and must not be exceed a max length of 1048576 characters.
+        :param SecretData data: (optional) Data container that allows to specify
+               config parameters and their values as a key-value map. Each key field must
+               consist of alphanumeric characters, `-`, `_` or `.` and must not be exceed
+               a max length of 253 characters. Each value field can consists of any
+               character and must not be exceed a max length of 1048576 characters.
         :param str format: (optional) Specify the format of the secret.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
@@ -2242,6 +2283,8 @@ class CodeEngineV2(BaseService):
             raise ValueError('name must be provided')
         if not if_match:
             raise ValueError('if_match must be provided')
+        if data is not None:
+            data = convert_model(data)
         headers = {
             'If-Match': if_match,
         }
@@ -2318,17 +2361,17 @@ class App:
     """
     App is the response model for app resources.
 
-    :attr str created_at: The date when the resource was created.
+    :attr str created_at: (optional) The date when the resource was created.
     :attr str endpoint: (optional) Optional URL to invoke app. Depending on
           visibility this is accessible publicly ot in the private network only. Empty in
           case 'managed_domain_mappings' is set to 'local'.
     :attr str endpoint_internal: (optional) URL to app that is only visible within
           the project.
-    :attr str entity_tag: The version of the job instance, which is used to achieve
+    :attr str entity_tag: The version of the app instance, which is used to achieve
           optimistic locking.
-    :attr str href: When you provision a new app,  a URL is created identifying the
-          location of the instance.
-    :attr str id: The identifier of the resource.
+    :attr str href: (optional) When you provision a new app,  a URL is created
+          identifying the location of the instance.
+    :attr str id: (optional) The identifier of the resource.
     :attr int image_port: (optional) Optional port the app listens on. While the app
           will always be exposed via port `443` for end users, this port is used to
           connect to the port that is exposed by the container image.
@@ -2348,8 +2391,9 @@ class App:
           are 'local_public', 'local_private' and 'local'. Visibility can only be
           'local_private' if the project supports application private visibility.
     :attr str name: The name of the app.
-    :attr str project_id: The ID of the project the resource is located in.
-    :attr str resource_type: The type of the app.
+    :attr str project_id: (optional) The ID of the project the resource is located
+          in.
+    :attr str resource_type: (optional) The type of the app.
     :attr List[str] run_arguments: Optional arguments for the app that are passed to
           start the container. If not specified an empty string array will be applied and
           the arguments specified by the container image, will be used to start the
@@ -2401,22 +2445,17 @@ class App:
           by any request for some time.
     :attr int scale_request_timeout: Optional amount of time in seconds that is
           allowed for a running app to respond to a request.
-    :attr str status: The current status of the app.
+    :attr str status: (optional) The current status of the app.
     :attr AppStatus status_details: (optional) The detailed status of the
           application.
     """
 
     def __init__(
         self,
-        created_at: str,
         entity_tag: str,
-        href: str,
-        id: str,
         image_reference: str,
         managed_domain_mappings: str,
         name: str,
-        project_id: str,
-        resource_type: str,
         run_arguments: List[str],
         run_commands: List[str],
         run_env_variables: List['EnvVar'],
@@ -2427,28 +2466,29 @@ class App:
         scale_memory_limit: str,
         scale_min_instances: int,
         scale_request_timeout: int,
-        status: str,
         *,
+        created_at: str = None,
         endpoint: str = None,
         endpoint_internal: str = None,
+        href: str = None,
+        id: str = None,
         image_port: int = None,
         image_secret: str = None,
+        project_id: str = None,
+        resource_type: str = None,
         run_as_user: int = None,
         run_service_account: str = None,
         scale_concurrency: int = None,
         scale_concurrency_target: int = None,
         scale_initial_instances: int = None,
+        status: str = None,
         status_details: 'AppStatus' = None,
     ) -> None:
         """
         Initialize a App object.
 
-        :param str created_at: The date when the resource was created.
-        :param str entity_tag: The version of the job instance, which is used to
+        :param str entity_tag: The version of the app instance, which is used to
                achieve optimistic locking.
-        :param str href: When you provision a new app,  a URL is created
-               identifying the location of the instance.
-        :param str id: The identifier of the resource.
         :param str image_reference: The name of the image that is used for this
                job. The format is `REGISTRY/NAMESPACE/REPOSITORY:TAG` where `REGISTRY` and
                `TAG` are optional. If `REGISTRY` is not specified, the default is
@@ -2460,8 +2500,6 @@ class App:
                values are 'local_public', 'local_private' and 'local'. Visibility can only
                be 'local_private' if the project supports application private visibility.
         :param str name: The name of the app.
-        :param str project_id: The ID of the project the resource is located in.
-        :param str resource_type: The type of the app.
         :param List[str] run_arguments: Optional arguments for the app that are
                passed to start the container. If not specified an empty string array will
                be applied and the arguments specified by the container image, will be used
@@ -2502,12 +2540,6 @@ class App:
                not hit by any request for some time.
         :param int scale_request_timeout: Optional amount of time in seconds that
                is allowed for a running app to respond to a request.
-        :param str status: The current status of the app.
-        :param str endpoint: (optional) Optional URL to invoke app. Depending on
-               visibility this is accessible publicly ot in the private network only.
-               Empty in case 'managed_domain_mappings' is set to 'local'.
-        :param str endpoint_internal: (optional) URL to app that is only visible
-               within the project.
         :param int image_port: (optional) Optional port the app listens on. While
                the app will always be exposed via port `443` for end users, this port is
                used to connect to the port that is exposed by the container image.
@@ -2571,8 +2603,6 @@ class App:
         args = {}
         if 'created_at' in _dict:
             args['created_at'] = _dict.get('created_at')
-        else:
-            raise ValueError('Required property \'created_at\' not present in App JSON')
         if 'endpoint' in _dict:
             args['endpoint'] = _dict.get('endpoint')
         if 'endpoint_internal' in _dict:
@@ -2583,12 +2613,8 @@ class App:
             raise ValueError('Required property \'entity_tag\' not present in App JSON')
         if 'href' in _dict:
             args['href'] = _dict.get('href')
-        else:
-            raise ValueError('Required property \'href\' not present in App JSON')
         if 'id' in _dict:
             args['id'] = _dict.get('id')
-        else:
-            raise ValueError('Required property \'id\' not present in App JSON')
         if 'image_port' in _dict:
             args['image_port'] = _dict.get('image_port')
         if 'image_reference' in _dict:
@@ -2607,12 +2633,8 @@ class App:
             raise ValueError('Required property \'name\' not present in App JSON')
         if 'project_id' in _dict:
             args['project_id'] = _dict.get('project_id')
-        else:
-            raise ValueError('Required property \'project_id\' not present in App JSON')
         if 'resource_type' in _dict:
             args['resource_type'] = _dict.get('resource_type')
-        else:
-            raise ValueError('Required property \'resource_type\' not present in App JSON')
         if 'run_arguments' in _dict:
             args['run_arguments'] = _dict.get('run_arguments')
         else:
@@ -2665,8 +2687,6 @@ class App:
             raise ValueError('Required property \'scale_request_timeout\' not present in App JSON')
         if 'status' in _dict:
             args['status'] = _dict.get('status')
-        else:
-            raise ValueError('Required property \'status\' not present in App JSON')
         if 'status_details' in _dict:
             args['status_details'] = AppStatus.from_dict(_dict.get('status_details'))
         return cls(**args)
@@ -2679,18 +2699,18 @@ class App:
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = self.created_at
-        if hasattr(self, 'endpoint') and self.endpoint is not None:
-            _dict['endpoint'] = self.endpoint
-        if hasattr(self, 'endpoint_internal') and self.endpoint_internal is not None:
-            _dict['endpoint_internal'] = self.endpoint_internal
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = getattr(self, 'created_at')
+        if hasattr(self, 'endpoint') and getattr(self, 'endpoint') is not None:
+            _dict['endpoint'] = getattr(self, 'endpoint')
+        if hasattr(self, 'endpoint_internal') and getattr(self, 'endpoint_internal') is not None:
+            _dict['endpoint_internal'] = getattr(self, 'endpoint_internal')
         if hasattr(self, 'entity_tag') and self.entity_tag is not None:
             _dict['entity_tag'] = self.entity_tag
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
         if hasattr(self, 'image_port') and self.image_port is not None:
             _dict['image_port'] = self.image_port
         if hasattr(self, 'image_reference') and self.image_reference is not None:
@@ -2701,10 +2721,10 @@ class App:
             _dict['managed_domain_mappings'] = self.managed_domain_mappings
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'project_id') and self.project_id is not None:
-            _dict['project_id'] = self.project_id
-        if hasattr(self, 'resource_type') and self.resource_type is not None:
-            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'project_id') and getattr(self, 'project_id') is not None:
+            _dict['project_id'] = getattr(self, 'project_id')
+        if hasattr(self, 'resource_type') and getattr(self, 'resource_type') is not None:
+            _dict['resource_type'] = getattr(self, 'resource_type')
         if hasattr(self, 'run_arguments') and self.run_arguments is not None:
             _dict['run_arguments'] = self.run_arguments
         if hasattr(self, 'run_as_user') and self.run_as_user is not None:
@@ -2747,8 +2767,8 @@ class App:
             _dict['scale_min_instances'] = self.scale_min_instances
         if hasattr(self, 'scale_request_timeout') and self.scale_request_timeout is not None:
             _dict['scale_request_timeout'] = self.scale_request_timeout
-        if hasattr(self, 'status') and self.status is not None:
-            _dict['status'] = self.status
+        if hasattr(self, 'status') and getattr(self, 'status') is not None:
+            _dict['status'] = getattr(self, 'status')
         if hasattr(self, 'status_details') and self.status_details is not None:
             if isinstance(self.status_details, dict):
                 _dict['status_details'] = self.status_details
@@ -3263,10 +3283,10 @@ class AppRevision:
     AppRevision is the response model for app revision resources.
 
     :attr str app_name: (optional) Name of the associated app.
-    :attr str created_at: The date when the resource was created.
-    :attr str href: When you provision a new revision,  a URL is created identifying
-          the location of the instance.
-    :attr str id: The identifier of the resource.
+    :attr str created_at: (optional) The date when the resource was created.
+    :attr str href: (optional) When you provision a new revision,  a URL is created
+          identifying the location of the instance.
+    :attr str id: (optional) The identifier of the resource.
     :attr int image_port: (optional) Optional port the app listens on. While the app
           will always be exposed via port `443` for end users, this port is used to
           connect to the port that is exposed by the container image.
@@ -3281,9 +3301,10 @@ class AppRevision:
           registry when you download the container image. If the image reference points to
           a registry that requires authentication, the app will be created but cannot
           reach the ready status, until this property is provided, too.
-    :attr str name: The name of the app revison.
-    :attr str project_id: The ID of the project the resource is located in.
-    :attr str resource_type: The type of the app revision.
+    :attr str name: (optional) The name of the app revison.
+    :attr str project_id: (optional) The ID of the project the resource is located
+          in.
+    :attr str resource_type: (optional) The type of the app revision.
     :attr List[str] run_arguments: Optional arguments for the app that are passed to
           start the container. If not specified an empty string array will be applied and
           the arguments specified by the container image, will be used to start the
@@ -3335,20 +3356,14 @@ class AppRevision:
           by any request for some time.
     :attr int scale_request_timeout: Optional amount of time in seconds that is
           allowed for a running app to respond to a request.
-    :attr str status: The current status of the app revision.
+    :attr str status: (optional) The current status of the app revision.
     :attr AppRevisionStatus status_details: (optional) The detailed status of the
           application revision.
     """
 
     def __init__(
         self,
-        created_at: str,
-        href: str,
-        id: str,
         image_reference: str,
-        name: str,
-        project_id: str,
-        resource_type: str,
         run_arguments: List[str],
         run_commands: List[str],
         run_env_variables: List['EnvVar'],
@@ -3359,34 +3374,33 @@ class AppRevision:
         scale_memory_limit: str,
         scale_min_instances: int,
         scale_request_timeout: int,
-        status: str,
         *,
         app_name: str = None,
+        created_at: str = None,
+        href: str = None,
+        id: str = None,
         image_port: int = None,
         image_secret: str = None,
+        name: str = None,
+        project_id: str = None,
+        resource_type: str = None,
         run_as_user: int = None,
         run_service_account: str = None,
         scale_concurrency: int = None,
         scale_concurrency_target: int = None,
         scale_initial_instances: int = None,
+        status: str = None,
         status_details: 'AppRevisionStatus' = None,
     ) -> None:
         """
         Initialize a AppRevision object.
 
-        :param str created_at: The date when the resource was created.
-        :param str href: When you provision a new revision,  a URL is created
-               identifying the location of the instance.
-        :param str id: The identifier of the resource.
         :param str image_reference: The name of the image that is used for this
                job. The format is `REGISTRY/NAMESPACE/REPOSITORY:TAG` where `REGISTRY` and
                `TAG` are optional. If `REGISTRY` is not specified, the default is
                `docker.io`. If `TAG` is not specified, the default is `latest`. If the
                image reference points to a registry that requires authentication, make
                sure to also specify the property `image_secret`.
-        :param str name: The name of the app revison.
-        :param str project_id: The ID of the project the resource is located in.
-        :param str resource_type: The type of the app revision.
         :param List[str] run_arguments: Optional arguments for the app that are
                passed to start the container. If not specified an empty string array will
                be applied and the arguments specified by the container image, will be used
@@ -3427,7 +3441,6 @@ class AppRevision:
                not hit by any request for some time.
         :param int scale_request_timeout: Optional amount of time in seconds that
                is allowed for a running app to respond to a request.
-        :param str status: The current status of the app revision.
         :param str app_name: (optional) Name of the associated app.
         :param int image_port: (optional) Optional port the app listens on. While
                the app will always be exposed via port `443` for end users, this port is
@@ -3491,16 +3504,10 @@ class AppRevision:
             args['app_name'] = _dict.get('app_name')
         if 'created_at' in _dict:
             args['created_at'] = _dict.get('created_at')
-        else:
-            raise ValueError('Required property \'created_at\' not present in AppRevision JSON')
         if 'href' in _dict:
             args['href'] = _dict.get('href')
-        else:
-            raise ValueError('Required property \'href\' not present in AppRevision JSON')
         if 'id' in _dict:
             args['id'] = _dict.get('id')
-        else:
-            raise ValueError('Required property \'id\' not present in AppRevision JSON')
         if 'image_port' in _dict:
             args['image_port'] = _dict.get('image_port')
         if 'image_reference' in _dict:
@@ -3511,16 +3518,10 @@ class AppRevision:
             args['image_secret'] = _dict.get('image_secret')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
-        else:
-            raise ValueError('Required property \'name\' not present in AppRevision JSON')
         if 'project_id' in _dict:
             args['project_id'] = _dict.get('project_id')
-        else:
-            raise ValueError('Required property \'project_id\' not present in AppRevision JSON')
         if 'resource_type' in _dict:
             args['resource_type'] = _dict.get('resource_type')
-        else:
-            raise ValueError('Required property \'resource_type\' not present in AppRevision JSON')
         if 'run_arguments' in _dict:
             args['run_arguments'] = _dict.get('run_arguments')
         else:
@@ -3573,8 +3574,6 @@ class AppRevision:
             raise ValueError('Required property \'scale_request_timeout\' not present in AppRevision JSON')
         if 'status' in _dict:
             args['status'] = _dict.get('status')
-        else:
-            raise ValueError('Required property \'status\' not present in AppRevision JSON')
         if 'status_details' in _dict:
             args['status_details'] = AppRevisionStatus.from_dict(_dict.get('status_details'))
         return cls(**args)
@@ -3589,24 +3588,24 @@ class AppRevision:
         _dict = {}
         if hasattr(self, 'app_name') and self.app_name is not None:
             _dict['app_name'] = self.app_name
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = self.created_at
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = getattr(self, 'created_at')
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
         if hasattr(self, 'image_port') and self.image_port is not None:
             _dict['image_port'] = self.image_port
         if hasattr(self, 'image_reference') and self.image_reference is not None:
             _dict['image_reference'] = self.image_reference
         if hasattr(self, 'image_secret') and self.image_secret is not None:
             _dict['image_secret'] = self.image_secret
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
-        if hasattr(self, 'project_id') and self.project_id is not None:
-            _dict['project_id'] = self.project_id
-        if hasattr(self, 'resource_type') and self.resource_type is not None:
-            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'name') and getattr(self, 'name') is not None:
+            _dict['name'] = getattr(self, 'name')
+        if hasattr(self, 'project_id') and getattr(self, 'project_id') is not None:
+            _dict['project_id'] = getattr(self, 'project_id')
+        if hasattr(self, 'resource_type') and getattr(self, 'resource_type') is not None:
+            _dict['resource_type'] = getattr(self, 'resource_type')
         if hasattr(self, 'run_arguments') and self.run_arguments is not None:
             _dict['run_arguments'] = self.run_arguments
         if hasattr(self, 'run_as_user') and self.run_as_user is not None:
@@ -3649,8 +3648,8 @@ class AppRevision:
             _dict['scale_min_instances'] = self.scale_min_instances
         if hasattr(self, 'scale_request_timeout') and self.scale_request_timeout is not None:
             _dict['scale_request_timeout'] = self.scale_request_timeout
-        if hasattr(self, 'status') and self.status is not None:
-            _dict['status'] = self.status
+        if hasattr(self, 'status') and getattr(self, 'status') is not None:
+            _dict['status'] = getattr(self, 'status')
         if hasattr(self, 'status_details') and self.status_details is not None:
             if isinstance(self.status_details, dict):
                 _dict['status_details'] = self.status_details
@@ -3822,10 +3821,6 @@ class AppRevisionStatus:
         """
         Initialize a AppRevisionStatus object.
 
-        :param int actual_instances: (optional) The number of running instances of
-               the revision.
-        :param str reason: (optional) Optional information to provide more context
-               in case of a 'failed' or 'warning' status.
         """
         self.actual_instances = actual_instances
         self.reason = reason
@@ -3848,10 +3843,10 @@ class AppRevisionStatus:
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'actual_instances') and self.actual_instances is not None:
-            _dict['actual_instances'] = self.actual_instances
-        if hasattr(self, 'reason') and self.reason is not None:
-            _dict['reason'] = self.reason
+        if hasattr(self, 'actual_instances') and getattr(self, 'actual_instances') is not None:
+            _dict['actual_instances'] = getattr(self, 'actual_instances')
+        if hasattr(self, 'reason') and getattr(self, 'reason') is not None:
+            _dict['reason'] = getattr(self, 'reason')
         return _dict
 
     def _to_dict(self):
@@ -3915,12 +3910,6 @@ class AppStatus:
         """
         Initialize a AppStatus object.
 
-        :param str latest_created_revision: (optional) Latest app revision that has
-               been created.
-        :param str latest_ready_revision: (optional) Latest app revision that
-               reached a ready state.
-        :param str reason: (optional) Optional information to provide more context
-               in case of a 'failed' or 'warning' status.
         """
         self.latest_created_revision = latest_created_revision
         self.latest_ready_revision = latest_ready_revision
@@ -3946,12 +3935,12 @@ class AppStatus:
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'latest_created_revision') and self.latest_created_revision is not None:
-            _dict['latest_created_revision'] = self.latest_created_revision
-        if hasattr(self, 'latest_ready_revision') and self.latest_ready_revision is not None:
-            _dict['latest_ready_revision'] = self.latest_ready_revision
-        if hasattr(self, 'reason') and self.reason is not None:
-            _dict['reason'] = self.reason
+        if hasattr(self, 'latest_created_revision') and getattr(self, 'latest_created_revision') is not None:
+            _dict['latest_created_revision'] = getattr(self, 'latest_created_revision')
+        if hasattr(self, 'latest_ready_revision') and getattr(self, 'latest_ready_revision') is not None:
+            _dict['latest_ready_revision'] = getattr(self, 'latest_ready_revision')
+        if hasattr(self, 'reason') and getattr(self, 'reason') is not None:
+            _dict['reason'] = getattr(self, 'reason')
         return _dict
 
     def _to_dict(self):
@@ -3989,18 +3978,19 @@ class Build:
     """
     Response model for build definitions.
 
-    :attr str created_at: The date when the resource was created.
+    :attr str created_at: (optional) The date when the resource was created.
     :attr str entity_tag: The version of the build instance, which is used to
           achieve optimistic locking.
     :attr str href: (optional) When you provision a new build,  a URL is created
           identifying the location of the instance.
-    :attr str id: The identifier of the resource.
+    :attr str id: (optional) The identifier of the resource.
     :attr str name: (optional) The name of the build.
     :attr str output_image: The name of the image.
     :attr str output_secret: The secret that is required to access the image
           registry. Make sure that the secret is granted with push permissions towards the
           specified container registry namespace.
-    :attr str project_id: The ID of the project the resource is located in.
+    :attr str project_id: (optional) The ID of the project the resource is located
+          in.
     :attr str resource_type: (optional) The type of the build.
     :attr str source_context_dir: (optional) Option directory in the repository that
           contains the buildpacks file or the Dockerfile.
@@ -4038,19 +4028,19 @@ class Build:
 
     def __init__(
         self,
-        created_at: str,
         entity_tag: str,
-        id: str,
         output_image: str,
         output_secret: str,
-        project_id: str,
         source_type: str,
         source_url: str,
         strategy_size: str,
         strategy_type: str,
         *,
+        created_at: str = None,
         href: str = None,
+        id: str = None,
         name: str = None,
+        project_id: str = None,
         resource_type: str = None,
         source_context_dir: str = None,
         source_revision: str = None,
@@ -4063,15 +4053,12 @@ class Build:
         """
         Initialize a Build object.
 
-        :param str created_at: The date when the resource was created.
         :param str entity_tag: The version of the build instance, which is used to
                achieve optimistic locking.
-        :param str id: The identifier of the resource.
         :param str output_image: The name of the image.
         :param str output_secret: The secret that is required to access the image
                registry. Make sure that the secret is granted with push permissions
                towards the specified container registry namespace.
-        :param str project_id: The ID of the project the resource is located in.
         :param str source_type: Specifies the type of source to determine if your
                build source is in a repository or based on local source code.
                * local - For builds from local source code.
@@ -4088,10 +4075,7 @@ class Build:
                amount of resources used. Build sizes are `small`, `medium`, `large`,
                `xlarge`.
         :param str strategy_type: The strategy to use for building the image.
-        :param str href: (optional) When you provision a new build,  a URL is
-               created identifying the location of the instance.
         :param str name: (optional) The name of the build.
-        :param str resource_type: (optional) The type of the build.
         :param str source_context_dir: (optional) Option directory in the
                repository that contains the buildpacks file or the Dockerfile.
         :param str source_revision: (optional) Commit, tag, or branch in the source
@@ -4104,7 +4088,6 @@ class Build:
                requires authentication, the build will be created but cannot access any
                source code, until this property is provided, too. If the `source_type`
                value is `local`, this field must be omitted.
-        :param str status: (optional) The current status of the build.
         :param BuildStatus status_details: (optional) The detailed status of the
                build.
         :param str strategy_spec_file: (optional) Optional path to the
@@ -4139,8 +4122,6 @@ class Build:
         args = {}
         if 'created_at' in _dict:
             args['created_at'] = _dict.get('created_at')
-        else:
-            raise ValueError('Required property \'created_at\' not present in Build JSON')
         if 'entity_tag' in _dict:
             args['entity_tag'] = _dict.get('entity_tag')
         else:
@@ -4149,8 +4130,6 @@ class Build:
             args['href'] = _dict.get('href')
         if 'id' in _dict:
             args['id'] = _dict.get('id')
-        else:
-            raise ValueError('Required property \'id\' not present in Build JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         if 'output_image' in _dict:
@@ -4163,8 +4142,6 @@ class Build:
             raise ValueError('Required property \'output_secret\' not present in Build JSON')
         if 'project_id' in _dict:
             args['project_id'] = _dict.get('project_id')
-        else:
-            raise ValueError('Required property \'project_id\' not present in Build JSON')
         if 'resource_type' in _dict:
             args['resource_type'] = _dict.get('resource_type')
         if 'source_context_dir' in _dict:
@@ -4207,24 +4184,24 @@ class Build:
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = self.created_at
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = getattr(self, 'created_at')
         if hasattr(self, 'entity_tag') and self.entity_tag is not None:
             _dict['entity_tag'] = self.entity_tag
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'output_image') and self.output_image is not None:
             _dict['output_image'] = self.output_image
         if hasattr(self, 'output_secret') and self.output_secret is not None:
             _dict['output_secret'] = self.output_secret
-        if hasattr(self, 'project_id') and self.project_id is not None:
-            _dict['project_id'] = self.project_id
-        if hasattr(self, 'resource_type') and self.resource_type is not None:
-            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'project_id') and getattr(self, 'project_id') is not None:
+            _dict['project_id'] = getattr(self, 'project_id')
+        if hasattr(self, 'resource_type') and getattr(self, 'resource_type') is not None:
+            _dict['resource_type'] = getattr(self, 'resource_type')
         if hasattr(self, 'source_context_dir') and self.source_context_dir is not None:
             _dict['source_context_dir'] = self.source_context_dir
         if hasattr(self, 'source_revision') and self.source_revision is not None:
@@ -4235,8 +4212,8 @@ class Build:
             _dict['source_type'] = self.source_type
         if hasattr(self, 'source_url') and self.source_url is not None:
             _dict['source_url'] = self.source_url
-        if hasattr(self, 'status') and self.status is not None:
-            _dict['status'] = self.status
+        if hasattr(self, 'status') and getattr(self, 'status') is not None:
+            _dict['status'] = getattr(self, 'status')
         if hasattr(self, 'status_details') and self.status_details is not None:
             if isinstance(self.status_details, dict):
                 _dict['status_details'] = self.status_details
@@ -4603,17 +4580,18 @@ class BuildRun:
           referenced build. If not specified, make sure to specify at least the fields
           `strategy_type`, `source_url`, `output_image` and `output_secret` to describe
           the build run.
-    :attr str created_at: The date when the resource was created.
+    :attr str created_at: (optional) The date when the resource was created.
     :attr str href: (optional) When you trigger a new build run,  a URL is created
           identifying the location of the instance.
-    :attr str id: The identifier of the resource.
+    :attr str id: (optional) The identifier of the resource.
     :attr str name: The name of the build run.
     :attr str output_image: (optional) The name of the image.
     :attr str output_secret: (optional) The secret that is required to access the
           image registry. Make sure that the secret is granted with push permissions
           towards the specified container registry namespace.
-    :attr str project_id: The ID of the project the resource is located in.
-    :attr str resource_type: The type of the build run.
+    :attr str project_id: (optional) The ID of the project the resource is located
+          in.
+    :attr str resource_type: (optional) The type of the build run.
     :attr str service_account: (optional) Optional service account which is used for
           resource control.
     :attr str source_context_dir: (optional) Option directory in the repository that
@@ -4639,7 +4617,7 @@ class BuildRun:
           repository requires authentication, you need to provide a 'ssh' URL like
           `git@github.com:IBM/CodeEngine.git` along with a `source_secret` that points to
           a secret of format `ssh_auth`.
-    :attr str status: The current status of the build run.
+    :attr str status: (optional) The current status of the build run.
     :attr BuildRunStatus status_details: (optional) Current status condition of a
           build run.
     :attr str strategy_size: (optional) Optional size for the build, which
@@ -4655,22 +4633,22 @@ class BuildRun:
     def __init__(
         self,
         build_name: str,
-        created_at: str,
-        id: str,
         name: str,
-        project_id: str,
-        resource_type: str,
-        status: str,
         *,
+        created_at: str = None,
         href: str = None,
+        id: str = None,
         output_image: str = None,
         output_secret: str = None,
+        project_id: str = None,
+        resource_type: str = None,
         service_account: str = None,
         source_context_dir: str = None,
         source_revision: str = None,
         source_secret: str = None,
         source_type: str = None,
         source_url: str = None,
+        status: str = None,
         status_details: 'BuildRunStatus' = None,
         strategy_size: str = None,
         strategy_spec_file: str = None,
@@ -4685,14 +4663,7 @@ class BuildRun:
                the referenced build. If not specified, make sure to specify at least the
                fields `strategy_type`, `source_url`, `output_image` and `output_secret` to
                describe the build run.
-        :param str created_at: The date when the resource was created.
-        :param str id: The identifier of the resource.
         :param str name: The name of the build run.
-        :param str project_id: The ID of the project the resource is located in.
-        :param str resource_type: The type of the build run.
-        :param str status: The current status of the build run.
-        :param str href: (optional) When you trigger a new build run,  a URL is
-               created identifying the location of the instance.
         :param str output_image: (optional) The name of the image.
         :param str output_secret: (optional) The secret that is required to access
                the image registry. Make sure that the secret is granted with push
@@ -4768,14 +4739,10 @@ class BuildRun:
             raise ValueError('Required property \'build_name\' not present in BuildRun JSON')
         if 'created_at' in _dict:
             args['created_at'] = _dict.get('created_at')
-        else:
-            raise ValueError('Required property \'created_at\' not present in BuildRun JSON')
         if 'href' in _dict:
             args['href'] = _dict.get('href')
         if 'id' in _dict:
             args['id'] = _dict.get('id')
-        else:
-            raise ValueError('Required property \'id\' not present in BuildRun JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
@@ -4786,12 +4753,8 @@ class BuildRun:
             args['output_secret'] = _dict.get('output_secret')
         if 'project_id' in _dict:
             args['project_id'] = _dict.get('project_id')
-        else:
-            raise ValueError('Required property \'project_id\' not present in BuildRun JSON')
         if 'resource_type' in _dict:
             args['resource_type'] = _dict.get('resource_type')
-        else:
-            raise ValueError('Required property \'resource_type\' not present in BuildRun JSON')
         if 'service_account' in _dict:
             args['service_account'] = _dict.get('service_account')
         if 'source_context_dir' in _dict:
@@ -4806,8 +4769,6 @@ class BuildRun:
             args['source_url'] = _dict.get('source_url')
         if 'status' in _dict:
             args['status'] = _dict.get('status')
-        else:
-            raise ValueError('Required property \'status\' not present in BuildRun JSON')
         if 'status_details' in _dict:
             args['status_details'] = BuildRunStatus.from_dict(_dict.get('status_details'))
         if 'strategy_size' in _dict:
@@ -4830,22 +4791,22 @@ class BuildRun:
         _dict = {}
         if hasattr(self, 'build_name') and self.build_name is not None:
             _dict['build_name'] = self.build_name
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = self.created_at
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = getattr(self, 'created_at')
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
         if hasattr(self, 'output_image') and self.output_image is not None:
             _dict['output_image'] = self.output_image
         if hasattr(self, 'output_secret') and self.output_secret is not None:
             _dict['output_secret'] = self.output_secret
-        if hasattr(self, 'project_id') and self.project_id is not None:
-            _dict['project_id'] = self.project_id
-        if hasattr(self, 'resource_type') and self.resource_type is not None:
-            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'project_id') and getattr(self, 'project_id') is not None:
+            _dict['project_id'] = getattr(self, 'project_id')
+        if hasattr(self, 'resource_type') and getattr(self, 'resource_type') is not None:
+            _dict['resource_type'] = getattr(self, 'resource_type')
         if hasattr(self, 'service_account') and self.service_account is not None:
             _dict['service_account'] = self.service_account
         if hasattr(self, 'source_context_dir') and self.source_context_dir is not None:
@@ -4858,8 +4819,8 @@ class BuildRun:
             _dict['source_type'] = self.source_type
         if hasattr(self, 'source_url') and self.source_url is not None:
             _dict['source_url'] = self.source_url
-        if hasattr(self, 'status') and self.status is not None:
-            _dict['status'] = self.status
+        if hasattr(self, 'status') and getattr(self, 'status') is not None:
+            _dict['status'] = getattr(self, 'status')
         if hasattr(self, 'status_details') and self.status_details is not None:
             if isinstance(self.status_details, dict):
                 _dict['status_details'] = self.status_details
@@ -5052,12 +5013,6 @@ class BuildRunStatus:
         """
         Initialize a BuildRunStatus object.
 
-        :param str completion_time: (optional) Time the build run completed.
-        :param str output_digest: (optional) Describes the time the build run
-               completed.
-        :param str reason: (optional) Optional information to provide more context
-               in case of a 'failed' or 'warning' status.
-        :param str start_time: (optional) Time the build run started.
         """
         self.completion_time = completion_time
         self.output_digest = output_digest
@@ -5086,14 +5041,14 @@ class BuildRunStatus:
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'completion_time') and self.completion_time is not None:
-            _dict['completion_time'] = self.completion_time
-        if hasattr(self, 'output_digest') and self.output_digest is not None:
-            _dict['output_digest'] = self.output_digest
-        if hasattr(self, 'reason') and self.reason is not None:
-            _dict['reason'] = self.reason
-        if hasattr(self, 'start_time') and self.start_time is not None:
-            _dict['start_time'] = self.start_time
+        if hasattr(self, 'completion_time') and getattr(self, 'completion_time') is not None:
+            _dict['completion_time'] = getattr(self, 'completion_time')
+        if hasattr(self, 'output_digest') and getattr(self, 'output_digest') is not None:
+            _dict['output_digest'] = getattr(self, 'output_digest')
+        if hasattr(self, 'reason') and getattr(self, 'reason') is not None:
+            _dict['reason'] = getattr(self, 'reason')
+        if hasattr(self, 'start_time') and getattr(self, 'start_time') is not None:
+            _dict['start_time'] = getattr(self, 'start_time')
         return _dict
 
     def _to_dict(self):
@@ -5151,8 +5106,6 @@ class BuildStatus:
         """
         Initialize a BuildStatus object.
 
-        :param str reason: (optional) Optional information to provide more context
-               in case of a 'failed' or 'warning' status.
         """
         self.reason = reason
 
@@ -5172,8 +5125,8 @@ class BuildStatus:
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'reason') and self.reason is not None:
-            _dict['reason'] = self.reason
+        if hasattr(self, 'reason') and getattr(self, 'reason') is not None:
+            _dict['reason'] = getattr(self, 'reason')
         return _dict
 
     def _to_dict(self):
@@ -5217,45 +5170,40 @@ class ConfigMap:
     """
     Describes the model of a configmap.
 
-    :attr str created_at: The date when the resource was created.
+    :attr str created_at: (optional) The date when the resource was created.
     :attr dict data: (optional) The key-value pair for the config map. Values must
           be specified in `KEY=VALUE` format.
     :attr str entity_tag: The version of the config map instance, which is used to
           achieve optimistic locking.
     :attr str href: (optional) When you provision a new config map,  a URL is
           created identifying the location of the instance.
-    :attr str id: The identifier of the resource.
+    :attr str id: (optional) The identifier of the resource.
     :attr str name: The name of the config map.
-    :attr str project_id: The ID of the project the resource is located in.
-    :attr str resource_type: The type of the config map.
+    :attr str project_id: (optional) The ID of the project the resource is located
+          in.
+    :attr str resource_type: (optional) The type of the config map.
     """
 
     def __init__(
         self,
-        created_at: str,
         entity_tag: str,
-        id: str,
         name: str,
-        project_id: str,
-        resource_type: str,
         *,
+        created_at: str = None,
         data: dict = None,
         href: str = None,
+        id: str = None,
+        project_id: str = None,
+        resource_type: str = None,
     ) -> None:
         """
         Initialize a ConfigMap object.
 
-        :param str created_at: The date when the resource was created.
         :param str entity_tag: The version of the config map instance, which is
                used to achieve optimistic locking.
-        :param str id: The identifier of the resource.
         :param str name: The name of the config map.
-        :param str project_id: The ID of the project the resource is located in.
-        :param str resource_type: The type of the config map.
         :param dict data: (optional) The key-value pair for the config map. Values
                must be specified in `KEY=VALUE` format.
-        :param str href: (optional) When you provision a new config map,  a URL is
-               created identifying the location of the instance.
         """
         self.created_at = created_at
         self.data = data
@@ -5272,8 +5220,6 @@ class ConfigMap:
         args = {}
         if 'created_at' in _dict:
             args['created_at'] = _dict.get('created_at')
-        else:
-            raise ValueError('Required property \'created_at\' not present in ConfigMap JSON')
         if 'data' in _dict:
             args['data'] = _dict.get('data')
         if 'entity_tag' in _dict:
@@ -5284,20 +5230,14 @@ class ConfigMap:
             args['href'] = _dict.get('href')
         if 'id' in _dict:
             args['id'] = _dict.get('id')
-        else:
-            raise ValueError('Required property \'id\' not present in ConfigMap JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
             raise ValueError('Required property \'name\' not present in ConfigMap JSON')
         if 'project_id' in _dict:
             args['project_id'] = _dict.get('project_id')
-        else:
-            raise ValueError('Required property \'project_id\' not present in ConfigMap JSON')
         if 'resource_type' in _dict:
             args['resource_type'] = _dict.get('resource_type')
-        else:
-            raise ValueError('Required property \'resource_type\' not present in ConfigMap JSON')
         return cls(**args)
 
     @classmethod
@@ -5308,22 +5248,22 @@ class ConfigMap:
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = self.created_at
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = getattr(self, 'created_at')
         if hasattr(self, 'data') and self.data is not None:
             _dict['data'] = self.data
         if hasattr(self, 'entity_tag') and self.entity_tag is not None:
             _dict['entity_tag'] = self.entity_tag
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'project_id') and self.project_id is not None:
-            _dict['project_id'] = self.project_id
-        if hasattr(self, 'resource_type') and self.resource_type is not None:
-            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'project_id') and getattr(self, 'project_id') is not None:
+            _dict['project_id'] = getattr(self, 'project_id')
+        if hasattr(self, 'resource_type') and getattr(self, 'resource_type') is not None:
+            _dict['resource_type'] = getattr(self, 'resource_type')
         return _dict
 
     def _to_dict(self):
@@ -5682,12 +5622,12 @@ class Job:
     """
     Job is the response model for job resources.
 
-    :attr str created_at: The date when the resource was created.
+    :attr str created_at: (optional) The date when the resource was created.
     :attr str entity_tag: The version of the job instance, which is used to achieve
           optimistic locking.
-    :attr str href: When you provision a new job,  a URL is created identifying the
-          location of the instance.
-    :attr str id: The identifier of the resource.
+    :attr str href: (optional) When you provision a new job,  a URL is created
+          identifying the location of the instance.
+    :attr str id: (optional) The identifier of the resource.
     :attr str image_reference: The name of the image that is used for this job. The
           format is `REGISTRY/NAMESPACE/REPOSITORY:TAG` where `REGISTRY` and `TAG` are
           optional. If `REGISTRY` is not specified, the default is `docker.io`. If `TAG`
@@ -5698,10 +5638,12 @@ class Job:
           The image registry access secret is used to authenticate with a private registry
           when you download the container image. If the image reference points to a
           registry that requires authentication, the job / job runs will be created but
-          submitted job runs will fail, until this property is provided, too.
+          submitted job runs will fail, until this property is provided, too. This
+          property must not be set on a job run, which references a job template.
     :attr str name: The name of the job.
-    :attr str project_id: The ID of the project the resource is located in.
-    :attr str resource_type: The type of the job.
+    :attr str project_id: (optional) The ID of the project the resource is located
+          in.
+    :attr str resource_type: (optional) The type of the job.
     :attr List[str] run_arguments: Set arguments for the job that are passed to
           start job run containers. If not specified an empty string array will be applied
           and the arguments specified by the container image, will be used to start the
@@ -5715,13 +5657,14 @@ class Job:
     :attr List[EnvVar] run_env_variables: References to config maps, secrets or a
           literal values, which are exposed as environment variables in the job run.
     :attr str run_mode: The mode for runs of the job. Valid values are `task` and
-          `daemon`. In `task` mode, the `max_execution_time` and `retry_limit` options
+          `daemon`. In `task` mode, the `max_execution_time` and `retry_limit` properties
           apply. In `daemon` mode, since there is no timeout and failed instances are
-          restarted indefinitely, the `max_execution_time` and `retry_limit` options are
-          not allowed.
+          restarted indefinitely, the `max_execution_time` and `retry_limit` properties
+          are not allowed.
     :attr str run_service_account: (optional) The name of the service account. For
           built-in service accounts, you can use the shortened names `manager`, `none`,
-          `reader`, and `writer`.
+          `reader`, and `writer`. This property must not be set on a job run, which
+          references a job template.
     :attr List[VolumeMount] run_volume_mounts: Optional mounts of config maps or a
           secrets.
     :attr str scale_array_spec: Define a custom set of array indices as
@@ -5739,8 +5682,8 @@ class Job:
           shorthand expressions for GB and MB. For more information see [Units of
           measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
     :attr int scale_max_execution_time: (optional) The maximum execution time in
-          seconds for runs of the job. This option can only be specified if `mode` is
-          `task`.
+          seconds for runs of the job. This property can only be specified if `run_mode`
+          is `task`.
     :attr str scale_memory_limit: Optional amount of memory set for the instance of
           the job. For valid values see [Supported memory and CPU
           combinations](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo).
@@ -5749,20 +5692,15 @@ class Job:
           of
           measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
     :attr int scale_retry_limit: (optional) The number of times to rerun an instance
-          of the job before the job is marked as failed. This option can only be specified
-          if `mode` is `task`.
+          of the job before the job is marked as failed. This property can only be
+          specified if `run_mode` is `task`.
     """
 
     def __init__(
         self,
-        created_at: str,
         entity_tag: str,
-        href: str,
-        id: str,
         image_reference: str,
         name: str,
-        project_id: str,
-        resource_type: str,
         run_arguments: List[str],
         run_commands: List[str],
         run_env_variables: List['EnvVar'],
@@ -5773,7 +5711,12 @@ class Job:
         scale_ephemeral_storage_limit: str,
         scale_memory_limit: str,
         *,
+        created_at: str = None,
+        href: str = None,
+        id: str = None,
         image_secret: str = None,
+        project_id: str = None,
+        resource_type: str = None,
         run_as_user: int = None,
         run_service_account: str = None,
         scale_max_execution_time: int = None,
@@ -5782,12 +5725,8 @@ class Job:
         """
         Initialize a Job object.
 
-        :param str created_at: The date when the resource was created.
         :param str entity_tag: The version of the job instance, which is used to
                achieve optimistic locking.
-        :param str href: When you provision a new job,  a URL is created
-               identifying the location of the instance.
-        :param str id: The identifier of the resource.
         :param str image_reference: The name of the image that is used for this
                job. The format is `REGISTRY/NAMESPACE/REPOSITORY:TAG` where `REGISTRY` and
                `TAG` are optional. If `REGISTRY` is not specified, the default is
@@ -5795,8 +5734,6 @@ class Job:
                image reference points to a registry that requires authentication, make
                sure to also specify the property `image_secret`.
         :param str name: The name of the job.
-        :param str project_id: The ID of the project the resource is located in.
-        :param str resource_type: The type of the job.
         :param List[str] run_arguments: Set arguments for the job that are passed
                to start job run containers. If not specified an empty string array will be
                applied and the arguments specified by the container image, will be used to
@@ -5810,9 +5747,9 @@ class Job:
                run.
         :param str run_mode: The mode for runs of the job. Valid values are `task`
                and `daemon`. In `task` mode, the `max_execution_time` and `retry_limit`
-               options apply. In `daemon` mode, since there is no timeout and failed
+               properties apply. In `daemon` mode, since there is no timeout and failed
                instances are restarted indefinitely, the `max_execution_time` and
-               `retry_limit` options are not allowed.
+               `retry_limit` properties are not allowed.
         :param List[VolumeMount] run_volume_mounts: Optional mounts of config maps
                or a secrets.
         :param str scale_array_spec: Define a custom set of array indices as
@@ -5842,18 +5779,20 @@ class Job:
                private registry when you download the container image. If the image
                reference points to a registry that requires authentication, the job / job
                runs will be created but submitted job runs will fail, until this property
-               is provided, too.
+               is provided, too. This property must not be set on a job run, which
+               references a job template.
         :param int run_as_user: (optional) The user ID (UID) to run the application
                (e.g., 1001).
         :param str run_service_account: (optional) The name of the service account.
                For built-in service accounts, you can use the shortened names `manager`,
-               `none`, `reader`, and `writer`.
+               `none`, `reader`, and `writer`. This property must not be set on a job run,
+               which references a job template.
         :param int scale_max_execution_time: (optional) The maximum execution time
-               in seconds for runs of the job. This option can only be specified if `mode`
-               is `task`.
+               in seconds for runs of the job. This property can only be specified if
+               `run_mode` is `task`.
         :param int scale_retry_limit: (optional) The number of times to rerun an
-               instance of the job before the job is marked as failed. This option can
-               only be specified if `mode` is `task`.
+               instance of the job before the job is marked as failed. This property can
+               only be specified if `run_mode` is `task`.
         """
         self.created_at = created_at
         self.entity_tag = entity_tag
@@ -5884,20 +5823,14 @@ class Job:
         args = {}
         if 'created_at' in _dict:
             args['created_at'] = _dict.get('created_at')
-        else:
-            raise ValueError('Required property \'created_at\' not present in Job JSON')
         if 'entity_tag' in _dict:
             args['entity_tag'] = _dict.get('entity_tag')
         else:
             raise ValueError('Required property \'entity_tag\' not present in Job JSON')
         if 'href' in _dict:
             args['href'] = _dict.get('href')
-        else:
-            raise ValueError('Required property \'href\' not present in Job JSON')
         if 'id' in _dict:
             args['id'] = _dict.get('id')
-        else:
-            raise ValueError('Required property \'id\' not present in Job JSON')
         if 'image_reference' in _dict:
             args['image_reference'] = _dict.get('image_reference')
         else:
@@ -5910,12 +5843,8 @@ class Job:
             raise ValueError('Required property \'name\' not present in Job JSON')
         if 'project_id' in _dict:
             args['project_id'] = _dict.get('project_id')
-        else:
-            raise ValueError('Required property \'project_id\' not present in Job JSON')
         if 'resource_type' in _dict:
             args['resource_type'] = _dict.get('resource_type')
-        else:
-            raise ValueError('Required property \'resource_type\' not present in Job JSON')
         if 'run_arguments' in _dict:
             args['run_arguments'] = _dict.get('run_arguments')
         else:
@@ -5970,24 +5899,24 @@ class Job:
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = self.created_at
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = getattr(self, 'created_at')
         if hasattr(self, 'entity_tag') and self.entity_tag is not None:
             _dict['entity_tag'] = self.entity_tag
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
         if hasattr(self, 'image_reference') and self.image_reference is not None:
             _dict['image_reference'] = self.image_reference
         if hasattr(self, 'image_secret') and self.image_secret is not None:
             _dict['image_secret'] = self.image_secret
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'project_id') and self.project_id is not None:
-            _dict['project_id'] = self.project_id
-        if hasattr(self, 'resource_type') and self.resource_type is not None:
-            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'project_id') and getattr(self, 'project_id') is not None:
+            _dict['project_id'] = getattr(self, 'project_id')
+        if hasattr(self, 'resource_type') and getattr(self, 'resource_type') is not None:
+            _dict['resource_type'] = getattr(self, 'resource_type')
         if hasattr(self, 'run_arguments') and self.run_arguments is not None:
             _dict['run_arguments'] = self.run_arguments
         if hasattr(self, 'run_as_user') and self.run_as_user is not None:
@@ -6056,9 +5985,9 @@ class Job:
     class RunModeEnum(str, Enum):
         """
         The mode for runs of the job. Valid values are `task` and `daemon`. In `task`
-        mode, the `max_execution_time` and `retry_limit` options apply. In `daemon` mode,
-        since there is no timeout and failed instances are restarted indefinitely, the
-        `max_execution_time` and `retry_limit` options are not allowed.
+        mode, the `max_execution_time` and `retry_limit` properties apply. In `daemon`
+        mode, since there is no timeout and failed instances are restarted indefinitely,
+        the `max_execution_time` and `retry_limit` properties are not allowed.
         """
 
         TASK = 'task'
@@ -6067,7 +5996,8 @@ class Job:
     class RunServiceAccountEnum(str, Enum):
         """
         The name of the service account. For built-in service accounts, you can use the
-        shortened names `manager`, `none`, `reader`, and `writer`.
+        shortened names `manager`, `none`, `reader`, and `writer`. This property must not
+        be set on a job run, which references a job template.
         """
 
         DEFAULT = 'default'
@@ -6188,7 +6118,8 @@ class JobPatch:
           The image registry access secret is used to authenticate with a private registry
           when you download the container image. If the image reference points to a
           registry that requires authentication, the job / job runs will be created but
-          submitted job runs will fail, until this property is provided, too.
+          submitted job runs will fail, until this property is provided, too. This
+          property must not be set on a job run, which references a job template.
     :attr List[str] run_arguments: (optional) Set arguments for the job that are
           passed to start job run containers. If not specified an empty string array will
           be applied and the arguments specified by the container image, will be used to
@@ -6203,12 +6134,13 @@ class JobPatch:
           config maps, secrets or a literal values.
     :attr str run_mode: (optional) The mode for runs of the job. Valid values are
           `task` and `daemon`. In `task` mode, the `max_execution_time` and `retry_limit`
-          options apply. In `daemon` mode, since there is no timeout and failed instances
-          are restarted indefinitely, the `max_execution_time` and `retry_limit` options
-          are not allowed.
+          properties apply. In `daemon` mode, since there is no timeout and failed
+          instances are restarted indefinitely, the `max_execution_time` and `retry_limit`
+          properties are not allowed.
     :attr str run_service_account: (optional) The name of the service account. For
           built-in service accounts, you can use the shortened names `manager`, `none`,
-          `reader`, and `writer`.
+          `reader`, and `writer`. This property must not be set on a job run, which
+          references a job template.
     :attr List[VolumeMountPrototype] run_volume_mounts: (optional) Optional mounts
           of config maps or a secrets. In case this is provided, existing
           `run_volume_mounts` will be overwritten.
@@ -6227,8 +6159,8 @@ class JobPatch:
           are the shorthand expressions for GB and MB. For more information see [Units of
           measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
     :attr int scale_max_execution_time: (optional) The maximum execution time in
-          seconds for runs of the job. This option can only be specified if `mode` is
-          `task`.
+          seconds for runs of the job. This property can only be specified if `run_mode`
+          is `task`.
     :attr str scale_memory_limit: (optional) Optional amount of memory set for the
           instance of the job. For valid values see [Supported memory and CPU
           combinations](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo).
@@ -6237,8 +6169,8 @@ class JobPatch:
           of
           measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
     :attr int scale_retry_limit: (optional) The number of times to rerun an instance
-          of the job before the job is marked as failed. This option can only be specified
-          if `mode` is `task`.
+          of the job before the job is marked as failed. This property can only be
+          specified if `run_mode` is `task`.
     """
 
     def __init__(
@@ -6274,7 +6206,8 @@ class JobPatch:
                private registry when you download the container image. If the image
                reference points to a registry that requires authentication, the job / job
                runs will be created but submitted job runs will fail, until this property
-               is provided, too.
+               is provided, too. This property must not be set on a job run, which
+               references a job template.
         :param List[str] run_arguments: (optional) Set arguments for the job that
                are passed to start job run containers. If not specified an empty string
                array will be applied and the arguments specified by the container image,
@@ -6289,12 +6222,13 @@ class JobPatch:
                references to config maps, secrets or a literal values.
         :param str run_mode: (optional) The mode for runs of the job. Valid values
                are `task` and `daemon`. In `task` mode, the `max_execution_time` and
-               `retry_limit` options apply. In `daemon` mode, since there is no timeout
+               `retry_limit` properties apply. In `daemon` mode, since there is no timeout
                and failed instances are restarted indefinitely, the `max_execution_time`
-               and `retry_limit` options are not allowed.
+               and `retry_limit` properties are not allowed.
         :param str run_service_account: (optional) The name of the service account.
                For built-in service accounts, you can use the shortened names `manager`,
-               `none`, `reader`, and `writer`.
+               `none`, `reader`, and `writer`. This property must not be set on a job run,
+               which references a job template.
         :param List[VolumeMountPrototype] run_volume_mounts: (optional) Optional
                mounts of config maps or a secrets. In case this is provided, existing
                `run_volume_mounts` will be overwritten.
@@ -6314,8 +6248,8 @@ class JobPatch:
                information see [Units of
                measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
         :param int scale_max_execution_time: (optional) The maximum execution time
-               in seconds for runs of the job. This option can only be specified if `mode`
-               is `task`.
+               in seconds for runs of the job. This property can only be specified if
+               `run_mode` is `task`.
         :param str scale_memory_limit: (optional) Optional amount of memory set for
                the instance of the job. For valid values see [Supported memory and CPU
                combinations](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo).
@@ -6324,8 +6258,8 @@ class JobPatch:
                [Units of
                measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
         :param int scale_retry_limit: (optional) The number of times to rerun an
-               instance of the job before the job is marked as failed. This option can
-               only be specified if `mode` is `task`.
+               instance of the job before the job is marked as failed. This property can
+               only be specified if `run_mode` is `task`.
         """
         self.image_reference = image_reference
         self.image_secret = image_secret
@@ -6452,9 +6386,9 @@ class JobPatch:
     class RunModeEnum(str, Enum):
         """
         The mode for runs of the job. Valid values are `task` and `daemon`. In `task`
-        mode, the `max_execution_time` and `retry_limit` options apply. In `daemon` mode,
-        since there is no timeout and failed instances are restarted indefinitely, the
-        `max_execution_time` and `retry_limit` options are not allowed.
+        mode, the `max_execution_time` and `retry_limit` properties apply. In `daemon`
+        mode, since there is no timeout and failed instances are restarted indefinitely,
+        the `max_execution_time` and `retry_limit` properties are not allowed.
         """
 
         TASK = 'task'
@@ -6463,7 +6397,8 @@ class JobPatch:
     class RunServiceAccountEnum(str, Enum):
         """
         The name of the service account. For built-in service accounts, you can use the
-        shortened names `manager`, `none`, `reader`, and `writer`.
+        shortened names `manager`, `none`, `reader`, and `writer`. This property must not
+        be set on a job run, which references a job template.
         """
 
         DEFAULT = 'default'
@@ -6491,12 +6426,14 @@ class JobRun:
           The image registry access secret is used to authenticate with a private registry
           when you download the container image. If the image reference points to a
           registry that requires authentication, the job / job runs will be created but
-          submitted job runs will fail, until this property is provided, too.
+          submitted job runs will fail, until this property is provided, too. This
+          property must not be set on a job run, which references a job template.
     :attr str job_name: (optional) Optional name of the job reference of this job
           run. If specified, the job run will inherit the configuration of the referenced
           job.
     :attr str name: (optional) The name of the job run.
-    :attr str project_id: The ID of the project the resource is located in.
+    :attr str project_id: (optional) The ID of the project the resource is located
+          in.
     :attr str resource_type: (optional) The type of the job run.
     :attr List[str] run_arguments: Set arguments for the job that are passed to
           start job run containers. If not specified an empty string array will be applied
@@ -6512,12 +6449,13 @@ class JobRun:
           literal values, which are exposed as environment variables in the job run.
     :attr str run_mode: (optional) The mode for runs of the job. Valid values are
           `task` and `daemon`. In `task` mode, the `max_execution_time` and `retry_limit`
-          options apply. In `daemon` mode, since there is no timeout and failed instances
-          are restarted indefinitely, the `max_execution_time` and `retry_limit` options
-          are not allowed.
+          properties apply. In `daemon` mode, since there is no timeout and failed
+          instances are restarted indefinitely, the `max_execution_time` and `retry_limit`
+          properties are not allowed.
     :attr str run_service_account: (optional) The name of the service account. For
           built-in service accounts, you can use the shortened names `manager`, `none`,
-          `reader`, and `writer`.
+          `reader`, and `writer`. This property must not be set on a job run, which
+          references a job template.
     :attr List[VolumeMount] run_volume_mounts: Optional mounts of config maps or a
           secrets.
     :attr str scale_array_spec: (optional) Define a custom set of array indices as
@@ -6535,8 +6473,8 @@ class JobRun:
           are the shorthand expressions for GB and MB. For more information see [Units of
           measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
     :attr int scale_max_execution_time: (optional) The maximum execution time in
-          seconds for runs of the job. This option can only be specified if `mode` is
-          `task`.
+          seconds for runs of the job. This property can only be specified if `run_mode`
+          is `task`.
     :attr str scale_memory_limit: (optional) Optional amount of memory set for the
           instance of the job. For valid values see [Supported memory and CPU
           combinations](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo).
@@ -6545,8 +6483,8 @@ class JobRun:
           of
           measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
     :attr int scale_retry_limit: (optional) The number of times to rerun an instance
-          of the job before the job is marked as failed. This option can only be specified
-          if `mode` is `task`.
+          of the job before the job is marked as failed. This property can only be
+          specified if `run_mode` is `task`.
     :attr str status: (optional) The current status of the job run.
     :attr JobRunStatus status_details: (optional) The detailed status of the job
           run.
@@ -6554,7 +6492,6 @@ class JobRun:
 
     def __init__(
         self,
-        project_id: str,
         run_arguments: List[str],
         run_commands: List[str],
         run_env_variables: List['EnvVar'],
@@ -6567,6 +6504,7 @@ class JobRun:
         image_secret: str = None,
         job_name: str = None,
         name: str = None,
+        project_id: str = None,
         resource_type: str = None,
         run_as_user: int = None,
         run_mode: str = None,
@@ -6583,7 +6521,6 @@ class JobRun:
         """
         Initialize a JobRun object.
 
-        :param str project_id: The ID of the project the resource is located in.
         :param List[str] run_arguments: Set arguments for the job that are passed
                to start job run containers. If not specified an empty string array will be
                applied and the arguments specified by the container image, will be used to
@@ -6597,10 +6534,6 @@ class JobRun:
                run.
         :param List[VolumeMount] run_volume_mounts: Optional mounts of config maps
                or a secrets.
-        :param str created_at: (optional) The date when the resource was created.
-        :param str href: (optional) When you provision a new job run,  a URL is
-               created identifying the location of the instance.
-        :param str id: (optional) The identifier of the resource.
         :param str image_reference: (optional) The name of the image that is used
                for this job. The format is `REGISTRY/NAMESPACE/REPOSITORY:TAG` where
                `REGISTRY` and `TAG` are optional. If `REGISTRY` is not specified, the
@@ -6612,22 +6545,23 @@ class JobRun:
                private registry when you download the container image. If the image
                reference points to a registry that requires authentication, the job / job
                runs will be created but submitted job runs will fail, until this property
-               is provided, too.
+               is provided, too. This property must not be set on a job run, which
+               references a job template.
         :param str job_name: (optional) Optional name of the job reference of this
                job run. If specified, the job run will inherit the configuration of the
                referenced job.
         :param str name: (optional) The name of the job run.
-        :param str resource_type: (optional) The type of the job run.
         :param int run_as_user: (optional) The user ID (UID) to run the application
                (e.g., 1001).
         :param str run_mode: (optional) The mode for runs of the job. Valid values
                are `task` and `daemon`. In `task` mode, the `max_execution_time` and
-               `retry_limit` options apply. In `daemon` mode, since there is no timeout
+               `retry_limit` properties apply. In `daemon` mode, since there is no timeout
                and failed instances are restarted indefinitely, the `max_execution_time`
-               and `retry_limit` options are not allowed.
+               and `retry_limit` properties are not allowed.
         :param str run_service_account: (optional) The name of the service account.
                For built-in service accounts, you can use the shortened names `manager`,
-               `none`, `reader`, and `writer`.
+               `none`, `reader`, and `writer`. This property must not be set on a job run,
+               which references a job template.
         :param str scale_array_spec: (optional) Define a custom set of array
                indices as comma-separated list containing single values and
                hyphen-separated ranges like `5,12-14,23,27`. Each instance can pick up its
@@ -6644,8 +6578,8 @@ class JobRun:
                information see [Units of
                measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
         :param int scale_max_execution_time: (optional) The maximum execution time
-               in seconds for runs of the job. This option can only be specified if `mode`
-               is `task`.
+               in seconds for runs of the job. This property can only be specified if
+               `run_mode` is `task`.
         :param str scale_memory_limit: (optional) Optional amount of memory set for
                the instance of the job. For valid values see [Supported memory and CPU
                combinations](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo).
@@ -6654,9 +6588,8 @@ class JobRun:
                [Units of
                measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
         :param int scale_retry_limit: (optional) The number of times to rerun an
-               instance of the job before the job is marked as failed. This option can
-               only be specified if `mode` is `task`.
-        :param str status: (optional) The current status of the job run.
+               instance of the job before the job is marked as failed. This property can
+               only be specified if `run_mode` is `task`.
         :param JobRunStatus status_details: (optional) The detailed status of the
                job run.
         """
@@ -6705,8 +6638,6 @@ class JobRun:
             args['name'] = _dict.get('name')
         if 'project_id' in _dict:
             args['project_id'] = _dict.get('project_id')
-        else:
-            raise ValueError('Required property \'project_id\' not present in JobRun JSON')
         if 'resource_type' in _dict:
             args['resource_type'] = _dict.get('resource_type')
         if 'run_arguments' in _dict:
@@ -6757,12 +6688,12 @@ class JobRun:
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = self.created_at
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = getattr(self, 'created_at')
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
         if hasattr(self, 'image_reference') and self.image_reference is not None:
             _dict['image_reference'] = self.image_reference
         if hasattr(self, 'image_secret') and self.image_secret is not None:
@@ -6771,10 +6702,10 @@ class JobRun:
             _dict['job_name'] = self.job_name
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'project_id') and self.project_id is not None:
-            _dict['project_id'] = self.project_id
-        if hasattr(self, 'resource_type') and self.resource_type is not None:
-            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'project_id') and getattr(self, 'project_id') is not None:
+            _dict['project_id'] = getattr(self, 'project_id')
+        if hasattr(self, 'resource_type') and getattr(self, 'resource_type') is not None:
+            _dict['resource_type'] = getattr(self, 'resource_type')
         if hasattr(self, 'run_arguments') and self.run_arguments is not None:
             _dict['run_arguments'] = self.run_arguments
         if hasattr(self, 'run_as_user') and self.run_as_user is not None:
@@ -6813,8 +6744,8 @@ class JobRun:
             _dict['scale_memory_limit'] = self.scale_memory_limit
         if hasattr(self, 'scale_retry_limit') and self.scale_retry_limit is not None:
             _dict['scale_retry_limit'] = self.scale_retry_limit
-        if hasattr(self, 'status') and self.status is not None:
-            _dict['status'] = self.status
+        if hasattr(self, 'status') and getattr(self, 'status') is not None:
+            _dict['status'] = getattr(self, 'status')
         if hasattr(self, 'status_details') and self.status_details is not None:
             if isinstance(self.status_details, dict):
                 _dict['status_details'] = self.status_details
@@ -6850,9 +6781,9 @@ class JobRun:
     class RunModeEnum(str, Enum):
         """
         The mode for runs of the job. Valid values are `task` and `daemon`. In `task`
-        mode, the `max_execution_time` and `retry_limit` options apply. In `daemon` mode,
-        since there is no timeout and failed instances are restarted indefinitely, the
-        `max_execution_time` and `retry_limit` options are not allowed.
+        mode, the `max_execution_time` and `retry_limit` properties apply. In `daemon`
+        mode, since there is no timeout and failed instances are restarted indefinitely,
+        the `max_execution_time` and `retry_limit` properties are not allowed.
         """
 
         TASK = 'task'
@@ -6861,7 +6792,8 @@ class JobRun:
     class RunServiceAccountEnum(str, Enum):
         """
         The name of the service account. For built-in service accounts, you can use the
-        shortened names `manager`, `none`, `reader`, and `writer`.
+        shortened names `manager`, `none`, `reader`, and `writer`. This property must not
+        be set on a job run, which references a job template.
         """
 
         DEFAULT = 'default'
@@ -7011,15 +6943,6 @@ class JobRunStatus:
         """
         Initialize a JobRunStatus object.
 
-        :param str completion_time: (optional) Time the job run completed.
-        :param int failed: (optional) Number of failed job run instances.
-        :param int pending: (optional) Number of pending job run instances.
-        :param int requested: (optional) Number of requested job run instances.
-        :param int running: (optional) Number of running job run instances.
-        :param str start_time: (optional) Time the job run started.
-        :param int succeeded: (optional) Number of succeeded job run instances.
-        :param int unknown: (optional) Number of job run instances with unknown
-               state.
         """
         self.completion_time = completion_time
         self.failed = failed
@@ -7060,22 +6983,22 @@ class JobRunStatus:
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'completion_time') and self.completion_time is not None:
-            _dict['completion_time'] = self.completion_time
-        if hasattr(self, 'failed') and self.failed is not None:
-            _dict['failed'] = self.failed
-        if hasattr(self, 'pending') and self.pending is not None:
-            _dict['pending'] = self.pending
-        if hasattr(self, 'requested') and self.requested is not None:
-            _dict['requested'] = self.requested
-        if hasattr(self, 'running') and self.running is not None:
-            _dict['running'] = self.running
-        if hasattr(self, 'start_time') and self.start_time is not None:
-            _dict['start_time'] = self.start_time
-        if hasattr(self, 'succeeded') and self.succeeded is not None:
-            _dict['succeeded'] = self.succeeded
-        if hasattr(self, 'unknown') and self.unknown is not None:
-            _dict['unknown'] = self.unknown
+        if hasattr(self, 'completion_time') and getattr(self, 'completion_time') is not None:
+            _dict['completion_time'] = getattr(self, 'completion_time')
+        if hasattr(self, 'failed') and getattr(self, 'failed') is not None:
+            _dict['failed'] = getattr(self, 'failed')
+        if hasattr(self, 'pending') and getattr(self, 'pending') is not None:
+            _dict['pending'] = getattr(self, 'pending')
+        if hasattr(self, 'requested') and getattr(self, 'requested') is not None:
+            _dict['requested'] = getattr(self, 'requested')
+        if hasattr(self, 'running') and getattr(self, 'running') is not None:
+            _dict['running'] = getattr(self, 'running')
+        if hasattr(self, 'start_time') and getattr(self, 'start_time') is not None:
+            _dict['start_time'] = getattr(self, 'start_time')
+        if hasattr(self, 'succeeded') and getattr(self, 'succeeded') is not None:
+            _dict['succeeded'] = getattr(self, 'succeeded')
+        if hasattr(self, 'unknown') and getattr(self, 'unknown') is not None:
+            _dict['unknown'] = getattr(self, 'unknown')
         return _dict
 
     def _to_dict(self):
@@ -7216,52 +7139,42 @@ class Project:
     """
     Describes the model of a project.
 
-    :attr str account_id: An alphanumeric value identifying the account ID.
-    :attr str created_at: The date when the project was created.
-    :attr str crn: The CRN of the project.
-    :attr str href: When you provision a new resource, a URL is created identifying
-          the location of the instance.
-    :attr str id: The ID of the project.
+    :attr str account_id: (optional) An alphanumeric value identifying the account
+          ID.
+    :attr str created_at: (optional) The date when the project was created.
+    :attr str crn: (optional) The CRN of the project.
+    :attr str href: (optional) When you provision a new resource, a URL is created
+          identifying the location of the instance.
+    :attr str id: (optional) The ID of the project.
     :attr str name: The name of the project.
-    :attr str region: The region for your project deployment. Possible values:
-          'au-syd', 'br-sao', 'ca-tor', 'eu-de', 'eu-gb', 'jp-osa', 'jp-tok', 'us-east',
-          'us-south'.
+    :attr str region: (optional) The region for your project deployment. Possible
+          values: 'au-syd', 'br-sao', 'ca-tor', 'eu-de', 'eu-gb', 'jp-osa', 'jp-tok',
+          'us-east', 'us-south'.
     :attr str resource_group_id: The ID of the resource group.
-    :attr str resource_type: The type of the project.
-    :attr str status: The current state of the project. For example, if the project
-          is created and ready to get used, it will return active.
+    :attr str resource_type: (optional) The type of the project.
+    :attr str status: (optional) The current state of the project. For example, if
+          the project is created and ready to get used, it will return active.
     """
 
     def __init__(
         self,
-        account_id: str,
-        created_at: str,
-        crn: str,
-        href: str,
-        id: str,
         name: str,
-        region: str,
         resource_group_id: str,
-        resource_type: str,
-        status: str,
+        *,
+        account_id: str = None,
+        created_at: str = None,
+        crn: str = None,
+        href: str = None,
+        id: str = None,
+        region: str = None,
+        resource_type: str = None,
+        status: str = None,
     ) -> None:
         """
         Initialize a Project object.
 
-        :param str account_id: An alphanumeric value identifying the account ID.
-        :param str created_at: The date when the project was created.
-        :param str crn: The CRN of the project.
-        :param str href: When you provision a new resource, a URL is created
-               identifying the location of the instance.
-        :param str id: The ID of the project.
         :param str name: The name of the project.
-        :param str region: The region for your project deployment. Possible values:
-               'au-syd', 'br-sao', 'ca-tor', 'eu-de', 'eu-gb', 'jp-osa', 'jp-tok',
-               'us-east', 'us-south'.
         :param str resource_group_id: The ID of the resource group.
-        :param str resource_type: The type of the project.
-        :param str status: The current state of the project. For example, if the
-               project is created and ready to get used, it will return active.
         """
         self.account_id = account_id
         self.created_at = created_at
@@ -7280,44 +7193,28 @@ class Project:
         args = {}
         if 'account_id' in _dict:
             args['account_id'] = _dict.get('account_id')
-        else:
-            raise ValueError('Required property \'account_id\' not present in Project JSON')
         if 'created_at' in _dict:
             args['created_at'] = _dict.get('created_at')
-        else:
-            raise ValueError('Required property \'created_at\' not present in Project JSON')
         if 'crn' in _dict:
             args['crn'] = _dict.get('crn')
-        else:
-            raise ValueError('Required property \'crn\' not present in Project JSON')
         if 'href' in _dict:
             args['href'] = _dict.get('href')
-        else:
-            raise ValueError('Required property \'href\' not present in Project JSON')
         if 'id' in _dict:
             args['id'] = _dict.get('id')
-        else:
-            raise ValueError('Required property \'id\' not present in Project JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
             raise ValueError('Required property \'name\' not present in Project JSON')
         if 'region' in _dict:
             args['region'] = _dict.get('region')
-        else:
-            raise ValueError('Required property \'region\' not present in Project JSON')
         if 'resource_group_id' in _dict:
             args['resource_group_id'] = _dict.get('resource_group_id')
         else:
             raise ValueError('Required property \'resource_group_id\' not present in Project JSON')
         if 'resource_type' in _dict:
             args['resource_type'] = _dict.get('resource_type')
-        else:
-            raise ValueError('Required property \'resource_type\' not present in Project JSON')
         if 'status' in _dict:
             args['status'] = _dict.get('status')
-        else:
-            raise ValueError('Required property \'status\' not present in Project JSON')
         return cls(**args)
 
     @classmethod
@@ -7328,26 +7225,26 @@ class Project:
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'account_id') and self.account_id is not None:
-            _dict['account_id'] = self.account_id
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = self.created_at
-        if hasattr(self, 'crn') and self.crn is not None:
-            _dict['crn'] = self.crn
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'account_id') and getattr(self, 'account_id') is not None:
+            _dict['account_id'] = getattr(self, 'account_id')
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = getattr(self, 'created_at')
+        if hasattr(self, 'crn') and getattr(self, 'crn') is not None:
+            _dict['crn'] = getattr(self, 'crn')
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'region') and self.region is not None:
-            _dict['region'] = self.region
+        if hasattr(self, 'region') and getattr(self, 'region') is not None:
+            _dict['region'] = getattr(self, 'region')
         if hasattr(self, 'resource_group_id') and self.resource_group_id is not None:
             _dict['resource_group_id'] = self.resource_group_id
-        if hasattr(self, 'resource_type') and self.resource_type is not None:
-            _dict['resource_type'] = self.resource_type
-        if hasattr(self, 'status') and self.status is not None:
-            _dict['status'] = self.status
+        if hasattr(self, 'resource_type') and getattr(self, 'resource_type') is not None:
+            _dict['resource_type'] = getattr(self, 'resource_type')
+        if hasattr(self, 'status') and getattr(self, 'status') is not None:
+            _dict['status'] = getattr(self, 'status')
         return _dict
 
     def _to_dict(self):
@@ -7393,6 +7290,68 @@ class Project:
         PREPARING = 'preparing'
         CREATING = 'creating'
         CREATION_FAILED = 'creation_failed'
+
+
+class ProjectEgressIPAddresses:
+    """
+    Describes the model of egress IP addresses.
+
+    :attr List[str] private: (optional) List of IBM private network IP addresses.
+    :attr List[str] public: (optional) List of public IP addresses.
+    """
+
+    def __init__(self, *, private: List[str] = None, public: List[str] = None) -> None:
+        """
+        Initialize a ProjectEgressIPAddresses object.
+
+        :param List[str] private: (optional) List of IBM private network IP
+               addresses.
+        :param List[str] public: (optional) List of public IP addresses.
+        """
+        self.private = private
+        self.public = public
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'ProjectEgressIPAddresses':
+        """Initialize a ProjectEgressIPAddresses object from a json dictionary."""
+        args = {}
+        if 'private' in _dict:
+            args['private'] = _dict.get('private')
+        if 'public' in _dict:
+            args['public'] = _dict.get('public')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a ProjectEgressIPAddresses object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'private') and self.private is not None:
+            _dict['private'] = self.private
+        if hasattr(self, 'public') and self.public is not None:
+            _dict['public'] = self.public
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this ProjectEgressIPAddresses object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'ProjectEgressIPAddresses') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'ProjectEgressIPAddresses') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 
 class ProjectList:
@@ -7501,7 +7460,7 @@ class Secret:
     """
     Describes the model of a secret.
 
-    :attr str created_at: The date when the resource was created.
+    :attr str created_at: (optional) The date when the resource was created.
     :attr dict data: (optional) Data container that allows to specify config
           parameters and their values as a key-value map. Each key field must consist of
           alphanumeric characters, `-`, `_` or `.` and must not be exceed a max length of
@@ -7512,43 +7471,38 @@ class Secret:
     :attr str format: (optional) Specify the format of the secret.
     :attr str href: (optional) When you provision a new secret,  a URL is created
           identifying the location of the instance.
-    :attr str id: The identifier of the resource.
+    :attr str id: (optional) The identifier of the resource.
     :attr str name: The name of the secret.
-    :attr str project_id: The ID of the project the resource is located in.
-    :attr str resource_type: The type of the secret.
+    :attr str project_id: (optional) The ID of the project the resource is located
+          in.
+    :attr str resource_type: (optional) The type of the secret.
     """
 
     def __init__(
         self,
-        created_at: str,
         entity_tag: str,
-        id: str,
         name: str,
-        project_id: str,
-        resource_type: str,
         *,
+        created_at: str = None,
         data: dict = None,
         format: str = None,
         href: str = None,
+        id: str = None,
+        project_id: str = None,
+        resource_type: str = None,
     ) -> None:
         """
         Initialize a Secret object.
 
-        :param str created_at: The date when the resource was created.
         :param str entity_tag: The version of the secret instance, which is used to
                achieve optimistic locking.
-        :param str id: The identifier of the resource.
         :param str name: The name of the secret.
-        :param str project_id: The ID of the project the resource is located in.
-        :param str resource_type: The type of the secret.
         :param dict data: (optional) Data container that allows to specify config
                parameters and their values as a key-value map. Each key field must consist
                of alphanumeric characters, `-`, `_` or `.` and must not be exceed a max
                length of 253 characters. Each value field can consists of any character
                and must not be exceed a max length of 1048576 characters.
         :param str format: (optional) Specify the format of the secret.
-        :param str href: (optional) When you provision a new secret,  a URL is
-               created identifying the location of the instance.
         """
         self.created_at = created_at
         self.data = data
@@ -7566,8 +7520,6 @@ class Secret:
         args = {}
         if 'created_at' in _dict:
             args['created_at'] = _dict.get('created_at')
-        else:
-            raise ValueError('Required property \'created_at\' not present in Secret JSON')
         if 'data' in _dict:
             args['data'] = _dict.get('data')
         if 'entity_tag' in _dict:
@@ -7580,20 +7532,14 @@ class Secret:
             args['href'] = _dict.get('href')
         if 'id' in _dict:
             args['id'] = _dict.get('id')
-        else:
-            raise ValueError('Required property \'id\' not present in Secret JSON')
         if 'name' in _dict:
             args['name'] = _dict.get('name')
         else:
             raise ValueError('Required property \'name\' not present in Secret JSON')
         if 'project_id' in _dict:
             args['project_id'] = _dict.get('project_id')
-        else:
-            raise ValueError('Required property \'project_id\' not present in Secret JSON')
         if 'resource_type' in _dict:
             args['resource_type'] = _dict.get('resource_type')
-        else:
-            raise ValueError('Required property \'resource_type\' not present in Secret JSON')
         return cls(**args)
 
     @classmethod
@@ -7604,24 +7550,24 @@ class Secret:
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'created_at') and self.created_at is not None:
-            _dict['created_at'] = self.created_at
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = getattr(self, 'created_at')
         if hasattr(self, 'data') and self.data is not None:
             _dict['data'] = self.data
         if hasattr(self, 'entity_tag') and self.entity_tag is not None:
             _dict['entity_tag'] = self.entity_tag
         if hasattr(self, 'format') and self.format is not None:
             _dict['format'] = self.format
-        if hasattr(self, 'href') and self.href is not None:
-            _dict['href'] = self.href
-        if hasattr(self, 'id') and self.id is not None:
-            _dict['id'] = self.id
+        if hasattr(self, 'href') and getattr(self, 'href') is not None:
+            _dict['href'] = getattr(self, 'href')
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'project_id') and self.project_id is not None:
-            _dict['project_id'] = self.project_id
-        if hasattr(self, 'resource_type') and self.resource_type is not None:
-            _dict['resource_type'] = self.resource_type
+        if hasattr(self, 'project_id') and getattr(self, 'project_id') is not None:
+            _dict['project_id'] = getattr(self, 'project_id')
+        if hasattr(self, 'resource_type') and getattr(self, 'resource_type') is not None:
+            _dict['resource_type'] = getattr(self, 'resource_type')
         return _dict
 
     def _to_dict(self):
@@ -7654,6 +7600,35 @@ class Secret:
         SERVICE_ACCESS = 'service_access'
         REGISTRY = 'registry'
         OTHER = 'other'
+
+
+class SecretData:
+    """
+    Data container that allows to specify config parameters and their values as a
+    key-value map. Each key field must consist of alphanumeric characters, `-`, `_` or `.`
+    and must not be exceed a max length of 253 characters. Each value field can consists
+    of any character and must not be exceed a max length of 1048576 characters.
+
+    """
+
+    def __init__(self, **kwargs) -> None:
+        """
+        Initialize a SecretData object.
+
+        :param **kwargs: (optional) Any additional properties.
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(
+                [
+                    'SecretDataSSHSecretData',
+                    'SecretDataRegistrySecretData',
+                    'SecretDataTLSSecretData',
+                    'SecretDataGenericSecretData',
+                    'SecretDataBasicAuthSecretData',
+                ]
+            )
+        )
+        raise Exception(msg)
 
 
 class SecretList:
@@ -7939,6 +7914,458 @@ class VolumeMountPrototype:
 
         CONFIG_MAP = 'config_map'
         SECRET = 'secret'
+
+
+class SecretDataBasicAuthSecretData(SecretData):
+    """
+    SecretDataBasicAuthSecretData.
+
+    :attr str username: Basic auth username.
+    :attr str password: Basic auth password.
+    """
+
+    # The set of defined properties for the class
+    _properties = frozenset(['username', 'password'])
+
+    def __init__(self, username: str, password: str, **kwargs) -> None:
+        """
+        Initialize a SecretDataBasicAuthSecretData object.
+
+        :param str username: Basic auth username.
+        :param str password: Basic auth password.
+        :param **kwargs: (optional) Any additional properties.
+        """
+        # pylint: disable=super-init-not-called
+        self.username = username
+        self.password = password
+        for _key, _value in kwargs.items():
+            setattr(self, _key, _value)
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SecretDataBasicAuthSecretData':
+        """Initialize a SecretDataBasicAuthSecretData object from a json dictionary."""
+        args = {}
+        if 'username' in _dict:
+            args['username'] = _dict.get('username')
+        else:
+            raise ValueError('Required property \'username\' not present in SecretDataBasicAuthSecretData JSON')
+        if 'password' in _dict:
+            args['password'] = _dict.get('password')
+        else:
+            raise ValueError('Required property \'password\' not present in SecretDataBasicAuthSecretData JSON')
+        args.update({k: v for (k, v) in _dict.items() if k not in cls._properties})
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecretDataBasicAuthSecretData object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'username') and self.username is not None:
+            _dict['username'] = self.username
+        if hasattr(self, 'password') and self.password is not None:
+            _dict['password'] = self.password
+        for _key in [k for k in vars(self).keys() if k not in SecretDataBasicAuthSecretData._properties]:
+            _dict[_key] = getattr(self, _key)
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def get_properties(self) -> Dict:
+        """Return a dictionary of arbitrary properties from this instance of SecretDataBasicAuthSecretData"""
+        _dict = {}
+
+        for _key in [k for k in vars(self).keys() if k not in SecretDataBasicAuthSecretData._properties]:
+            _dict[_key] = getattr(self, _key)
+        return _dict
+
+    def set_properties(self, _dict: dict):
+        """Set a dictionary of arbitrary properties to this instance of SecretDataBasicAuthSecretData"""
+        for _key in [k for k in vars(self).keys() if k not in SecretDataBasicAuthSecretData._properties]:
+            delattr(self, _key)
+
+        for _key, _value in _dict.items():
+            if _key not in SecretDataBasicAuthSecretData._properties:
+                setattr(self, _key, _value)
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecretDataBasicAuthSecretData object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SecretDataBasicAuthSecretData') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SecretDataBasicAuthSecretData') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SecretDataGenericSecretData(SecretData):
+    """
+    Data container that allows to specify config parameters and their values as a
+    key-value map. Each key field must consist of alphanumeric characters, `-`, `_` or `.`
+    and must not be exceed a max length of 253 characters. Each value field can consists
+    of any character and must not be exceed a max length of 1048576 characters.
+
+    """
+
+    def __init__(self, **kwargs) -> None:
+        """
+        Initialize a SecretDataGenericSecretData object.
+
+        :param **kwargs: (optional) Any additional properties.
+        """
+        # pylint: disable=super-init-not-called
+        for _key, _value in kwargs.items():
+            setattr(self, _key, _value)
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SecretDataGenericSecretData':
+        """Initialize a SecretDataGenericSecretData object from a json dictionary."""
+        return cls(**_dict)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecretDataGenericSecretData object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        return vars(self)
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def get_properties(self) -> Dict:
+        """Return a dictionary of arbitrary properties from this instance of SecretDataGenericSecretData"""
+        _dict = {}
+
+        for _key in [k for k in vars(self).keys()]:
+            _dict[_key] = getattr(self, _key)
+        return _dict
+
+    def set_properties(self, _dict: dict):
+        """Set a dictionary of arbitrary properties to this instance of SecretDataGenericSecretData"""
+        for _key in [k for k in vars(self).keys()]:
+            delattr(self, _key)
+
+        for _key, _value in _dict.items():
+            setattr(self, _key, _value)
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecretDataGenericSecretData object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SecretDataGenericSecretData') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SecretDataGenericSecretData') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SecretDataRegistrySecretData(SecretData):
+    """
+    SecretDataRegistrySecretData.
+
+    :attr str username: Registry username.
+    :attr str password: Registry password.
+    :attr str server: Registry server.
+    :attr str email: Registry email address.
+    """
+
+    # The set of defined properties for the class
+    _properties = frozenset(['username', 'password', 'server', 'email'])
+
+    def __init__(self, username: str, password: str, server: str, email: str, **kwargs) -> None:
+        """
+        Initialize a SecretDataRegistrySecretData object.
+
+        :param str username: Registry username.
+        :param str password: Registry password.
+        :param str server: Registry server.
+        :param str email: Registry email address.
+        :param **kwargs: (optional) Any additional properties.
+        """
+        # pylint: disable=super-init-not-called
+        self.username = username
+        self.password = password
+        self.server = server
+        self.email = email
+        for _key, _value in kwargs.items():
+            setattr(self, _key, _value)
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SecretDataRegistrySecretData':
+        """Initialize a SecretDataRegistrySecretData object from a json dictionary."""
+        args = {}
+        if 'username' in _dict:
+            args['username'] = _dict.get('username')
+        else:
+            raise ValueError('Required property \'username\' not present in SecretDataRegistrySecretData JSON')
+        if 'password' in _dict:
+            args['password'] = _dict.get('password')
+        else:
+            raise ValueError('Required property \'password\' not present in SecretDataRegistrySecretData JSON')
+        if 'server' in _dict:
+            args['server'] = _dict.get('server')
+        else:
+            raise ValueError('Required property \'server\' not present in SecretDataRegistrySecretData JSON')
+        if 'email' in _dict:
+            args['email'] = _dict.get('email')
+        else:
+            raise ValueError('Required property \'email\' not present in SecretDataRegistrySecretData JSON')
+        args.update({k: v for (k, v) in _dict.items() if k not in cls._properties})
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecretDataRegistrySecretData object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'username') and self.username is not None:
+            _dict['username'] = self.username
+        if hasattr(self, 'password') and self.password is not None:
+            _dict['password'] = self.password
+        if hasattr(self, 'server') and self.server is not None:
+            _dict['server'] = self.server
+        if hasattr(self, 'email') and self.email is not None:
+            _dict['email'] = self.email
+        for _key in [k for k in vars(self).keys() if k not in SecretDataRegistrySecretData._properties]:
+            _dict[_key] = getattr(self, _key)
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def get_properties(self) -> Dict:
+        """Return a dictionary of arbitrary properties from this instance of SecretDataRegistrySecretData"""
+        _dict = {}
+
+        for _key in [k for k in vars(self).keys() if k not in SecretDataRegistrySecretData._properties]:
+            _dict[_key] = getattr(self, _key)
+        return _dict
+
+    def set_properties(self, _dict: dict):
+        """Set a dictionary of arbitrary properties to this instance of SecretDataRegistrySecretData"""
+        for _key in [k for k in vars(self).keys() if k not in SecretDataRegistrySecretData._properties]:
+            delattr(self, _key)
+
+        for _key, _value in _dict.items():
+            if _key not in SecretDataRegistrySecretData._properties:
+                setattr(self, _key, _value)
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecretDataRegistrySecretData object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SecretDataRegistrySecretData') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SecretDataRegistrySecretData') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SecretDataSSHSecretData(SecretData):
+    """
+    Secret Data field used by SSH secrets.
+
+    :attr str ssh_key: SSH key.
+    :attr str known_hosts: (optional) Known hosts.
+    """
+
+    # The set of defined properties for the class
+    _properties = frozenset(['ssh_key', 'known_hosts'])
+
+    def __init__(self, ssh_key: str, *, known_hosts: str = None, **kwargs) -> None:
+        """
+        Initialize a SecretDataSSHSecretData object.
+
+        :param str ssh_key: SSH key.
+        :param str known_hosts: (optional) Known hosts.
+        :param **kwargs: (optional) Any additional properties.
+        """
+        # pylint: disable=super-init-not-called
+        self.ssh_key = ssh_key
+        self.known_hosts = known_hosts
+        for _key, _value in kwargs.items():
+            setattr(self, _key, _value)
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SecretDataSSHSecretData':
+        """Initialize a SecretDataSSHSecretData object from a json dictionary."""
+        args = {}
+        if 'ssh_key' in _dict:
+            args['ssh_key'] = _dict.get('ssh_key')
+        else:
+            raise ValueError('Required property \'ssh_key\' not present in SecretDataSSHSecretData JSON')
+        if 'known_hosts' in _dict:
+            args['known_hosts'] = _dict.get('known_hosts')
+        args.update({k: v for (k, v) in _dict.items() if k not in cls._properties})
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecretDataSSHSecretData object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'ssh_key') and self.ssh_key is not None:
+            _dict['ssh_key'] = self.ssh_key
+        if hasattr(self, 'known_hosts') and self.known_hosts is not None:
+            _dict['known_hosts'] = self.known_hosts
+        for _key in [k for k in vars(self).keys() if k not in SecretDataSSHSecretData._properties]:
+            _dict[_key] = getattr(self, _key)
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def get_properties(self) -> Dict:
+        """Return a dictionary of arbitrary properties from this instance of SecretDataSSHSecretData"""
+        _dict = {}
+
+        for _key in [k for k in vars(self).keys() if k not in SecretDataSSHSecretData._properties]:
+            _dict[_key] = getattr(self, _key)
+        return _dict
+
+    def set_properties(self, _dict: dict):
+        """Set a dictionary of arbitrary properties to this instance of SecretDataSSHSecretData"""
+        for _key in [k for k in vars(self).keys() if k not in SecretDataSSHSecretData._properties]:
+            delattr(self, _key)
+
+        for _key, _value in _dict.items():
+            if _key not in SecretDataSSHSecretData._properties:
+                setattr(self, _key, _value)
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecretDataSSHSecretData object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SecretDataSSHSecretData') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SecretDataSSHSecretData') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SecretDataTLSSecretData(SecretData):
+    """
+    SecretDataTLSSecretData.
+
+    :attr str tls_cert: The TLS certificate used in a TLS secret.
+    :attr str tls_key: The TLS key used in a TLS secret.
+    """
+
+    # The set of defined properties for the class
+    _properties = frozenset(['tls_cert', 'tls_key'])
+
+    def __init__(self, tls_cert: str, tls_key: str, **kwargs) -> None:
+        """
+        Initialize a SecretDataTLSSecretData object.
+
+        :param str tls_cert: The TLS certificate used in a TLS secret.
+        :param str tls_key: The TLS key used in a TLS secret.
+        :param **kwargs: (optional) Any additional properties.
+        """
+        # pylint: disable=super-init-not-called
+        self.tls_cert = tls_cert
+        self.tls_key = tls_key
+        for _key, _value in kwargs.items():
+            setattr(self, _key, _value)
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SecretDataTLSSecretData':
+        """Initialize a SecretDataTLSSecretData object from a json dictionary."""
+        args = {}
+        if 'tls_cert' in _dict:
+            args['tls_cert'] = _dict.get('tls_cert')
+        else:
+            raise ValueError('Required property \'tls_cert\' not present in SecretDataTLSSecretData JSON')
+        if 'tls_key' in _dict:
+            args['tls_key'] = _dict.get('tls_key')
+        else:
+            raise ValueError('Required property \'tls_key\' not present in SecretDataTLSSecretData JSON')
+        args.update({k: v for (k, v) in _dict.items() if k not in cls._properties})
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecretDataTLSSecretData object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'tls_cert') and self.tls_cert is not None:
+            _dict['tls_cert'] = self.tls_cert
+        if hasattr(self, 'tls_key') and self.tls_key is not None:
+            _dict['tls_key'] = self.tls_key
+        for _key in [k for k in vars(self).keys() if k not in SecretDataTLSSecretData._properties]:
+            _dict[_key] = getattr(self, _key)
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def get_properties(self) -> Dict:
+        """Return a dictionary of arbitrary properties from this instance of SecretDataTLSSecretData"""
+        _dict = {}
+
+        for _key in [k for k in vars(self).keys() if k not in SecretDataTLSSecretData._properties]:
+            _dict[_key] = getattr(self, _key)
+        return _dict
+
+    def set_properties(self, _dict: dict):
+        """Set a dictionary of arbitrary properties to this instance of SecretDataTLSSecretData"""
+        for _key in [k for k in vars(self).keys() if k not in SecretDataTLSSecretData._properties]:
+            delattr(self, _key)
+
+        for _key, _value in _dict.items():
+            if _key not in SecretDataTLSSecretData._properties:
+                setattr(self, _key, _value)
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecretDataTLSSecretData object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SecretDataTLSSecretData') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SecretDataTLSSecretData') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
 
 
 ##############################################################################

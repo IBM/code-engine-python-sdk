@@ -43,7 +43,7 @@ class TestCodeEngineV2:
             cls.config = read_external_sources(CodeEngineV2.DEFAULT_SERVICE_NAME)
             assert cls.config is not None
 
-            cls.code_engine_service.enable_retries()
+            cls.code_engine_service.enable_retries(max_retries=0, retry_interval=10)
 
         print('Setup complete.')
 
@@ -53,7 +53,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_list_projects(self):
-
         response = self.code_engine_service.list_projects(
             limit=100,
         )
@@ -89,9 +88,8 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_create_project(self):
-
         response = self.code_engine_service.create_project(
-            name=f'sdk-e2e-python-{time.time()}',
+            name=f'sdk-e2e-python-{int(time.time())}',
             tags=['testString'],
         )
 
@@ -105,7 +103,7 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_get_project(self):
-
+        time.sleep(120)
         response = self.code_engine_service.get_project(
             id=pytest.e2e_test_project_id,
         )
@@ -117,8 +115,8 @@ class TestCodeEngineV2:
         # Assume that the project creation takes some time
         i = 0
         obtained_project = []
-        while i < 20:
-            time.sleep(10)
+        while i < 30:
+            time.sleep(15)
             proj_res = self.code_engine_service.get_project(
                 id=pytest.e2e_test_project_id,
             )
@@ -135,8 +133,17 @@ class TestCodeEngineV2:
         assert obtained_project['status'] == 'active'
 
     @needscredentials
-    def test_list_apps(self):
+    def test_get_project_egress_ips(self):
+        response = self.code_engine_service.get_project_egress_ips(
+            project_id=pytest.e2e_test_project_id,
+        )
 
+        assert response.get_status_code() == 200
+        project_egress_ip_addresses = response.get_result()
+        assert project_egress_ip_addresses is not None
+
+    @needscredentials
+    def test_list_apps(self):
         response = self.code_engine_service.list_apps(
             project_id=pytest.e2e_test_project_id,
             limit=100,
@@ -175,7 +182,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_create_app(self):
-
         # Construct a dict representation of a EnvVarPrototype model
         env_var_prototype_model = {
             'key': 'MY_VARIABLE',
@@ -224,7 +230,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_get_app(self):
-
         response = self.code_engine_service.get_app(
             project_id=pytest.e2e_test_project_id,
             name='my-app',
@@ -236,7 +241,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_update_app(self):
-
         # Construct a dict representation of a EnvVarPrototype model
         env_var_prototype_model = {
             'key': 'MY_VARIABLE',
@@ -291,7 +295,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_list_app_revisions(self):
-
         response = self.code_engine_service.list_app_revisions(
             project_id=pytest.e2e_test_project_id,
             app_name='my-app',
@@ -333,7 +336,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_get_app_revision(self):
-
         response = self.code_engine_service.get_app_revision(
             project_id=pytest.e2e_test_project_id,
             app_name='my-app',
@@ -346,7 +348,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_list_jobs(self):
-
         response = self.code_engine_service.list_jobs(
             project_id=pytest.e2e_test_project_id,
             limit=100,
@@ -385,7 +386,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_create_job(self):
-
         # Construct a dict representation of a EnvVarPrototype model
         env_var_prototype_model = {
             'key': 'MY_VARIABLE',
@@ -430,7 +430,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_get_job(self):
-
         response = self.code_engine_service.get_job(
             project_id=pytest.e2e_test_project_id,
             name='my-job',
@@ -442,7 +441,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_update_job(self):
-
         # Construct a dict representation of a EnvVarPrototype model
         env_var_prototype_model = {
             'key': 'MY_VARIABLE',
@@ -493,7 +491,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_list_job_runs(self):
-
         response = self.code_engine_service.list_job_runs(
             project_id=pytest.e2e_test_project_id,
             job_name='my-job',
@@ -535,7 +532,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_create_job_run(self):
-
         # Construct a dict representation of a EnvVarPrototype model
         env_var_prototype_model = {
             'key': 'MY_VARIABLE',
@@ -579,7 +575,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_get_job_run(self):
-
         response = self.code_engine_service.get_job_run(
             project_id=pytest.e2e_test_project_id,
             name='my-job-run',
@@ -591,7 +586,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_list_builds(self):
-
         response = self.code_engine_service.list_builds(
             project_id=pytest.e2e_test_project_id,
             limit=100,
@@ -630,7 +624,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_create_build(self):
-
         response = self.code_engine_service.create_build(
             project_id=pytest.e2e_test_project_id,
             name='my-build',
@@ -653,7 +646,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_get_build(self):
-
         response = self.code_engine_service.get_build(
             project_id=pytest.e2e_test_project_id,
             name='my-build',
@@ -665,7 +657,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_update_build(self):
-
         # Construct a dict representation of a BuildPatch model
         build_patch_model = {
             'output_image': 'private.de.icr.io/icr_namespace/image-name',
@@ -694,7 +685,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_list_build_runs(self):
-
         response = self.code_engine_service.list_build_runs(
             project_id=pytest.e2e_test_project_id,
             build_name='my-build',
@@ -736,7 +726,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_create_build_run(self):
-
         response = self.code_engine_service.create_build_run(
             project_id=pytest.e2e_test_project_id,
             build_name='my-build',
@@ -761,7 +750,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_get_build_run(self):
-
         response = self.code_engine_service.get_build_run(
             project_id=pytest.e2e_test_project_id,
             name='my-build-run',
@@ -773,7 +761,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_list_config_maps(self):
-
         response = self.code_engine_service.list_config_maps(
             project_id=pytest.e2e_test_project_id,
             limit=100,
@@ -812,7 +799,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_create_config_map(self):
-
         response = self.code_engine_service.create_config_map(
             project_id=pytest.e2e_test_project_id,
             name='my-config-map',
@@ -825,7 +811,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_get_config_map(self):
-
         response = self.code_engine_service.get_config_map(
             project_id=pytest.e2e_test_project_id,
             name='my-config-map',
@@ -837,7 +822,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_replace_config_map(self):
-
         response = self.code_engine_service.replace_config_map(
             project_id=pytest.e2e_test_project_id,
             name='my-config-map',
@@ -851,7 +835,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_list_secrets(self):
-
         response = self.code_engine_service.list_secrets(
             project_id=pytest.e2e_test_project_id,
             limit=100,
@@ -890,7 +873,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_create_secret(self):
-
         response = self.code_engine_service.create_secret(
             project_id=pytest.e2e_test_project_id,
             format='generic',
@@ -903,8 +885,62 @@ class TestCodeEngineV2:
         assert secret is not None
 
     @needscredentials
-    def test_get_secret(self):
+    def test_create_ssh_secret(self):
+        response = self.code_engine_service.create_secret(
+            project_id=pytest.e2e_test_project_id,
+            format='ssh_auth',
+            name='my-ssh-secret',
+            data={'ssh_key': '-----BEGIN RSA PRIVATE KEY----------END RSA PRIVATE KEY-----'},
+        )
 
+        assert response.get_status_code() == 201
+        secret = response.get_result()
+        assert secret is not None
+
+    @needscredentials
+    def test_create_tls_secret(self):
+        response = self.code_engine_service.create_secret(
+            project_id=pytest.e2e_test_project_id,
+            format='tls',
+            name='my-tls-secret',
+            data={
+                'tls_key': '-----BEGIN RSA PRIVATE KEY----------END RSA PRIVATE KEY-----',
+                'tls_cert': '---BEGIN CERTIFICATE------END CERTIFICATE---',
+            },
+        )
+
+        assert response.get_status_code() == 201
+        secret = response.get_result()
+        assert secret is not None
+
+    @needscredentials
+    def test_create_basic_auth_secret(self):
+        response = self.code_engine_service.create_secret(
+            project_id=pytest.e2e_test_project_id,
+            format='basic_auth',
+            name='my-basic-auth-secret',
+            data={'username': 'user1', 'password': 'pass1'},
+        )
+
+        assert response.get_status_code() == 201
+        secret = response.get_result()
+        assert secret is not None
+
+    @needscredentials
+    def test_create_registry_secret(self):
+        response = self.code_engine_service.create_secret(
+            project_id=pytest.e2e_test_project_id,
+            format='registry',
+            name='my-registry-secret',
+            data={'username': 'user1', 'password': 'pass1', 'server': 'github.com', 'email': 'myemail@email.com'},
+        )
+
+        assert response.get_status_code() == 201
+        secret = response.get_result()
+        assert secret is not None
+
+    @needscredentials
+    def test_get_secret(self):
         response = self.code_engine_service.get_secret(
             project_id=pytest.e2e_test_project_id,
             name='my-secret',
@@ -915,8 +951,51 @@ class TestCodeEngineV2:
         assert secret is not None
 
     @needscredentials
-    def test_replace_secret(self):
+    def test_get_ssh_secret(self):
+        response = self.code_engine_service.get_secret(
+            project_id=pytest.e2e_test_project_id,
+            name='my-ssh-secret',
+        )
 
+        assert response.get_status_code() == 200
+        secret = response.get_result()
+        assert secret is not None
+
+    @needscredentials
+    def test_get_tls_secret(self):
+        response = self.code_engine_service.get_secret(
+            project_id=pytest.e2e_test_project_id,
+            name='my-tls-secret',
+        )
+
+        assert response.get_status_code() == 200
+        secret = response.get_result()
+        assert secret is not None
+
+    @needscredentials
+    def test_get_basic_auth_secret(self):
+        response = self.code_engine_service.get_secret(
+            project_id=pytest.e2e_test_project_id,
+            name='my-basic-auth-secret',
+        )
+
+        assert response.get_status_code() == 200
+        secret = response.get_result()
+        assert secret is not None
+
+    @needscredentials
+    def test_get_registry_secret(self):
+        response = self.code_engine_service.get_secret(
+            project_id=pytest.e2e_test_project_id,
+            name='my-registry-secret',
+        )
+
+        assert response.get_status_code() == 200
+        secret = response.get_result()
+        assert secret is not None
+
+    @needscredentials
+    def test_replace_secret(self):
         response = self.code_engine_service.replace_secret(
             project_id=pytest.e2e_test_project_id,
             name='my-secret',
@@ -930,8 +1009,66 @@ class TestCodeEngineV2:
         assert secret is not None
 
     @needscredentials
-    def test_delete_app_revision(self):
+    def test_replace_ssh_secret(self):
+        response = self.code_engine_service.replace_secret(
+            project_id=pytest.e2e_test_project_id,
+            name='my-ssh-secret',
+            if_match='*',
+            data={'ssh_key': '-----BEGIN RSA PRIVATE KEY----------END RSA PRIVATE KEY-----'},
+            format='ssh_auth',
+        )
 
+        assert response.get_status_code() == 200
+        secret = response.get_result()
+        assert secret is not None
+
+    @needscredentials
+    def test_replace_tls_secret(self):
+        response = self.code_engine_service.replace_secret(
+            project_id=pytest.e2e_test_project_id,
+            name='my-tls-secret',
+            if_match='*',
+            data={
+                'tls_key': '-----BEGIN RSA PRIVATE KEY-----update-----END RSA PRIVATE KEY-----',
+                'tls_cert': '---BEGIN CERTIFICATE---update---END CERTIFICATE---',
+            },
+            format='tls',
+        )
+
+        assert response.get_status_code() == 200
+        secret = response.get_result()
+        assert secret is not None
+
+    @needscredentials
+    def test_replace_basic_auth_secret(self):
+        response = self.code_engine_service.replace_secret(
+            project_id=pytest.e2e_test_project_id,
+            name='my-basic-auth-secret',
+            if_match='*',
+            data={'username': 'user2', 'password': 'pass2'},
+            format='basic_auth',
+        )
+
+        assert response.get_status_code() == 200
+        secret = response.get_result()
+        assert secret is not None
+
+    @needscredentials
+    def test_replace_registry_secret(self):
+        response = self.code_engine_service.replace_secret(
+            project_id=pytest.e2e_test_project_id,
+            name='my-registry-secret',
+            if_match='*',
+            data={'username': 'user2', 'password': 'pass2', 'server': 'github.com', 'email': 'myemail@email.com'},
+            format='registry',
+        )
+
+        assert response.get_status_code() == 200
+        secret = response.get_result()
+        assert secret is not None
+
+    @needscredentials
+    def test_delete_app_revision(self):
         response = self.code_engine_service.delete_app_revision(
             project_id=pytest.e2e_test_project_id,
             app_name='my-app',
@@ -942,7 +1079,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_delete_app(self):
-
         response = self.code_engine_service.delete_app(
             project_id=pytest.e2e_test_project_id,
             name='my-app',
@@ -952,7 +1088,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_delete_job_run(self):
-
         response = self.code_engine_service.delete_job_run(
             project_id=pytest.e2e_test_project_id,
             name='my-job-run',
@@ -962,7 +1097,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_delete_job(self):
-
         response = self.code_engine_service.delete_job(
             project_id=pytest.e2e_test_project_id,
             name='my-job',
@@ -972,7 +1106,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_delete_build_run(self):
-
         response = self.code_engine_service.delete_build_run(
             project_id=pytest.e2e_test_project_id,
             name='my-build-run',
@@ -982,7 +1115,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_delete_build(self):
-
         response = self.code_engine_service.delete_build(
             project_id=pytest.e2e_test_project_id,
             name='my-build',
@@ -992,7 +1124,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_delete_config_map(self):
-
         response = self.code_engine_service.delete_config_map(
             project_id=pytest.e2e_test_project_id,
             name='my-config-map',
@@ -1002,7 +1133,6 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_delete_secret(self):
-
         response = self.code_engine_service.delete_secret(
             project_id=pytest.e2e_test_project_id,
             name='my-secret',
@@ -1011,8 +1141,43 @@ class TestCodeEngineV2:
         assert response.get_status_code() == 202
 
     @needscredentials
-    def test_delete_project(self):
+    def test_delete_ssh_secret(self):
+        response = self.code_engine_service.delete_secret(
+            project_id=pytest.e2e_test_project_id,
+            name='my-ssh-secret',
+        )
 
+        assert response.get_status_code() == 202
+
+    @needscredentials
+    def test_delete_tls_secret(self):
+        response = self.code_engine_service.delete_secret(
+            project_id=pytest.e2e_test_project_id,
+            name='my-tls-secret',
+        )
+
+        assert response.get_status_code() == 202
+
+    @needscredentials
+    def test_delete_basic_auth_secret(self):
+        response = self.code_engine_service.delete_secret(
+            project_id=pytest.e2e_test_project_id,
+            name='my-basic-auth-secret',
+        )
+
+        assert response.get_status_code() == 202
+
+    @needscredentials
+    def test_delete_registry_secret(self):
+        response = self.code_engine_service.delete_secret(
+            project_id=pytest.e2e_test_project_id,
+            name='my-registry-secret',
+        )
+
+        assert response.get_status_code() == 202
+
+    @needscredentials
+    def test_delete_project(self):
         response = self.code_engine_service.delete_project(
             id=pytest.e2e_test_project_id,
         )

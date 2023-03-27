@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python -m pylint ibm_code_engine_sdk test --exit-zero
+python3 -m pylint ibm_code_engine_sdk test --exit-zero

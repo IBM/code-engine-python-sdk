@@ -1,6 +1,0 @@
-{
-    "apiPackage": "ibm_code_engine_sdk",
-    "serviceClass": "CodeEngineV2",
-    "unitTestFolder": "test/unit/",
-    "intTestFolder": "test/integration"
-}

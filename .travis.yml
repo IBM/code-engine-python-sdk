@@ -4,6 +4,8 @@ language: python
 python:
   - "3.11"
 
+version: ~> 1.0
+
 cache: pip
 
 # Only run on main (still tests PRs)
@@ -25,7 +27,7 @@ install:
 - sudo apt-get update
 - sudo apt-get install pandoc
 - pip install pypandoc
-- echo -e "machine github.ibm.com\n  login $GITHUB_OAUTH_TOKEN" > ~/.netrc
+- echo -e "machine github.ibm.com\n  login $GITHUB_TOKEN" > ~/.netrc
 - pip install setuptools=="60.8.2"
 
 script:

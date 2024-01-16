@@ -83,3 +83,7 @@ node_modules/
 
 # ignore the generated integration test files, as they cannot be used without manual editing
 test/integration/test_code_engine_v2.py
+
+# ignore the generated SSH and TLS keys and certs
+test/integration/domain*
+test/integration/sshkey*

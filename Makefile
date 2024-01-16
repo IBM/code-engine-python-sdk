@@ -26,6 +26,7 @@ test-unit:
 	python3 -m pytest --cov=ibm_code_engine_sdk test/unit
 
 test-int:
+	./test/integration/prepare-integration-tests.sh
 	python3 -m pytest test/integration
 
 test-examples:

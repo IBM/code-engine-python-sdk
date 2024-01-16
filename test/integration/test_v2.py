@@ -886,11 +886,14 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_create_ssh_secret(self):
+        file = open("test/integration/sshkey.pem", "r")
+        sshKeyContent = file.read()
+        file.close()
         response = self.code_engine_service.create_secret(
             project_id=pytest.e2e_test_project_id,
             format='ssh_auth',
             name='my-ssh-secret',
-            data={'ssh_key': '-----BEGIN RSA PRIVATE KEY----------END RSA PRIVATE KEY-----'},
+            data={'ssh_key': sshKeyContent},
         )
 
         assert response.get_status_code() == 201
@@ -899,13 +902,19 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_create_tls_secret(self):
+        tlsKeyFile = open("test/integration/domain.key", "r")
+        tlsKeyContent = tlsKeyFile.read()
+        tlsKeyFile.close()
+        tlsCertFile = open("test/integration/domain.crt", "r")
+        tlsCertContent = tlsCertFile.read()
+        tlsCertFile.close()
         response = self.code_engine_service.create_secret(
             project_id=pytest.e2e_test_project_id,
             format='tls',
             name='my-tls-secret',
             data={
-                'tls_key': '-----BEGIN RSA PRIVATE KEY----------END RSA PRIVATE KEY-----',
-                'tls_cert': '---BEGIN CERTIFICATE------END CERTIFICATE---',
+                'tls_key': tlsKeyContent,
+                'tls_cert': tlsCertContent,
             },
         )
 
@@ -1010,11 +1019,14 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_replace_ssh_secret(self):
+        file = open("test/integration/sshkey.pem", "r")
+        sshKeyContent = file.read()
+        file.close()
         response = self.code_engine_service.replace_secret(
             project_id=pytest.e2e_test_project_id,
             name='my-ssh-secret',
             if_match='*',
-            data={'ssh_key': '-----BEGIN RSA PRIVATE KEY----------END RSA PRIVATE KEY-----'},
+            data={'ssh_key': sshKeyContent},
             format='ssh_auth',
         )
 
@@ -1024,13 +1036,19 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_replace_tls_secret(self):
+        tlsKeyFile = open("test/integration/domain.key", "r")
+        tlsKeyContent = tlsKeyFile.read()
+        tlsKeyFile.close()
+        tlsCertFile = open("test/integration/domain.crt", "r")
+        tlsCertContent = tlsCertFile.read()
+        tlsCertFile.close()
         response = self.code_engine_service.replace_secret(
             project_id=pytest.e2e_test_project_id,
             name='my-tls-secret',
             if_match='*',
             data={
-                'tls_key': '-----BEGIN RSA PRIVATE KEY-----update-----END RSA PRIVATE KEY-----',
-                'tls_cert': '---BEGIN CERTIFICATE---update---END CERTIFICATE---',
+                'tls_key': tlsKeyContent,
+                'tls_cert': tlsCertContent,
             },
             format='tls',
         )

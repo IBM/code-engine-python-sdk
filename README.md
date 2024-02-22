@@ -67,7 +67,7 @@ easy_install --upgrade "ibm_code_engine_sdk>=3.1.0"
 ```
 
 ## Using the SDK
-Examples and a demo are available in the [example](/example) folder.
+Examples and a demo are available in the [examples](/examples) folder.
 
 For general SDK usage information, please see [this link](https://github.com/IBM/ibm-cloud-sdk-common/blob/main/README.md)
 

@@ -87,3 +87,6 @@ test/integration/test_code_engine_v2.py
 # ignore the generated SSH and TLS keys and certs
 test/integration/domain*
 test/integration/sshkey*
+
+# API repo (pulled from Github)
+api

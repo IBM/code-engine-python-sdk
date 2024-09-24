@@ -22,6 +22,9 @@ before_install:
 - echo "CODE_ENGINE_AUTH_TYPE=iam" >> code_engine_v2.env
 - echo "CODE_ENGINE_APIKEY=$CE_API_KEY" >> code_engine_v2.env
 - echo "CODE_ENGINE_AUTH_URL=$IAM_ENDPOINT" >> code_engine_v2.env
+- echo "CODE_ENGINE_DOMAIN_MAPPING_NAME=api-unit-test-tls.e2e-board.info" >> code_engine_v2.env
+- echo "CODE_ENGINE_TLS_KEY_FILE_PATH=api/test/integration/tls-files/demohero.key" >> code_engine_v2.env
+- echo "CODE_ENGINE_TLS_CERT_FILE_PATH=api/test/integration/tls-files/demohero.crt" >> code_engine_v2.env
 
 install:
 - sudo apt-get update
@@ -32,6 +35,7 @@ install:
 
 script:
 - make ci
+- ./scripts/get-dependencies.sh # get api repo for access to latest domain mapping cert
 - make test-int
 
 before_deploy:

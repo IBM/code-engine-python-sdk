@@ -20,15 +20,17 @@ Python client library to interact with the [IBM Cloud Code Engine API](https://c
 
 <!-- toc -->
 
-- [Overview](#overview)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Using the SDK](#using-the-sdk)
-- [Questions](#questions)
-- [Issues](#issues)
-- [Open source @ IBM](#open-source--ibm)
-- [Contributing](#contributing)
-- [License](#license)
+- [Python SDK for IBM Cloud Code Engine 3.1.0](#python-sdk-for-ibm-cloud-code-engine-310)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Using the SDK](#using-the-sdk)
+  - [Questions](#questions)
+  - [Issues](#issues)
+  - [Open source @ IBM](#open-source--ibm)
+  - [Contributing](#contributing)
+  - [License](#license)
 
 <!-- tocstop -->
 
@@ -65,7 +67,7 @@ easy_install --upgrade "ibm_code_engine_sdk>=4.0.0"
 ```
 
 ## Using the SDK
-Examples and a demo are available in the [example](/example) folder.
+Examples and a demo are available in the [examples](/examples) folder.
 
 For general SDK usage information, please see [this link](https://github.com/IBM/ibm-cloud-sdk-common/blob/main/README.md)
 

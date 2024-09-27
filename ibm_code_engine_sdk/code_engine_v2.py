@@ -13479,7 +13479,7 @@ class SecretDataBasicAuthSecretData(SecretData):
                     raise ValueError('Value for additional property {} must be of type str'.format(k))
                 setattr(self, k, v)
             else:
-                raise ValueError('Property {} cannot be specified as an additional property'.format(_key))
+                raise ValueError('Property {} cannot be specified as an additional property'.format(k))
 
     def __str__(self) -> str:
         """Return a `str` version of this SecretDataBasicAuthSecretData object."""
@@ -13691,7 +13691,7 @@ class SecretDataRegistrySecretData(SecretData):
                     raise ValueError('Value for additional property {} must be of type str'.format(k))
                 setattr(self, k, v)
             else:
-                raise ValueError('Property {} cannot be specified as an additional property'.format(_key))
+                raise ValueError('Property {} cannot be specified as an additional property'.format(k))
 
     def __str__(self) -> str:
         """Return a `str` version of this SecretDataRegistrySecretData object."""
@@ -13800,7 +13800,7 @@ class SecretDataSSHSecretData(SecretData):
                     raise ValueError('Value for additional property {} must be of type str'.format(k))
                 setattr(self, k, v)
             else:
-                raise ValueError('Property {} cannot be specified as an additional property'.format(_key))
+                raise ValueError('Property {} cannot be specified as an additional property'.format(k))
 
     def __str__(self) -> str:
         """Return a `str` version of this SecretDataSSHSecretData object."""
@@ -13910,7 +13910,7 @@ class SecretDataTLSSecretData(SecretData):
                     raise ValueError('Value for additional property {} must be of type str'.format(k))
                 setattr(self, k, v)
             else:
-                raise ValueError('Property {} cannot be specified as an additional property'.format(_key))
+                raise ValueError('Property {} cannot be specified as an additional property'.format(k))
 
     def __str__(self) -> str:
         """Return a `str` version of this SecretDataTLSSecretData object."""

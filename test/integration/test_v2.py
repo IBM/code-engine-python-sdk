@@ -886,11 +886,14 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_create_ssh_secret(self):
+        file = open("test/integration/sshkey.pem", "r")
+        sshKeyContent = file.read()
+        file.close()
         response = self.code_engine_service.create_secret(
             project_id=pytest.e2e_test_project_id,
             format='ssh_auth',
             name='my-ssh-secret',
-            data={'ssh_key': '-----BEGIN RSA PRIVATE KEY----------END RSA PRIVATE KEY-----'},
+            data={'ssh_key': sshKeyContent},
         )
 
         assert response.get_status_code() == 201
@@ -899,19 +902,100 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_create_tls_secret(self):
+        tlsKeyFilePath = self.config.get('TLS_KEY_FILE_PATH')
+        assert tlsKeyFilePath is not None
+        tlsCertFilePath = self.config.get('TLS_CERT_FILE_PATH')
+        assert tlsCertFilePath is not None
+
+        tlsKeyFile = open(tlsKeyFilePath, "r")
+        tlsKeyContent = tlsKeyFile.read()
+        tlsKeyFile.close()
+        tlsCertFile = open(tlsCertFilePath, "r")
+        tlsCertContent = tlsCertFile.read()
+        tlsCertFile.close()
         response = self.code_engine_service.create_secret(
             project_id=pytest.e2e_test_project_id,
             format='tls',
             name='my-tls-secret',
             data={
-                'tls_key': '-----BEGIN RSA PRIVATE KEY----------END RSA PRIVATE KEY-----',
-                'tls_cert': '---BEGIN CERTIFICATE------END CERTIFICATE---',
+                'tls_key': tlsKeyContent,
+                'tls_cert': tlsCertContent,
             },
         )
 
         assert response.get_status_code() == 201
         secret = response.get_result()
         assert secret is not None
+
+    @needscredentials
+    def test_create_domain_mapping(self):
+        # store the domainMappingName in the pytest context to be able to share it across tests
+        pytest.e2e_test_domain_mapping_name = self.config.get('DOMAIN_MAPPING_NAME')
+
+        component_ref_model = {
+            'name': 'my-app',
+            'resource_type': 'app_v2',
+        }
+        response = self.code_engine_service.create_domain_mapping(
+            project_id=pytest.e2e_test_project_id,
+            component=component_ref_model,
+            name=pytest.e2e_test_domain_mapping_name,
+            tls_secret='my-tls-secret',
+        )
+        assert response.get_status_code() == 201
+        domain_mapping = response.get_result()
+        assert domain_mapping is not None
+
+    @needscredentials
+    def test_get_domain_mapping(self):
+        response = self.code_engine_service.get_domain_mapping(
+            project_id=pytest.e2e_test_project_id,
+            name=pytest.e2e_test_domain_mapping_name,
+        )
+        assert response.get_status_code() == 200
+        domain_mapping = response.get_result()
+        assert domain_mapping is not None
+
+    @needscredentials
+    def test_create_app_2(self):
+        response = self.code_engine_service.create_app(
+            project_id=pytest.e2e_test_project_id,
+            image_reference='icr.io/codeengine/helloworld',
+            name='my-app-2',
+        )
+
+        assert response.get_status_code() == 201
+        app = response.get_result()
+        assert app is not None
+
+    @needscredentials
+    def test_update_domain_mapping(self):
+        component_ref_model = {
+            'name': 'my-app-2',
+            'resource_type': 'app_v2',
+        }
+        domain_mapping_patch_model = {
+            'name': component_ref_model,
+        }
+        response = self.code_engine_service.update_domain_mapping(
+            project_id=pytest.e2e_test_project_id,
+            name=pytest.e2e_test_domain_mapping_name,
+            if_match='*',
+            domain_mapping=domain_mapping_patch_model,
+        )
+
+        assert response.get_status_code() == 200
+        domain_mapping = response.get_result()
+        assert domain_mapping is not None
+
+    @needscredentials
+    def test_delete_domain_mapping_example(self):
+        response = self.code_engine_service.delete_domain_mapping(
+            project_id=pytest.e2e_test_project_id,
+            name=pytest.e2e_test_domain_mapping_name,
+        )
+
+        assert response.get_status_code() == 202
 
     @needscredentials
     def test_create_basic_auth_secret(self):
@@ -1010,11 +1094,14 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_replace_ssh_secret(self):
+        file = open("test/integration/sshkey.pem", "r")
+        sshKeyContent = file.read()
+        file.close()
         response = self.code_engine_service.replace_secret(
             project_id=pytest.e2e_test_project_id,
             name='my-ssh-secret',
             if_match='*',
-            data={'ssh_key': '-----BEGIN RSA PRIVATE KEY----------END RSA PRIVATE KEY-----'},
+            data={'ssh_key': sshKeyContent},
             format='ssh_auth',
         )
 
@@ -1024,13 +1111,19 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_replace_tls_secret(self):
+        tlsKeyFile = open("test/integration/domain.key", "r")
+        tlsKeyContent = tlsKeyFile.read()
+        tlsKeyFile.close()
+        tlsCertFile = open("test/integration/domain.crt", "r")
+        tlsCertContent = tlsCertFile.read()
+        tlsCertFile.close()
         response = self.code_engine_service.replace_secret(
             project_id=pytest.e2e_test_project_id,
             name='my-tls-secret',
             if_match='*',
             data={
-                'tls_key': '-----BEGIN RSA PRIVATE KEY-----update-----END RSA PRIVATE KEY-----',
-                'tls_cert': '---BEGIN CERTIFICATE---update---END CERTIFICATE---',
+                'tls_key': tlsKeyContent,
+                'tls_cert': tlsCertContent,
             },
             format='tls',
         )
@@ -1066,6 +1159,74 @@ class TestCodeEngineV2:
         assert response.get_status_code() == 200
         secret = response.get_result()
         assert secret is not None
+
+    @needscredentials
+    def test_create_function(self):
+        response = self.code_engine_service.create_function(
+            project_id=pytest.e2e_test_project_id,
+            code_reference='data:text/plain;base64,YXN5bmMgZnVuY3Rpb24gbWFpbihwYXJhbXMpIHsKICByZXR1cm4gewogICAgICBzdGF0dXNDb2RlOiAyMDAsCiAgICAgIGhlYWRlcnM6IHsgJ0NvbnRlbnQtVHlwZSc6ICdhcHBsaWNhdGlvbi9qc29uJyB9LAogICAgICBib2R5OiBwYXJhbXMgfTsKfQptb2R1bGUuZXhwb3J0cy5tYWluID0gbWFpbjs=',
+            name='my-function',
+            runtime='nodejs-20',
+        )
+
+        assert response.get_status_code() == 201
+        function = response.get_result()
+        assert function is not None
+
+    @needscredentials
+    def test_get_function(self):
+        response = self.code_engine_service.get_function(
+            project_id=pytest.e2e_test_project_id,
+            name='my-function',
+        )
+
+        assert response.get_status_code() == 200
+        function = response.get_result()
+        assert function is not None
+
+    @needscredentials
+    def test_update_function(self):
+        function_patch_model = {
+            'ScaleMaxExecutionTime': 30,
+        }
+        response = self.code_engine_service.update_function(
+            project_id=pytest.e2e_test_project_id,
+            name='my-function',
+            if_match='*',
+            function=function_patch_model,
+        )
+
+        assert response.get_status_code() == 200
+        function = response.get_result()
+        assert function is not None
+
+    @needscredentials
+    def test_list_functions(self):
+        response = self.code_engine_service.list_functions(
+            project_id=pytest.e2e_test_project_id,
+            limit=100,
+        )
+
+        assert response.get_status_code() == 200
+        function_list = response.get_result()
+        assert function_list is not None
+
+    @needscredentials
+    def test_list_function_runtimes(self):
+        response = self.code_engine_service.list_function_runtimes()
+
+        assert response.get_status_code() == 200
+        function_runtime_list = response.get_result()
+        assert function_runtime_list is not None
+
+    @needscredentials
+    def test_delete_function(self):
+        response = self.code_engine_service.delete_function(
+            project_id=pytest.e2e_test_project_id,
+            name='my-function',
+        )
+
+        assert response.get_status_code() == 202
 
     @needscredentials
     def test_delete_app_revision(self):

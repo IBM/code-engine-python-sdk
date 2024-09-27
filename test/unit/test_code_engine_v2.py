@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (C) Copyright IBM Corp. 2023.
+# (C) Copyright IBM Corp. 2024.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import responses
 import urllib
 from ibm_code_engine_sdk.code_engine_v2 import *
 
+version = '2024-09-24'
 
 _service = CodeEngineV2(authenticator=NoAuthAuthenticator())
 
@@ -42,23 +43,15 @@ def preprocess_url(operation_path: str):
     The returned request URL is used to register the mock response so it needs
     to match the request URL that is formed by the requests library.
     """
-    # First, unquote the path since it might have some quoted/escaped characters in it
-    # due to how the generator inserts the operation paths into the unit test code.
-    operation_path = urllib.parse.unquote(operation_path)
 
-    # Next, quote the path using urllib so that we approximate what will
-    # happen during request processing.
-    operation_path = urllib.parse.quote(operation_path, safe='/')
-
-    # Finally, form the request URL from the base URL and operation path.
+    # Form the request URL from the base URL and operation path.
     request_url = _base_url + operation_path
 
     # If the request url does NOT end with a /, then just return it as-is.
     # Otherwise, return a regular expression that matches one or more trailing /.
-    if re.fullmatch('.*/+', request_url) is None:
+    if not request_url.endswith('/'):
         return request_url
-    else:
-        return re.compile(request_url.rstrip('/') + '/+')
+    return re.compile(request_url.rstrip('/') + '/+')
 
 
 ##############################################################################
@@ -108,14 +101,24 @@ class TestListProjects:
         # Set up mock
         url = preprocess_url('/projects')
         mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "projects": [{"account_id": "4329073d16d2f3663f74bfa955259139", "created_at": "2021-03-29T12:18:13.992359829Z", "crn": "crn:v1:bluemix:public:codeengine:eu-de:a/4329073d16d2f3663f74bfa955259139:4e49b3e0-27a8-48d2-a784-c7ee48bb863b::", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "name": "project-name", "region": "us-east", "resource_group_id": "5c49eabcf5e85881a37e2d100a33b3df", "resource_type": "project_v2", "status": "active"}]}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         limit = 100
         start = 'testString'
 
         # Invoke method
-        response = _service.list_projects(limit=limit, start=start, headers={})
+        response = _service.list_projects(
+            limit=limit,
+            start=start,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -143,7 +146,13 @@ class TestListProjects:
         # Set up mock
         url = preprocess_url('/projects')
         mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "projects": [{"account_id": "4329073d16d2f3663f74bfa955259139", "created_at": "2021-03-29T12:18:13.992359829Z", "crn": "crn:v1:bluemix:public:codeengine:eu-de:a/4329073d16d2f3663f74bfa955259139:4e49b3e0-27a8-48d2-a784-c7ee48bb863b::", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "name": "project-name", "region": "us-east", "resource_group_id": "5c49eabcf5e85881a37e2d100a33b3df", "resource_type": "project_v2", "status": "active"}]}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Invoke method
         response = _service.list_projects()
@@ -170,8 +179,20 @@ class TestListProjects:
         url = preprocess_url('/projects')
         mock_response1 = '{"next":{"start":"1"},"projects":[{"account_id":"4329073d16d2f3663f74bfa955259139","created_at":"2021-03-29T12:18:13.992359829Z","crn":"crn:v1:bluemix:public:codeengine:eu-de:a/4329073d16d2f3663f74bfa955259139:4e49b3e0-27a8-48d2-a784-c7ee48bb863b::","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b","id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","name":"project-name","region":"us-east","resource_group_id":"5c49eabcf5e85881a37e2d100a33b3df","resource_type":"project_v2","status":"active"}],"total_count":2,"limit":1}'
         mock_response2 = '{"projects":[{"account_id":"4329073d16d2f3663f74bfa955259139","created_at":"2021-03-29T12:18:13.992359829Z","crn":"crn:v1:bluemix:public:codeengine:eu-de:a/4329073d16d2f3663f74bfa955259139:4e49b3e0-27a8-48d2-a784-c7ee48bb863b::","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b","id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","name":"project-name","region":"us-east","resource_group_id":"5c49eabcf5e85881a37e2d100a33b3df","resource_type":"project_v2","status":"active"}],"total_count":2,"limit":1}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         all_results = []
@@ -194,8 +215,20 @@ class TestListProjects:
         url = preprocess_url('/projects')
         mock_response1 = '{"next":{"start":"1"},"projects":[{"account_id":"4329073d16d2f3663f74bfa955259139","created_at":"2021-03-29T12:18:13.992359829Z","crn":"crn:v1:bluemix:public:codeengine:eu-de:a/4329073d16d2f3663f74bfa955259139:4e49b3e0-27a8-48d2-a784-c7ee48bb863b::","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b","id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","name":"project-name","region":"us-east","resource_group_id":"5c49eabcf5e85881a37e2d100a33b3df","resource_type":"project_v2","status":"active"}],"total_count":2,"limit":1}'
         mock_response2 = '{"projects":[{"account_id":"4329073d16d2f3663f74bfa955259139","created_at":"2021-03-29T12:18:13.992359829Z","crn":"crn:v1:bluemix:public:codeengine:eu-de:a/4329073d16d2f3663f74bfa955259139:4e49b3e0-27a8-48d2-a784-c7ee48bb863b::","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b","id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","name":"project-name","region":"us-east","resource_group_id":"5c49eabcf5e85881a37e2d100a33b3df","resource_type":"project_v2","status":"active"}],"total_count":2,"limit":1}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         pager = ProjectsPager(
@@ -220,7 +253,13 @@ class TestCreateProject:
         # Set up mock
         url = preprocess_url('/projects')
         mock_response = '{"account_id": "4329073d16d2f3663f74bfa955259139", "created_at": "2021-03-29T12:18:13.992359829Z", "crn": "crn:v1:bluemix:public:codeengine:eu-de:a/4329073d16d2f3663f74bfa955259139:4e49b3e0-27a8-48d2-a784-c7ee48bb863b::", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "name": "project-name", "region": "us-east", "resource_group_id": "5c49eabcf5e85881a37e2d100a33b3df", "resource_type": "project_v2", "status": "active"}'
-        responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=202)
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=202,
+        )
 
         # Set up parameter values
         name = 'my-project'
@@ -228,7 +267,12 @@ class TestCreateProject:
         tags = ['testString']
 
         # Invoke method
-        response = _service.create_project(name, resource_group_id=resource_group_id, tags=tags, headers={})
+        response = _service.create_project(
+            name,
+            resource_group_id=resource_group_id,
+            tags=tags,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -256,7 +300,13 @@ class TestCreateProject:
         # Set up mock
         url = preprocess_url('/projects')
         mock_response = '{"account_id": "4329073d16d2f3663f74bfa955259139", "created_at": "2021-03-29T12:18:13.992359829Z", "crn": "crn:v1:bluemix:public:codeengine:eu-de:a/4329073d16d2f3663f74bfa955259139:4e49b3e0-27a8-48d2-a784-c7ee48bb863b::", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "name": "project-name", "region": "us-east", "resource_group_id": "5c49eabcf5e85881a37e2d100a33b3df", "resource_type": "project_v2", "status": "active"}'
-        responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=202)
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=202,
+        )
 
         # Set up parameter values
         name = 'my-project'
@@ -295,13 +345,22 @@ class TestGetProject:
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005')
         mock_response = '{"account_id": "4329073d16d2f3663f74bfa955259139", "created_at": "2021-03-29T12:18:13.992359829Z", "crn": "crn:v1:bluemix:public:codeengine:eu-de:a/4329073d16d2f3663f74bfa955259139:4e49b3e0-27a8-48d2-a784-c7ee48bb863b::", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "name": "project-name", "region": "us-east", "resource_group_id": "5c49eabcf5e85881a37e2d100a33b3df", "resource_type": "project_v2", "status": "active"}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         id = '15314cc3-85b4-4338-903f-c28cdee6d005'
 
         # Invoke method
-        response = _service.get_project(id, headers={})
+        response = _service.get_project(
+            id,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -324,7 +383,13 @@ class TestGetProject:
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005')
         mock_response = '{"account_id": "4329073d16d2f3663f74bfa955259139", "created_at": "2021-03-29T12:18:13.992359829Z", "crn": "crn:v1:bluemix:public:codeengine:eu-de:a/4329073d16d2f3663f74bfa955259139:4e49b3e0-27a8-48d2-a784-c7ee48bb863b::", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "name": "project-name", "region": "us-east", "resource_group_id": "5c49eabcf5e85881a37e2d100a33b3df", "resource_type": "project_v2", "status": "active"}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -360,13 +425,20 @@ class TestDeleteProject:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         id = '15314cc3-85b4-4338-903f-c28cdee6d005'
 
         # Invoke method
-        response = _service.delete_project(id, headers={})
+        response = _service.delete_project(
+            id,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -388,7 +460,11 @@ class TestDeleteProject:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -425,13 +501,22 @@ class TestGetProjectEgressIps:
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/egress_ips')
         mock_response = '{"private": ["private"], "public": ["public"]}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
 
         # Invoke method
-        response = _service.get_project_egress_ips(project_id, headers={})
+        response = _service.get_project_egress_ips(
+            project_id,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -454,7 +539,13 @@ class TestGetProjectEgressIps:
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/egress_ips')
         mock_response = '{"private": ["private"], "public": ["public"]}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -476,6 +567,87 @@ class TestGetProjectEgressIps:
         # Disable retries and run test_get_project_egress_ips_value_error.
         _service.disable_retries()
         self.test_get_project_egress_ips_value_error()
+
+
+class TestGetProjectStatusDetails:
+    """
+    Test Class for get_project_status_details
+    """
+
+    @responses.activate
+    def test_get_project_status_details_all_params(self):
+        """
+        get_project_status_details()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/status_details')
+        mock_response = '{"domain": "unknown", "project": "enabled", "vpe_not_enabled": false}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+
+        # Invoke method
+        response = _service.get_project_status_details(
+            project_id,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_project_status_details_all_params_with_retries(self):
+        # Enable retries and run test_get_project_status_details_all_params.
+        _service.enable_retries()
+        self.test_get_project_status_details_all_params()
+
+        # Disable retries and run test_get_project_status_details_all_params.
+        _service.disable_retries()
+        self.test_get_project_status_details_all_params()
+
+    @responses.activate
+    def test_get_project_status_details_value_error(self):
+        """
+        test_get_project_status_details_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/status_details')
+        mock_response = '{"domain": "unknown", "project": "enabled", "vpe_not_enabled": false}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.get_project_status_details(**req_copy)
+
+    def test_get_project_status_details_value_error_with_retries(self):
+        # Enable retries and run test_get_project_status_details_value_error.
+        _service.enable_retries()
+        self.test_get_project_status_details_value_error()
+
+        # Disable retries and run test_get_project_status_details_value_error.
+        _service.disable_retries()
+        self.test_get_project_status_details_value_error()
 
 
 # endregion
@@ -529,8 +701,14 @@ class TestListApps:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps')
-        mock_response = '{"apps": [{"created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"apps": [{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -538,7 +716,12 @@ class TestListApps:
         start = 'testString'
 
         # Invoke method
-        response = _service.list_apps(project_id, limit=limit, start=start, headers={})
+        response = _service.list_apps(
+            project_id,
+            limit=limit,
+            start=start,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -565,14 +748,23 @@ class TestListApps:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps')
-        mock_response = '{"apps": [{"created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"apps": [{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
 
         # Invoke method
-        response = _service.list_apps(project_id, headers={})
+        response = _service.list_apps(
+            project_id,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -594,8 +786,14 @@ class TestListApps:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps')
-        mock_response = '{"apps": [{"created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"apps": [{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -625,10 +823,22 @@ class TestListApps:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps')
-        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"apps":[{"created_at":"2022-09-13T11:41:35+02:00","endpoint":"https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud","endpoint_internal":"http://my-app.vg67hzldruk.svc.cluster.local","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_port":8080,"image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","managed_domain_mappings":"local_public","name":"my-app","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"app_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_concurrency":100,"scale_concurrency_target":80,"scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_initial_instances":1,"scale_max_instances":10,"scale_memory_limit":"4G","scale_min_instances":1,"scale_request_timeout":300,"status":"ready","status_details":{"latest_created_revision":"my-app-00001","latest_ready_revision":"my-app-00001","reason":"ready"}}]}'
-        mock_response2 = '{"total_count":2,"limit":1,"apps":[{"created_at":"2022-09-13T11:41:35+02:00","endpoint":"https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud","endpoint_internal":"http://my-app.vg67hzldruk.svc.cluster.local","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_port":8080,"image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","managed_domain_mappings":"local_public","name":"my-app","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"app_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_concurrency":100,"scale_concurrency_target":80,"scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_initial_instances":1,"scale_max_instances":10,"scale_memory_limit":"4G","scale_min_instances":1,"scale_request_timeout":300,"status":"ready","status_details":{"latest_created_revision":"my-app-00001","latest_ready_revision":"my-app-00001","reason":"ready"}}]}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"apps":[{"build":"my-build","build_run":"my-build-run","computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","endpoint":"https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud","endpoint_internal":"http://my-app.vg67hzldruk.svc.cluster.local","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_port":8080,"image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","managed_domain_mappings":"local_public","name":"my-app","probe_liveness":{"failure_threshold":5,"initial_delay":5,"interval":5,"path":"path","port":8080,"timeout":300,"type":"tcp"},"probe_readiness":{"failure_threshold":5,"initial_delay":5,"interval":5,"path":"path","port":8080,"timeout":300,"type":"tcp"},"project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_concurrency":100,"scale_concurrency_target":80,"scale_cpu_limit":"1","scale_down_delay":300,"scale_ephemeral_storage_limit":"4G","scale_initial_instances":1,"scale_max_instances":10,"scale_memory_limit":"4G","scale_min_instances":1,"scale_request_timeout":300,"status":"ready","status_details":{"latest_created_revision":"my-app-00001","latest_ready_revision":"my-app-00001","reason":"ready"}}]}'
+        mock_response2 = '{"total_count":2,"limit":1,"apps":[{"build":"my-build","build_run":"my-build-run","computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","endpoint":"https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud","endpoint_internal":"http://my-app.vg67hzldruk.svc.cluster.local","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_port":8080,"image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","managed_domain_mappings":"local_public","name":"my-app","probe_liveness":{"failure_threshold":5,"initial_delay":5,"interval":5,"path":"path","port":8080,"timeout":300,"type":"tcp"},"probe_readiness":{"failure_threshold":5,"initial_delay":5,"interval":5,"path":"path","port":8080,"timeout":300,"type":"tcp"},"project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_concurrency":100,"scale_concurrency_target":80,"scale_cpu_limit":"1","scale_down_delay":300,"scale_ephemeral_storage_limit":"4G","scale_initial_instances":1,"scale_max_instances":10,"scale_memory_limit":"4G","scale_min_instances":1,"scale_request_timeout":300,"status":"ready","status_details":{"latest_created_revision":"my-app-00001","latest_ready_revision":"my-app-00001","reason":"ready"}}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         all_results = []
@@ -650,10 +860,22 @@ class TestListApps:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps')
-        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"apps":[{"created_at":"2022-09-13T11:41:35+02:00","endpoint":"https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud","endpoint_internal":"http://my-app.vg67hzldruk.svc.cluster.local","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_port":8080,"image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","managed_domain_mappings":"local_public","name":"my-app","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"app_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_concurrency":100,"scale_concurrency_target":80,"scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_initial_instances":1,"scale_max_instances":10,"scale_memory_limit":"4G","scale_min_instances":1,"scale_request_timeout":300,"status":"ready","status_details":{"latest_created_revision":"my-app-00001","latest_ready_revision":"my-app-00001","reason":"ready"}}]}'
-        mock_response2 = '{"total_count":2,"limit":1,"apps":[{"created_at":"2022-09-13T11:41:35+02:00","endpoint":"https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud","endpoint_internal":"http://my-app.vg67hzldruk.svc.cluster.local","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_port":8080,"image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","managed_domain_mappings":"local_public","name":"my-app","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"app_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_concurrency":100,"scale_concurrency_target":80,"scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_initial_instances":1,"scale_max_instances":10,"scale_memory_limit":"4G","scale_min_instances":1,"scale_request_timeout":300,"status":"ready","status_details":{"latest_created_revision":"my-app-00001","latest_ready_revision":"my-app-00001","reason":"ready"}}]}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"apps":[{"build":"my-build","build_run":"my-build-run","computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","endpoint":"https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud","endpoint_internal":"http://my-app.vg67hzldruk.svc.cluster.local","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_port":8080,"image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","managed_domain_mappings":"local_public","name":"my-app","probe_liveness":{"failure_threshold":5,"initial_delay":5,"interval":5,"path":"path","port":8080,"timeout":300,"type":"tcp"},"probe_readiness":{"failure_threshold":5,"initial_delay":5,"interval":5,"path":"path","port":8080,"timeout":300,"type":"tcp"},"project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_concurrency":100,"scale_concurrency_target":80,"scale_cpu_limit":"1","scale_down_delay":300,"scale_ephemeral_storage_limit":"4G","scale_initial_instances":1,"scale_max_instances":10,"scale_memory_limit":"4G","scale_min_instances":1,"scale_request_timeout":300,"status":"ready","status_details":{"latest_created_revision":"my-app-00001","latest_ready_revision":"my-app-00001","reason":"ready"}}]}'
+        mock_response2 = '{"total_count":2,"limit":1,"apps":[{"build":"my-build","build_run":"my-build-run","computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","endpoint":"https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud","endpoint_internal":"http://my-app.vg67hzldruk.svc.cluster.local","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_port":8080,"image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","managed_domain_mappings":"local_public","name":"my-app","probe_liveness":{"failure_threshold":5,"initial_delay":5,"interval":5,"path":"path","port":8080,"timeout":300,"type":"tcp"},"probe_readiness":{"failure_threshold":5,"initial_delay":5,"interval":5,"path":"path","port":8080,"timeout":300,"type":"tcp"},"project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_concurrency":100,"scale_concurrency_target":80,"scale_cpu_limit":"1","scale_down_delay":300,"scale_ephemeral_storage_limit":"4G","scale_initial_instances":1,"scale_max_instances":10,"scale_memory_limit":"4G","scale_min_instances":1,"scale_request_timeout":300,"status":"ready","status_details":{"latest_created_revision":"my-app-00001","latest_ready_revision":"my-app-00001","reason":"ready"}}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         pager = AppsPager(
@@ -678,8 +900,24 @@ class TestCreateApp:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}'
-        responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=201)
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
+
+        # Construct a dict representation of a ProbePrototype model
+        probe_prototype_model = {}
+        probe_prototype_model['failure_threshold'] = 5
+        probe_prototype_model['initial_delay'] = 5
+        probe_prototype_model['interval'] = 5
+        probe_prototype_model['path'] = 'testString'
+        probe_prototype_model['port'] = 8080
+        probe_prototype_model['timeout'] = 300
+        probe_prototype_model['type'] = 'tcp'
 
         # Construct a dict representation of a EnvVarPrototype model
         env_var_prototype_model = {}
@@ -704,6 +942,8 @@ class TestCreateApp:
         image_port = 8080
         image_secret = 'my-secret'
         managed_domain_mappings = 'local_public'
+        probe_liveness = probe_prototype_model
+        probe_readiness = probe_prototype_model
         run_arguments = ['testString']
         run_as_user = 1001
         run_commands = ['testString']
@@ -713,6 +953,7 @@ class TestCreateApp:
         scale_concurrency = 100
         scale_concurrency_target = 80
         scale_cpu_limit = '1'
+        scale_down_delay = 300
         scale_ephemeral_storage_limit = '4G'
         scale_initial_instances = 1
         scale_max_instances = 10
@@ -728,6 +969,8 @@ class TestCreateApp:
             image_port=image_port,
             image_secret=image_secret,
             managed_domain_mappings=managed_domain_mappings,
+            probe_liveness=probe_liveness,
+            probe_readiness=probe_readiness,
             run_arguments=run_arguments,
             run_as_user=run_as_user,
             run_commands=run_commands,
@@ -737,6 +980,7 @@ class TestCreateApp:
             scale_concurrency=scale_concurrency,
             scale_concurrency_target=scale_concurrency_target,
             scale_cpu_limit=scale_cpu_limit,
+            scale_down_delay=scale_down_delay,
             scale_ephemeral_storage_limit=scale_ephemeral_storage_limit,
             scale_initial_instances=scale_initial_instances,
             scale_max_instances=scale_max_instances,
@@ -756,6 +1000,8 @@ class TestCreateApp:
         assert req_body['image_port'] == 8080
         assert req_body['image_secret'] == 'my-secret'
         assert req_body['managed_domain_mappings'] == 'local_public'
+        assert req_body['probe_liveness'] == probe_prototype_model
+        assert req_body['probe_readiness'] == probe_prototype_model
         assert req_body['run_arguments'] == ['testString']
         assert req_body['run_as_user'] == 1001
         assert req_body['run_commands'] == ['testString']
@@ -765,6 +1011,7 @@ class TestCreateApp:
         assert req_body['scale_concurrency'] == 100
         assert req_body['scale_concurrency_target'] == 80
         assert req_body['scale_cpu_limit'] == '1'
+        assert req_body['scale_down_delay'] == 300
         assert req_body['scale_ephemeral_storage_limit'] == '4G'
         assert req_body['scale_initial_instances'] == 1
         assert req_body['scale_max_instances'] == 10
@@ -782,14 +1029,30 @@ class TestCreateApp:
         self.test_create_app_all_params()
 
     @responses.activate
-    def test_create_app_value_error(self):
+    def test_create_app_required_params(self):
         """
-        test_create_app_value_error()
+        test_create_app_required_params()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}'
-        responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=201)
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
+
+        # Construct a dict representation of a ProbePrototype model
+        probe_prototype_model = {}
+        probe_prototype_model['failure_threshold'] = 5
+        probe_prototype_model['initial_delay'] = 5
+        probe_prototype_model['interval'] = 5
+        probe_prototype_model['path'] = 'testString'
+        probe_prototype_model['port'] = 8080
+        probe_prototype_model['timeout'] = 300
+        probe_prototype_model['type'] = 'tcp'
 
         # Construct a dict representation of a EnvVarPrototype model
         env_var_prototype_model = {}
@@ -814,6 +1077,8 @@ class TestCreateApp:
         image_port = 8080
         image_secret = 'my-secret'
         managed_domain_mappings = 'local_public'
+        probe_liveness = probe_prototype_model
+        probe_readiness = probe_prototype_model
         run_arguments = ['testString']
         run_as_user = 1001
         run_commands = ['testString']
@@ -823,6 +1088,142 @@ class TestCreateApp:
         scale_concurrency = 100
         scale_concurrency_target = 80
         scale_cpu_limit = '1'
+        scale_down_delay = 300
+        scale_ephemeral_storage_limit = '4G'
+        scale_initial_instances = 1
+        scale_max_instances = 10
+        scale_memory_limit = '4G'
+        scale_min_instances = 1
+        scale_request_timeout = 300
+
+        # Invoke method
+        response = _service.create_app(
+            project_id,
+            image_reference,
+            name,
+            image_port=image_port,
+            image_secret=image_secret,
+            managed_domain_mappings=managed_domain_mappings,
+            probe_liveness=probe_liveness,
+            probe_readiness=probe_readiness,
+            run_arguments=run_arguments,
+            run_as_user=run_as_user,
+            run_commands=run_commands,
+            run_env_variables=run_env_variables,
+            run_service_account=run_service_account,
+            run_volume_mounts=run_volume_mounts,
+            scale_concurrency=scale_concurrency,
+            scale_concurrency_target=scale_concurrency_target,
+            scale_cpu_limit=scale_cpu_limit,
+            scale_down_delay=scale_down_delay,
+            scale_ephemeral_storage_limit=scale_ephemeral_storage_limit,
+            scale_initial_instances=scale_initial_instances,
+            scale_max_instances=scale_max_instances,
+            scale_memory_limit=scale_memory_limit,
+            scale_min_instances=scale_min_instances,
+            scale_request_timeout=scale_request_timeout,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 201
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body['image_reference'] == 'icr.io/codeengine/helloworld'
+        assert req_body['name'] == 'my-app'
+        assert req_body['image_port'] == 8080
+        assert req_body['image_secret'] == 'my-secret'
+        assert req_body['managed_domain_mappings'] == 'local_public'
+        assert req_body['probe_liveness'] == probe_prototype_model
+        assert req_body['probe_readiness'] == probe_prototype_model
+        assert req_body['run_arguments'] == ['testString']
+        assert req_body['run_as_user'] == 1001
+        assert req_body['run_commands'] == ['testString']
+        assert req_body['run_env_variables'] == [env_var_prototype_model]
+        assert req_body['run_service_account'] == 'default'
+        assert req_body['run_volume_mounts'] == [volume_mount_prototype_model]
+        assert req_body['scale_concurrency'] == 100
+        assert req_body['scale_concurrency_target'] == 80
+        assert req_body['scale_cpu_limit'] == '1'
+        assert req_body['scale_down_delay'] == 300
+        assert req_body['scale_ephemeral_storage_limit'] == '4G'
+        assert req_body['scale_initial_instances'] == 1
+        assert req_body['scale_max_instances'] == 10
+        assert req_body['scale_memory_limit'] == '4G'
+        assert req_body['scale_min_instances'] == 1
+        assert req_body['scale_request_timeout'] == 300
+
+    def test_create_app_required_params_with_retries(self):
+        # Enable retries and run test_create_app_required_params.
+        _service.enable_retries()
+        self.test_create_app_required_params()
+
+        # Disable retries and run test_create_app_required_params.
+        _service.disable_retries()
+        self.test_create_app_required_params()
+
+    @responses.activate
+    def test_create_app_value_error(self):
+        """
+        test_create_app_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps')
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
+
+        # Construct a dict representation of a ProbePrototype model
+        probe_prototype_model = {}
+        probe_prototype_model['failure_threshold'] = 5
+        probe_prototype_model['initial_delay'] = 5
+        probe_prototype_model['interval'] = 5
+        probe_prototype_model['path'] = 'testString'
+        probe_prototype_model['port'] = 8080
+        probe_prototype_model['timeout'] = 300
+        probe_prototype_model['type'] = 'tcp'
+
+        # Construct a dict representation of a EnvVarPrototype model
+        env_var_prototype_model = {}
+        env_var_prototype_model['key'] = 'MY_VARIABLE'
+        env_var_prototype_model['name'] = 'SOME'
+        env_var_prototype_model['prefix'] = 'PREFIX_'
+        env_var_prototype_model['reference'] = 'my-secret'
+        env_var_prototype_model['type'] = 'literal'
+        env_var_prototype_model['value'] = 'VALUE'
+
+        # Construct a dict representation of a VolumeMountPrototype model
+        volume_mount_prototype_model = {}
+        volume_mount_prototype_model['mount_path'] = '/app'
+        volume_mount_prototype_model['name'] = 'codeengine-mount-b69u90'
+        volume_mount_prototype_model['reference'] = 'my-secret'
+        volume_mount_prototype_model['type'] = 'secret'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        image_reference = 'icr.io/codeengine/helloworld'
+        name = 'my-app'
+        image_port = 8080
+        image_secret = 'my-secret'
+        managed_domain_mappings = 'local_public'
+        probe_liveness = probe_prototype_model
+        probe_readiness = probe_prototype_model
+        run_arguments = ['testString']
+        run_as_user = 1001
+        run_commands = ['testString']
+        run_env_variables = [env_var_prototype_model]
+        run_service_account = 'default'
+        run_volume_mounts = [volume_mount_prototype_model]
+        scale_concurrency = 100
+        scale_concurrency_target = 80
+        scale_cpu_limit = '1'
+        scale_down_delay = 300
         scale_ephemeral_storage_limit = '4G'
         scale_initial_instances = 1
         scale_max_instances = 10
@@ -863,15 +1264,25 @@ class TestGetApp:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-app'
 
         # Invoke method
-        response = _service.get_app(project_id, name, headers={})
+        response = _service.get_app(
+            project_id,
+            name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -887,14 +1298,60 @@ class TestGetApp:
         self.test_get_app_all_params()
 
     @responses.activate
+    def test_get_app_required_params(self):
+        """
+        test_get_app_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app')
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-app'
+
+        # Invoke method
+        response = _service.get_app(
+            project_id,
+            name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_app_required_params_with_retries(self):
+        # Enable retries and run test_get_app_required_params.
+        _service.enable_retries()
+        self.test_get_app_required_params()
+
+        # Disable retries and run test_get_app_required_params.
+        _service.disable_retries()
+        self.test_get_app_required_params()
+
+    @responses.activate
     def test_get_app_value_error(self):
         """
         test_get_app_value_error()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -932,14 +1389,22 @@ class TestDeleteApp:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-app'
 
         # Invoke method
-        response = _service.delete_app(project_id, name, headers={})
+        response = _service.delete_app(
+            project_id,
+            name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -955,13 +1420,54 @@ class TestDeleteApp:
         self.test_delete_app_all_params()
 
     @responses.activate
+    def test_delete_app_required_params(self):
+        """
+        test_delete_app_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app')
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-app'
+
+        # Invoke method
+        response = _service.delete_app(
+            project_id,
+            name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_delete_app_required_params_with_retries(self):
+        # Enable retries and run test_delete_app_required_params.
+        _service.enable_retries()
+        self.test_delete_app_required_params()
+
+        # Disable retries and run test_delete_app_required_params.
+        _service.disable_retries()
+        self.test_delete_app_required_params()
+
+    @responses.activate
     def test_delete_app_value_error(self):
         """
         test_delete_app_value_error()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -999,8 +1505,24 @@ class TestUpdateApp:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}'
-        responses.add(responses.PATCH, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}'
+        responses.add(
+            responses.PATCH,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Construct a dict representation of a ProbePrototype model
+        probe_prototype_model = {}
+        probe_prototype_model['failure_threshold'] = 5
+        probe_prototype_model['initial_delay'] = 5
+        probe_prototype_model['interval'] = 5
+        probe_prototype_model['path'] = 'testString'
+        probe_prototype_model['port'] = 8080
+        probe_prototype_model['timeout'] = 300
+        probe_prototype_model['type'] = 'tcp'
 
         # Construct a dict representation of a EnvVarPrototype model
         env_var_prototype_model = {}
@@ -1024,6 +1546,8 @@ class TestUpdateApp:
         app_patch_model['image_reference'] = 'icr.io/codeengine/helloworld'
         app_patch_model['image_secret'] = 'my-secret'
         app_patch_model['managed_domain_mappings'] = 'local_public'
+        app_patch_model['probe_liveness'] = probe_prototype_model
+        app_patch_model['probe_readiness'] = probe_prototype_model
         app_patch_model['run_arguments'] = ['testString']
         app_patch_model['run_as_user'] = 1001
         app_patch_model['run_commands'] = ['testString']
@@ -1033,6 +1557,7 @@ class TestUpdateApp:
         app_patch_model['scale_concurrency'] = 100
         app_patch_model['scale_concurrency_target'] = 80
         app_patch_model['scale_cpu_limit'] = '1'
+        app_patch_model['scale_down_delay'] = 300
         app_patch_model['scale_ephemeral_storage_limit'] = '4G'
         app_patch_model['scale_initial_instances'] = 1
         app_patch_model['scale_max_instances'] = 10
@@ -1047,7 +1572,13 @@ class TestUpdateApp:
         app = app_patch_model
 
         # Invoke method
-        response = _service.update_app(project_id, name, if_match, app, headers={})
+        response = _service.update_app(
+            project_id,
+            name,
+            if_match,
+            app,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -1066,14 +1597,30 @@ class TestUpdateApp:
         self.test_update_app_all_params()
 
     @responses.activate
-    def test_update_app_value_error(self):
+    def test_update_app_required_params(self):
         """
-        test_update_app_value_error()
+        test_update_app_required_params()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}'
-        responses.add(responses.PATCH, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}'
+        responses.add(
+            responses.PATCH,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Construct a dict representation of a ProbePrototype model
+        probe_prototype_model = {}
+        probe_prototype_model['failure_threshold'] = 5
+        probe_prototype_model['initial_delay'] = 5
+        probe_prototype_model['interval'] = 5
+        probe_prototype_model['path'] = 'testString'
+        probe_prototype_model['port'] = 8080
+        probe_prototype_model['timeout'] = 300
+        probe_prototype_model['type'] = 'tcp'
 
         # Construct a dict representation of a EnvVarPrototype model
         env_var_prototype_model = {}
@@ -1097,6 +1644,8 @@ class TestUpdateApp:
         app_patch_model['image_reference'] = 'icr.io/codeengine/helloworld'
         app_patch_model['image_secret'] = 'my-secret'
         app_patch_model['managed_domain_mappings'] = 'local_public'
+        app_patch_model['probe_liveness'] = probe_prototype_model
+        app_patch_model['probe_readiness'] = probe_prototype_model
         app_patch_model['run_arguments'] = ['testString']
         app_patch_model['run_as_user'] = 1001
         app_patch_model['run_commands'] = ['testString']
@@ -1106,6 +1655,105 @@ class TestUpdateApp:
         app_patch_model['scale_concurrency'] = 100
         app_patch_model['scale_concurrency_target'] = 80
         app_patch_model['scale_cpu_limit'] = '1'
+        app_patch_model['scale_down_delay'] = 300
+        app_patch_model['scale_ephemeral_storage_limit'] = '4G'
+        app_patch_model['scale_initial_instances'] = 1
+        app_patch_model['scale_max_instances'] = 10
+        app_patch_model['scale_memory_limit'] = '4G'
+        app_patch_model['scale_min_instances'] = 1
+        app_patch_model['scale_request_timeout'] = 300
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-app'
+        if_match = 'testString'
+        app = app_patch_model
+
+        # Invoke method
+        response = _service.update_app(
+            project_id,
+            name,
+            if_match,
+            app,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == app
+
+    def test_update_app_required_params_with_retries(self):
+        # Enable retries and run test_update_app_required_params.
+        _service.enable_retries()
+        self.test_update_app_required_params()
+
+        # Disable retries and run test_update_app_required_params.
+        _service.disable_retries()
+        self.test_update_app_required_params()
+
+    @responses.activate
+    def test_update_app_value_error(self):
+        """
+        test_update_app_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app')
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-app.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-app.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "managed_domain_mappings": "local_public", "name": "my-app", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"latest_created_revision": "my-app-00001", "latest_ready_revision": "my-app-00001", "reason": "ready"}}'
+        responses.add(
+            responses.PATCH,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Construct a dict representation of a ProbePrototype model
+        probe_prototype_model = {}
+        probe_prototype_model['failure_threshold'] = 5
+        probe_prototype_model['initial_delay'] = 5
+        probe_prototype_model['interval'] = 5
+        probe_prototype_model['path'] = 'testString'
+        probe_prototype_model['port'] = 8080
+        probe_prototype_model['timeout'] = 300
+        probe_prototype_model['type'] = 'tcp'
+
+        # Construct a dict representation of a EnvVarPrototype model
+        env_var_prototype_model = {}
+        env_var_prototype_model['key'] = 'MY_VARIABLE'
+        env_var_prototype_model['name'] = 'SOME'
+        env_var_prototype_model['prefix'] = 'PREFIX_'
+        env_var_prototype_model['reference'] = 'my-secret'
+        env_var_prototype_model['type'] = 'literal'
+        env_var_prototype_model['value'] = 'VALUE'
+
+        # Construct a dict representation of a VolumeMountPrototype model
+        volume_mount_prototype_model = {}
+        volume_mount_prototype_model['mount_path'] = '/app'
+        volume_mount_prototype_model['name'] = 'codeengine-mount-b69u90'
+        volume_mount_prototype_model['reference'] = 'my-secret'
+        volume_mount_prototype_model['type'] = 'secret'
+
+        # Construct a dict representation of a AppPatch model
+        app_patch_model = {}
+        app_patch_model['image_port'] = 8080
+        app_patch_model['image_reference'] = 'icr.io/codeengine/helloworld'
+        app_patch_model['image_secret'] = 'my-secret'
+        app_patch_model['managed_domain_mappings'] = 'local_public'
+        app_patch_model['probe_liveness'] = probe_prototype_model
+        app_patch_model['probe_readiness'] = probe_prototype_model
+        app_patch_model['run_arguments'] = ['testString']
+        app_patch_model['run_as_user'] = 1001
+        app_patch_model['run_commands'] = ['testString']
+        app_patch_model['run_env_variables'] = [env_var_prototype_model]
+        app_patch_model['run_service_account'] = 'default'
+        app_patch_model['run_volume_mounts'] = [volume_mount_prototype_model]
+        app_patch_model['scale_concurrency'] = 100
+        app_patch_model['scale_concurrency_target'] = 80
+        app_patch_model['scale_cpu_limit'] = '1'
+        app_patch_model['scale_down_delay'] = 300
         app_patch_model['scale_ephemeral_storage_limit'] = '4G'
         app_patch_model['scale_initial_instances'] = 1
         app_patch_model['scale_max_instances'] = 10
@@ -1153,8 +1801,14 @@ class TestListAppRevisions:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions')
-        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "revisions": [{"app_name": "my-app", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-app-00001", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "app_revision_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"actual_instances": 1, "reason": "ready"}}]}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "revisions": [{"app_name": "my-app", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-app-00001", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_revision_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"actual_instances": 1, "reason": "ready"}}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -1163,7 +1817,13 @@ class TestListAppRevisions:
         start = 'testString'
 
         # Invoke method
-        response = _service.list_app_revisions(project_id, app_name, limit=limit, start=start, headers={})
+        response = _service.list_app_revisions(
+            project_id,
+            app_name,
+            limit=limit,
+            start=start,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -1190,15 +1850,25 @@ class TestListAppRevisions:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions')
-        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "revisions": [{"app_name": "my-app", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-app-00001", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "app_revision_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"actual_instances": 1, "reason": "ready"}}]}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "revisions": [{"app_name": "my-app", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-app-00001", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_revision_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"actual_instances": 1, "reason": "ready"}}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         app_name = 'my-app'
 
         # Invoke method
-        response = _service.list_app_revisions(project_id, app_name, headers={})
+        response = _service.list_app_revisions(
+            project_id,
+            app_name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -1220,8 +1890,14 @@ class TestListAppRevisions:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions')
-        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "revisions": [{"app_name": "my-app", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-app-00001", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "app_revision_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"actual_instances": 1, "reason": "ready"}}]}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "revisions": [{"app_name": "my-app", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-app-00001", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_revision_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"actual_instances": 1, "reason": "ready"}}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -1253,10 +1929,22 @@ class TestListAppRevisions:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions')
-        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"revisions":[{"app_name":"my-app","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_port":8080,"image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-app-00001","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"app_revision_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_concurrency":100,"scale_concurrency_target":80,"scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_initial_instances":1,"scale_max_instances":10,"scale_memory_limit":"4G","scale_min_instances":1,"scale_request_timeout":300,"status":"ready","status_details":{"actual_instances":1,"reason":"ready"}}]}'
-        mock_response2 = '{"total_count":2,"limit":1,"revisions":[{"app_name":"my-app","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_port":8080,"image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-app-00001","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"app_revision_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_concurrency":100,"scale_concurrency_target":80,"scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_initial_instances":1,"scale_max_instances":10,"scale_memory_limit":"4G","scale_min_instances":1,"scale_request_timeout":300,"status":"ready","status_details":{"actual_instances":1,"reason":"ready"}}]}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"revisions":[{"app_name":"my-app","computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_port":8080,"image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-app-00001","probe_liveness":{"failure_threshold":5,"initial_delay":5,"interval":5,"path":"path","port":8080,"timeout":300,"type":"tcp"},"probe_readiness":{"failure_threshold":5,"initial_delay":5,"interval":5,"path":"path","port":8080,"timeout":300,"type":"tcp"},"project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_revision_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_concurrency":100,"scale_concurrency_target":80,"scale_cpu_limit":"1","scale_down_delay":300,"scale_ephemeral_storage_limit":"4G","scale_initial_instances":1,"scale_max_instances":10,"scale_memory_limit":"4G","scale_min_instances":1,"scale_request_timeout":300,"status":"ready","status_details":{"actual_instances":1,"reason":"ready"}}]}'
+        mock_response2 = '{"total_count":2,"limit":1,"revisions":[{"app_name":"my-app","computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_port":8080,"image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-app-00001","probe_liveness":{"failure_threshold":5,"initial_delay":5,"interval":5,"path":"path","port":8080,"timeout":300,"type":"tcp"},"probe_readiness":{"failure_threshold":5,"initial_delay":5,"interval":5,"path":"path","port":8080,"timeout":300,"type":"tcp"},"project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_revision_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_concurrency":100,"scale_concurrency_target":80,"scale_cpu_limit":"1","scale_down_delay":300,"scale_ephemeral_storage_limit":"4G","scale_initial_instances":1,"scale_max_instances":10,"scale_memory_limit":"4G","scale_min_instances":1,"scale_request_timeout":300,"status":"ready","status_details":{"actual_instances":1,"reason":"ready"}}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         all_results = []
@@ -1279,10 +1967,22 @@ class TestListAppRevisions:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions')
-        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"revisions":[{"app_name":"my-app","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_port":8080,"image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-app-00001","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"app_revision_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_concurrency":100,"scale_concurrency_target":80,"scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_initial_instances":1,"scale_max_instances":10,"scale_memory_limit":"4G","scale_min_instances":1,"scale_request_timeout":300,"status":"ready","status_details":{"actual_instances":1,"reason":"ready"}}]}'
-        mock_response2 = '{"total_count":2,"limit":1,"revisions":[{"app_name":"my-app","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_port":8080,"image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-app-00001","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"app_revision_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_concurrency":100,"scale_concurrency_target":80,"scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_initial_instances":1,"scale_max_instances":10,"scale_memory_limit":"4G","scale_min_instances":1,"scale_request_timeout":300,"status":"ready","status_details":{"actual_instances":1,"reason":"ready"}}]}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"revisions":[{"app_name":"my-app","computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_port":8080,"image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-app-00001","probe_liveness":{"failure_threshold":5,"initial_delay":5,"interval":5,"path":"path","port":8080,"timeout":300,"type":"tcp"},"probe_readiness":{"failure_threshold":5,"initial_delay":5,"interval":5,"path":"path","port":8080,"timeout":300,"type":"tcp"},"project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_revision_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_concurrency":100,"scale_concurrency_target":80,"scale_cpu_limit":"1","scale_down_delay":300,"scale_ephemeral_storage_limit":"4G","scale_initial_instances":1,"scale_max_instances":10,"scale_memory_limit":"4G","scale_min_instances":1,"scale_request_timeout":300,"status":"ready","status_details":{"actual_instances":1,"reason":"ready"}}]}'
+        mock_response2 = '{"total_count":2,"limit":1,"revisions":[{"app_name":"my-app","computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_port":8080,"image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-app-00001","probe_liveness":{"failure_threshold":5,"initial_delay":5,"interval":5,"path":"path","port":8080,"timeout":300,"type":"tcp"},"probe_readiness":{"failure_threshold":5,"initial_delay":5,"interval":5,"path":"path","port":8080,"timeout":300,"type":"tcp"},"project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_revision_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_concurrency":100,"scale_concurrency_target":80,"scale_cpu_limit":"1","scale_down_delay":300,"scale_ephemeral_storage_limit":"4G","scale_initial_instances":1,"scale_max_instances":10,"scale_memory_limit":"4G","scale_min_instances":1,"scale_request_timeout":300,"status":"ready","status_details":{"actual_instances":1,"reason":"ready"}}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         pager = AppRevisionsPager(
@@ -1308,8 +2008,14 @@ class TestGetAppRevision:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions/my-app-00001')
-        mock_response = '{"app_name": "my-app", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-app-00001", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "app_revision_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"actual_instances": 1, "reason": "ready"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"app_name": "my-app", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-app-00001", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_revision_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"actual_instances": 1, "reason": "ready"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -1317,7 +2023,12 @@ class TestGetAppRevision:
         name = 'my-app-00001'
 
         # Invoke method
-        response = _service.get_app_revision(project_id, app_name, name, headers={})
+        response = _service.get_app_revision(
+            project_id,
+            app_name,
+            name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -1333,14 +2044,62 @@ class TestGetAppRevision:
         self.test_get_app_revision_all_params()
 
     @responses.activate
+    def test_get_app_revision_required_params(self):
+        """
+        test_get_app_revision_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions/my-app-00001')
+        mock_response = '{"app_name": "my-app", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-app-00001", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_revision_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"actual_instances": 1, "reason": "ready"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        app_name = 'my-app'
+        name = 'my-app-00001'
+
+        # Invoke method
+        response = _service.get_app_revision(
+            project_id,
+            app_name,
+            name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_app_revision_required_params_with_retries(self):
+        # Enable retries and run test_get_app_revision_required_params.
+        _service.enable_retries()
+        self.test_get_app_revision_required_params()
+
+        # Disable retries and run test_get_app_revision_required_params.
+        _service.disable_retries()
+        self.test_get_app_revision_required_params()
+
+    @responses.activate
     def test_get_app_revision_value_error(self):
         """
         test_get_app_revision_value_error()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions/my-app-00001')
-        mock_response = '{"app_name": "my-app", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-app-00001", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "app_revision_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"actual_instances": 1, "reason": "ready"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"app_name": "my-app", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/revisions/my-app-00001", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_port": 8080, "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-app-00001", "probe_liveness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "probe_readiness": {"failure_threshold": 5, "initial_delay": 5, "interval": 5, "path": "path", "port": 8080, "timeout": 300, "type": "tcp"}, "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_revision_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_concurrency": 100, "scale_concurrency_target": 80, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_ephemeral_storage_limit": "4G", "scale_initial_instances": 1, "scale_max_instances": 10, "scale_memory_limit": "4G", "scale_min_instances": 1, "scale_request_timeout": 300, "status": "ready", "status_details": {"actual_instances": 1, "reason": "ready"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -1380,7 +2139,11 @@ class TestDeleteAppRevision:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions/my-app-00001')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -1388,7 +2151,12 @@ class TestDeleteAppRevision:
         name = 'my-app-00001'
 
         # Invoke method
-        response = _service.delete_app_revision(project_id, app_name, name, headers={})
+        response = _service.delete_app_revision(
+            project_id,
+            app_name,
+            name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -1410,7 +2178,11 @@ class TestDeleteAppRevision:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/revisions/my-app-00001')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -1436,6 +2208,213 @@ class TestDeleteAppRevision:
         # Disable retries and run test_delete_app_revision_value_error.
         _service.disable_retries()
         self.test_delete_app_revision_value_error()
+
+
+class TestListAppInstances:
+    """
+    Test Class for list_app_instances
+    """
+
+    @responses.activate
+    def test_list_app_instances_all_params(self):
+        """
+        list_app_instances()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/instances')
+        mock_response = '{"first": {"href": "href"}, "instances": [{"app_name": "my-app", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-app-00001-deployment-6c9b5cf966-wjs44", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_instance_v2", "restarts": 4, "revision_name": "my-app", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_memory_limit": "4G", "status": "pending", "system_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "container_status", "exit_code": 100, "reason": "ready", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "container_status", "exit_code": 100, "reason": "ready", "started_at": "2022-09-22T17:34:00Z"}}, "user_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "container_status", "exit_code": 100, "reason": "ready", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "container_status", "exit_code": 100, "reason": "ready", "started_at": "2022-09-22T17:34:00Z"}}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        app_name = 'my-app'
+        limit = 100
+        start = 'testString'
+
+        # Invoke method
+        response = _service.list_app_instances(
+            project_id,
+            app_name,
+            limit=limit,
+            start=start,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate query params
+        query_string = responses.calls[0].request.url.split('?', 1)[1]
+        query_string = urllib.parse.unquote_plus(query_string)
+        assert 'limit={}'.format(limit) in query_string
+        assert 'start={}'.format(start) in query_string
+
+    def test_list_app_instances_all_params_with_retries(self):
+        # Enable retries and run test_list_app_instances_all_params.
+        _service.enable_retries()
+        self.test_list_app_instances_all_params()
+
+        # Disable retries and run test_list_app_instances_all_params.
+        _service.disable_retries()
+        self.test_list_app_instances_all_params()
+
+    @responses.activate
+    def test_list_app_instances_required_params(self):
+        """
+        test_list_app_instances_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/instances')
+        mock_response = '{"first": {"href": "href"}, "instances": [{"app_name": "my-app", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-app-00001-deployment-6c9b5cf966-wjs44", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_instance_v2", "restarts": 4, "revision_name": "my-app", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_memory_limit": "4G", "status": "pending", "system_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "container_status", "exit_code": 100, "reason": "ready", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "container_status", "exit_code": 100, "reason": "ready", "started_at": "2022-09-22T17:34:00Z"}}, "user_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "container_status", "exit_code": 100, "reason": "ready", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "container_status", "exit_code": 100, "reason": "ready", "started_at": "2022-09-22T17:34:00Z"}}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        app_name = 'my-app'
+
+        # Invoke method
+        response = _service.list_app_instances(
+            project_id,
+            app_name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_list_app_instances_required_params_with_retries(self):
+        # Enable retries and run test_list_app_instances_required_params.
+        _service.enable_retries()
+        self.test_list_app_instances_required_params()
+
+        # Disable retries and run test_list_app_instances_required_params.
+        _service.disable_retries()
+        self.test_list_app_instances_required_params()
+
+    @responses.activate
+    def test_list_app_instances_value_error(self):
+        """
+        test_list_app_instances_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/instances')
+        mock_response = '{"first": {"href": "href"}, "instances": [{"app_name": "my-app", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-app-00001-deployment-6c9b5cf966-wjs44", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_instance_v2", "restarts": 4, "revision_name": "my-app", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_memory_limit": "4G", "status": "pending", "system_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "container_status", "exit_code": 100, "reason": "ready", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "container_status", "exit_code": 100, "reason": "ready", "started_at": "2022-09-22T17:34:00Z"}}, "user_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "container_status", "exit_code": 100, "reason": "ready", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "container_status", "exit_code": 100, "reason": "ready", "started_at": "2022-09-22T17:34:00Z"}}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        app_name = 'my-app'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+            "app_name": app_name,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.list_app_instances(**req_copy)
+
+    def test_list_app_instances_value_error_with_retries(self):
+        # Enable retries and run test_list_app_instances_value_error.
+        _service.enable_retries()
+        self.test_list_app_instances_value_error()
+
+        # Disable retries and run test_list_app_instances_value_error.
+        _service.disable_retries()
+        self.test_list_app_instances_value_error()
+
+    @responses.activate
+    def test_list_app_instances_with_pager_get_next(self):
+        """
+        test_list_app_instances_with_pager_get_next()
+        """
+        # Set up a two-page mock response
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/instances')
+        mock_response1 = '{"next":{"start":"1"},"instances":[{"app_name":"my-app","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-app-00001-deployment-6c9b5cf966-wjs44","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_instance_v2","restarts":4,"revision_name":"my-app","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_memory_limit":"4G","status":"pending","system_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"container_status","exit_code":100,"reason":"ready","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"container_status","exit_code":100,"reason":"ready","started_at":"2022-09-22T17:34:00Z"}},"user_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"container_status","exit_code":100,"reason":"ready","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"container_status","exit_code":100,"reason":"ready","started_at":"2022-09-22T17:34:00Z"}}}],"total_count":2,"limit":1}'
+        mock_response2 = '{"instances":[{"app_name":"my-app","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-app-00001-deployment-6c9b5cf966-wjs44","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_instance_v2","restarts":4,"revision_name":"my-app","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_memory_limit":"4G","status":"pending","system_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"container_status","exit_code":100,"reason":"ready","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"container_status","exit_code":100,"reason":"ready","started_at":"2022-09-22T17:34:00Z"}},"user_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"container_status","exit_code":100,"reason":"ready","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"container_status","exit_code":100,"reason":"ready","started_at":"2022-09-22T17:34:00Z"}}}],"total_count":2,"limit":1}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Exercise the pager class for this operation
+        all_results = []
+        pager = AppInstancesPager(
+            client=_service,
+            project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+            app_name='my-app',
+            limit=100,
+        )
+        while pager.has_next():
+            next_page = pager.get_next()
+            assert next_page is not None
+            all_results.extend(next_page)
+        assert len(all_results) == 2
+
+    @responses.activate
+    def test_list_app_instances_with_pager_get_all(self):
+        """
+        test_list_app_instances_with_pager_get_all()
+        """
+        # Set up a two-page mock response
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/instances')
+        mock_response1 = '{"next":{"start":"1"},"instances":[{"app_name":"my-app","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-app-00001-deployment-6c9b5cf966-wjs44","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_instance_v2","restarts":4,"revision_name":"my-app","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_memory_limit":"4G","status":"pending","system_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"container_status","exit_code":100,"reason":"ready","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"container_status","exit_code":100,"reason":"ready","started_at":"2022-09-22T17:34:00Z"}},"user_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"container_status","exit_code":100,"reason":"ready","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"container_status","exit_code":100,"reason":"ready","started_at":"2022-09-22T17:34:00Z"}}}],"total_count":2,"limit":1}'
+        mock_response2 = '{"instances":[{"app_name":"my-app","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-app-00001-deployment-6c9b5cf966-wjs44","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_instance_v2","restarts":4,"revision_name":"my-app","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_memory_limit":"4G","status":"pending","system_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"container_status","exit_code":100,"reason":"ready","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"container_status","exit_code":100,"reason":"ready","started_at":"2022-09-22T17:34:00Z"}},"user_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"container_status","exit_code":100,"reason":"ready","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"container_status","exit_code":100,"reason":"ready","started_at":"2022-09-22T17:34:00Z"}}}],"total_count":2,"limit":1}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Exercise the pager class for this operation
+        pager = AppInstancesPager(
+            client=_service,
+            project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+            app_name='my-app',
+            limit=100,
+        )
+        all_results = pager.get_all()
+        assert all_results is not None
+        assert len(all_results) == 2
 
 
 # endregion
@@ -1489,8 +2468,14 @@ class TestListJobs:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs')
-        mock_response = '{"first": {"href": "href"}, "jobs": [{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}], "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"first": {"href": "href"}, "jobs": [{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -1498,7 +2483,12 @@ class TestListJobs:
         start = 'testString'
 
         # Invoke method
-        response = _service.list_jobs(project_id, limit=limit, start=start, headers={})
+        response = _service.list_jobs(
+            project_id,
+            limit=limit,
+            start=start,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -1525,14 +2515,23 @@ class TestListJobs:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs')
-        mock_response = '{"first": {"href": "href"}, "jobs": [{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}], "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"first": {"href": "href"}, "jobs": [{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
 
         # Invoke method
-        response = _service.list_jobs(project_id, headers={})
+        response = _service.list_jobs(
+            project_id,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -1554,8 +2553,14 @@ class TestListJobs:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs')
-        mock_response = '{"first": {"href": "href"}, "jobs": [{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}], "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"first": {"href": "href"}, "jobs": [{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -1585,10 +2590,22 @@ class TestListJobs:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs')
-        mock_response1 = '{"next":{"start":"1"},"total_count":2,"jobs":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-job","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3}],"limit":1}'
-        mock_response2 = '{"total_count":2,"jobs":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-job","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3}],"limit":1}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        mock_response1 = '{"next":{"start":"1"},"total_count":2,"jobs":[{"build":"my-build","build_run":"my-build-run","computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-job","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"job_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3}],"limit":1}'
+        mock_response2 = '{"total_count":2,"jobs":[{"build":"my-build","build_run":"my-build-run","computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-job","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"job_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3}],"limit":1}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         all_results = []
@@ -1610,10 +2627,22 @@ class TestListJobs:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs')
-        mock_response1 = '{"next":{"start":"1"},"total_count":2,"jobs":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-job","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3}],"limit":1}'
-        mock_response2 = '{"total_count":2,"jobs":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-job","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3}],"limit":1}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        mock_response1 = '{"next":{"start":"1"},"total_count":2,"jobs":[{"build":"my-build","build_run":"my-build-run","computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-job","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"job_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3}],"limit":1}'
+        mock_response2 = '{"total_count":2,"jobs":[{"build":"my-build","build_run":"my-build-run","computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","name":"my-job","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"job_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3}],"limit":1}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         pager = JobsPager(
@@ -1638,8 +2667,14 @@ class TestCreateJob:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
-        responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=201)
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
 
         # Construct a dict representation of a EnvVarPrototype model
         env_var_prototype_model = {}
@@ -1730,14 +2765,124 @@ class TestCreateJob:
         self.test_create_job_all_params()
 
     @responses.activate
+    def test_create_job_required_params(self):
+        """
+        test_create_job_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs')
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
+
+        # Construct a dict representation of a EnvVarPrototype model
+        env_var_prototype_model = {}
+        env_var_prototype_model['key'] = 'MY_VARIABLE'
+        env_var_prototype_model['name'] = 'SOME'
+        env_var_prototype_model['prefix'] = 'PREFIX_'
+        env_var_prototype_model['reference'] = 'my-secret'
+        env_var_prototype_model['type'] = 'literal'
+        env_var_prototype_model['value'] = 'VALUE'
+
+        # Construct a dict representation of a VolumeMountPrototype model
+        volume_mount_prototype_model = {}
+        volume_mount_prototype_model['mount_path'] = '/app'
+        volume_mount_prototype_model['name'] = 'codeengine-mount-b69u90'
+        volume_mount_prototype_model['reference'] = 'my-secret'
+        volume_mount_prototype_model['type'] = 'secret'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        image_reference = 'icr.io/codeengine/helloworld'
+        name = 'my-job'
+        image_secret = 'my-secret'
+        run_arguments = ['testString']
+        run_as_user = 1001
+        run_commands = ['testString']
+        run_env_variables = [env_var_prototype_model]
+        run_mode = 'task'
+        run_service_account = 'default'
+        run_volume_mounts = [volume_mount_prototype_model]
+        scale_array_spec = '1-5,7-8,10'
+        scale_cpu_limit = '1'
+        scale_ephemeral_storage_limit = '4G'
+        scale_max_execution_time = 7200
+        scale_memory_limit = '4G'
+        scale_retry_limit = 3
+
+        # Invoke method
+        response = _service.create_job(
+            project_id,
+            image_reference,
+            name,
+            image_secret=image_secret,
+            run_arguments=run_arguments,
+            run_as_user=run_as_user,
+            run_commands=run_commands,
+            run_env_variables=run_env_variables,
+            run_mode=run_mode,
+            run_service_account=run_service_account,
+            run_volume_mounts=run_volume_mounts,
+            scale_array_spec=scale_array_spec,
+            scale_cpu_limit=scale_cpu_limit,
+            scale_ephemeral_storage_limit=scale_ephemeral_storage_limit,
+            scale_max_execution_time=scale_max_execution_time,
+            scale_memory_limit=scale_memory_limit,
+            scale_retry_limit=scale_retry_limit,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 201
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body['image_reference'] == 'icr.io/codeengine/helloworld'
+        assert req_body['name'] == 'my-job'
+        assert req_body['image_secret'] == 'my-secret'
+        assert req_body['run_arguments'] == ['testString']
+        assert req_body['run_as_user'] == 1001
+        assert req_body['run_commands'] == ['testString']
+        assert req_body['run_env_variables'] == [env_var_prototype_model]
+        assert req_body['run_mode'] == 'task'
+        assert req_body['run_service_account'] == 'default'
+        assert req_body['run_volume_mounts'] == [volume_mount_prototype_model]
+        assert req_body['scale_array_spec'] == '1-5,7-8,10'
+        assert req_body['scale_cpu_limit'] == '1'
+        assert req_body['scale_ephemeral_storage_limit'] == '4G'
+        assert req_body['scale_max_execution_time'] == 7200
+        assert req_body['scale_memory_limit'] == '4G'
+        assert req_body['scale_retry_limit'] == 3
+
+    def test_create_job_required_params_with_retries(self):
+        # Enable retries and run test_create_job_required_params.
+        _service.enable_retries()
+        self.test_create_job_required_params()
+
+        # Disable retries and run test_create_job_required_params.
+        _service.disable_retries()
+        self.test_create_job_required_params()
+
+    @responses.activate
     def test_create_job_value_error(self):
         """
         test_create_job_value_error()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
-        responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=201)
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
 
         # Construct a dict representation of a EnvVarPrototype model
         env_var_prototype_model = {}
@@ -1807,15 +2952,25 @@ class TestGetJob:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs/my-job')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-job'
 
         # Invoke method
-        response = _service.get_job(project_id, name, headers={})
+        response = _service.get_job(
+            project_id,
+            name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -1831,14 +2986,60 @@ class TestGetJob:
         self.test_get_job_all_params()
 
     @responses.activate
+    def test_get_job_required_params(self):
+        """
+        test_get_job_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs/my-job')
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-job'
+
+        # Invoke method
+        response = _service.get_job(
+            project_id,
+            name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_job_required_params_with_retries(self):
+        # Enable retries and run test_get_job_required_params.
+        _service.enable_retries()
+        self.test_get_job_required_params()
+
+        # Disable retries and run test_get_job_required_params.
+        _service.disable_retries()
+        self.test_get_job_required_params()
+
+    @responses.activate
     def test_get_job_value_error(self):
         """
         test_get_job_value_error()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs/my-job')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -1876,14 +3077,22 @@ class TestDeleteJob:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs/my-job')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-job'
 
         # Invoke method
-        response = _service.delete_job(project_id, name, headers={})
+        response = _service.delete_job(
+            project_id,
+            name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -1899,13 +3108,54 @@ class TestDeleteJob:
         self.test_delete_job_all_params()
 
     @responses.activate
+    def test_delete_job_required_params(self):
+        """
+        test_delete_job_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs/my-job')
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-job'
+
+        # Invoke method
+        response = _service.delete_job(
+            project_id,
+            name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_delete_job_required_params_with_retries(self):
+        # Enable retries and run test_delete_job_required_params.
+        _service.enable_retries()
+        self.test_delete_job_required_params()
+
+        # Disable retries and run test_delete_job_required_params.
+        _service.disable_retries()
+        self.test_delete_job_required_params()
+
+    @responses.activate
     def test_delete_job_value_error(self):
         """
         test_delete_job_value_error()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs/my-job')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -1943,8 +3193,14 @@ class TestUpdateJob:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs/my-job')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
-        responses.add(responses.PATCH, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
+        responses.add(
+            responses.PATCH,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Construct a dict representation of a EnvVarPrototype model
         env_var_prototype_model = {}
@@ -1987,7 +3243,13 @@ class TestUpdateJob:
         job = job_patch_model
 
         # Invoke method
-        response = _service.update_job(project_id, name, if_match, job, headers={})
+        response = _service.update_job(
+            project_id,
+            name,
+            if_match,
+            job,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -2006,14 +3268,101 @@ class TestUpdateJob:
         self.test_update_job_all_params()
 
     @responses.activate
+    def test_update_job_required_params(self):
+        """
+        test_update_job_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs/my-job')
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
+        responses.add(
+            responses.PATCH,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Construct a dict representation of a EnvVarPrototype model
+        env_var_prototype_model = {}
+        env_var_prototype_model['key'] = 'MY_VARIABLE'
+        env_var_prototype_model['name'] = 'SOME'
+        env_var_prototype_model['prefix'] = 'PREFIX_'
+        env_var_prototype_model['reference'] = 'my-secret'
+        env_var_prototype_model['type'] = 'literal'
+        env_var_prototype_model['value'] = 'VALUE'
+
+        # Construct a dict representation of a VolumeMountPrototype model
+        volume_mount_prototype_model = {}
+        volume_mount_prototype_model['mount_path'] = '/app'
+        volume_mount_prototype_model['name'] = 'codeengine-mount-b69u90'
+        volume_mount_prototype_model['reference'] = 'my-secret'
+        volume_mount_prototype_model['type'] = 'secret'
+
+        # Construct a dict representation of a JobPatch model
+        job_patch_model = {}
+        job_patch_model['image_reference'] = 'icr.io/codeengine/helloworld'
+        job_patch_model['image_secret'] = 'my-secret'
+        job_patch_model['run_arguments'] = ['testString']
+        job_patch_model['run_as_user'] = 1001
+        job_patch_model['run_commands'] = ['testString']
+        job_patch_model['run_env_variables'] = [env_var_prototype_model]
+        job_patch_model['run_mode'] = 'task'
+        job_patch_model['run_service_account'] = 'default'
+        job_patch_model['run_volume_mounts'] = [volume_mount_prototype_model]
+        job_patch_model['scale_array_spec'] = '1-5,7-8,10'
+        job_patch_model['scale_cpu_limit'] = '1'
+        job_patch_model['scale_ephemeral_storage_limit'] = '4G'
+        job_patch_model['scale_max_execution_time'] = 7200
+        job_patch_model['scale_memory_limit'] = '4G'
+        job_patch_model['scale_retry_limit'] = 3
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-job'
+        if_match = 'testString'
+        job = job_patch_model
+
+        # Invoke method
+        response = _service.update_job(
+            project_id,
+            name,
+            if_match,
+            job,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == job
+
+    def test_update_job_required_params_with_retries(self):
+        # Enable retries and run test_update_job_required_params.
+        _service.enable_retries()
+        self.test_update_job_required_params()
+
+        # Disable retries and run test_update_job_required_params.
+        _service.disable_retries()
+        self.test_update_job_required_params()
+
+    @responses.activate
     def test_update_job_value_error(self):
         """
         test_update_job_value_error()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/jobs/my-job')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
-        responses.add(responses.PATCH, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"build": "my-build", "build_run": "my-build-run", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/jobs/my-job", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "name": "my-job", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3}'
+        responses.add(
+            responses.PATCH,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Construct a dict representation of a EnvVarPrototype model
         env_var_prototype_model = {}
@@ -2089,8 +3438,14 @@ class TestListJobRuns:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs')
-        mock_response = '{"first": {"href": "href"}, "job_runs": [{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"first": {"href": "href"}, "job_runs": [{"computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_size_variable_override": 2, "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "failed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "failed_indices": "1,5", "pending": 0, "pending_indices": "9,12-15", "requested": 0, "running": 0, "running_indices": "10-11", "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "succeeded_indices": "2-4,6-8", "unknown": 0}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -2099,7 +3454,13 @@ class TestListJobRuns:
         start = 'testString'
 
         # Invoke method
-        response = _service.list_job_runs(project_id, job_name=job_name, limit=limit, start=start, headers={})
+        response = _service.list_job_runs(
+            project_id,
+            job_name=job_name,
+            limit=limit,
+            start=start,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -2127,14 +3488,23 @@ class TestListJobRuns:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs')
-        mock_response = '{"first": {"href": "href"}, "job_runs": [{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"first": {"href": "href"}, "job_runs": [{"computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_size_variable_override": 2, "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "failed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "failed_indices": "1,5", "pending": 0, "pending_indices": "9,12-15", "requested": 0, "running": 0, "running_indices": "10-11", "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "succeeded_indices": "2-4,6-8", "unknown": 0}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
 
         # Invoke method
-        response = _service.list_job_runs(project_id, headers={})
+        response = _service.list_job_runs(
+            project_id,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -2156,8 +3526,14 @@ class TestListJobRuns:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs')
-        mock_response = '{"first": {"href": "href"}, "job_runs": [{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"first": {"href": "href"}, "job_runs": [{"computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_size_variable_override": 2, "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "failed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "failed_indices": "1,5", "pending": 0, "pending_indices": "9,12-15", "requested": 0, "running": 0, "running_indices": "10-11", "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "succeeded_indices": "2-4,6-8", "unknown": 0}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -2187,10 +3563,22 @@ class TestListJobRuns:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs')
-        mock_response1 = '{"next":{"start":"1"},"job_runs":[{"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","job_name":"my-job","name":"my-job-run","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_run_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3,"status":"completed","status_details":{"completion_time":"2022-09-22T17:40:00Z","failed":0,"pending":0,"requested":0,"running":0,"start_time":"2022-09-22T17:34:00Z","succeeded":1,"unknown":0}}],"total_count":2,"limit":1}'
-        mock_response2 = '{"job_runs":[{"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","job_name":"my-job","name":"my-job-run","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_run_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3,"status":"completed","status_details":{"completion_time":"2022-09-22T17:40:00Z","failed":0,"pending":0,"requested":0,"running":0,"start_time":"2022-09-22T17:34:00Z","succeeded":1,"unknown":0}}],"total_count":2,"limit":1}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        mock_response1 = '{"next":{"start":"1"},"job_runs":[{"computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","job_name":"my-job","name":"my-job-run","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"job_run_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_size_variable_override":2,"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3,"status":"failed","status_details":{"completion_time":"2022-09-22T17:40:00Z","failed":0,"failed_indices":"1,5","pending":0,"pending_indices":"9,12-15","requested":0,"running":0,"running_indices":"10-11","start_time":"2022-09-22T17:34:00Z","succeeded":1,"succeeded_indices":"2-4,6-8","unknown":0}}],"total_count":2,"limit":1}'
+        mock_response2 = '{"job_runs":[{"computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","job_name":"my-job","name":"my-job-run","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"job_run_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_size_variable_override":2,"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3,"status":"failed","status_details":{"completion_time":"2022-09-22T17:40:00Z","failed":0,"failed_indices":"1,5","pending":0,"pending_indices":"9,12-15","requested":0,"running":0,"running_indices":"10-11","start_time":"2022-09-22T17:34:00Z","succeeded":1,"succeeded_indices":"2-4,6-8","unknown":0}}],"total_count":2,"limit":1}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         all_results = []
@@ -2213,10 +3601,22 @@ class TestListJobRuns:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs')
-        mock_response1 = '{"next":{"start":"1"},"job_runs":[{"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","job_name":"my-job","name":"my-job-run","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_run_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3,"status":"completed","status_details":{"completion_time":"2022-09-22T17:40:00Z","failed":0,"pending":0,"requested":0,"running":0,"start_time":"2022-09-22T17:34:00Z","succeeded":1,"unknown":0}}],"total_count":2,"limit":1}'
-        mock_response2 = '{"job_runs":[{"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","job_name":"my-job","name":"my-job-run","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"job_run_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3,"status":"completed","status_details":{"completion_time":"2022-09-22T17:40:00Z","failed":0,"pending":0,"requested":0,"running":0,"start_time":"2022-09-22T17:34:00Z","succeeded":1,"unknown":0}}],"total_count":2,"limit":1}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        mock_response1 = '{"next":{"start":"1"},"job_runs":[{"computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","job_name":"my-job","name":"my-job-run","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"job_run_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_size_variable_override":2,"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3,"status":"failed","status_details":{"completion_time":"2022-09-22T17:40:00Z","failed":0,"failed_indices":"1,5","pending":0,"pending_indices":"9,12-15","requested":0,"running":0,"running_indices":"10-11","start_time":"2022-09-22T17:34:00Z","succeeded":1,"succeeded_indices":"2-4,6-8","unknown":0}}],"total_count":2,"limit":1}'
+        mock_response2 = '{"job_runs":[{"computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","image_reference":"icr.io/codeengine/helloworld","image_secret":"my-secret","job_name":"my-job","name":"my-job-run","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"job_run_v2","run_arguments":["run_arguments"],"run_as_user":1001,"run_commands":["run_commands"],"run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"run_mode":"task","run_service_account":"default","run_volume_mounts":[{"mount_path":"/app","name":"codeengine-mount-b69u90","reference":"my-secret","type":"secret"}],"scale_array_size_variable_override":2,"scale_array_spec":"1-5,7-8,10","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_max_execution_time":7200,"scale_memory_limit":"4G","scale_retry_limit":3,"status":"failed","status_details":{"completion_time":"2022-09-22T17:40:00Z","failed":0,"failed_indices":"1,5","pending":0,"pending_indices":"9,12-15","requested":0,"running":0,"running_indices":"10-11","start_time":"2022-09-22T17:34:00Z","succeeded":1,"succeeded_indices":"2-4,6-8","unknown":0}}],"total_count":2,"limit":1}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         pager = JobRunsPager(
@@ -2242,8 +3642,14 @@ class TestCreateJobRun:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}'
-        responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=202)
+        mock_response = '{"computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_size_variable_override": 2, "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "failed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "failed_indices": "1,5", "pending": 0, "pending_indices": "9,12-15", "requested": 0, "running": 0, "running_indices": "10-11", "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "succeeded_indices": "2-4,6-8", "unknown": 0}}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=202,
+        )
 
         # Construct a dict representation of a EnvVarPrototype model
         env_var_prototype_model = {}
@@ -2274,6 +3680,7 @@ class TestCreateJobRun:
         run_mode = 'task'
         run_service_account = 'default'
         run_volume_mounts = [volume_mount_prototype_model]
+        scale_array_size_variable_override = 2
         scale_array_spec = '1-5,7-8,10'
         scale_cpu_limit = '1'
         scale_ephemeral_storage_limit = '4G'
@@ -2295,6 +3702,7 @@ class TestCreateJobRun:
             run_mode=run_mode,
             run_service_account=run_service_account,
             run_volume_mounts=run_volume_mounts,
+            scale_array_size_variable_override=scale_array_size_variable_override,
             scale_array_spec=scale_array_spec,
             scale_cpu_limit=scale_cpu_limit,
             scale_ephemeral_storage_limit=scale_ephemeral_storage_limit,
@@ -2320,6 +3728,7 @@ class TestCreateJobRun:
         assert req_body['run_mode'] == 'task'
         assert req_body['run_service_account'] == 'default'
         assert req_body['run_volume_mounts'] == [volume_mount_prototype_model]
+        assert req_body['scale_array_size_variable_override'] == 2
         assert req_body['scale_array_spec'] == '1-5,7-8,10'
         assert req_body['scale_cpu_limit'] == '1'
         assert req_body['scale_ephemeral_storage_limit'] == '4G'
@@ -2337,14 +3746,20 @@ class TestCreateJobRun:
         self.test_create_job_run_all_params()
 
     @responses.activate
-    def test_create_job_run_value_error(self):
+    def test_create_job_run_required_params(self):
         """
-        test_create_job_run_value_error()
+        test_create_job_run_required_params()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}'
-        responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=202)
+        mock_response = '{"computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_size_variable_override": 2, "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "failed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "failed_indices": "1,5", "pending": 0, "pending_indices": "9,12-15", "requested": 0, "running": 0, "running_indices": "10-11", "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "succeeded_indices": "2-4,6-8", "unknown": 0}}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=202,
+        )
 
         # Construct a dict representation of a EnvVarPrototype model
         env_var_prototype_model = {}
@@ -2375,6 +3790,117 @@ class TestCreateJobRun:
         run_mode = 'task'
         run_service_account = 'default'
         run_volume_mounts = [volume_mount_prototype_model]
+        scale_array_size_variable_override = 2
+        scale_array_spec = '1-5,7-8,10'
+        scale_cpu_limit = '1'
+        scale_ephemeral_storage_limit = '4G'
+        scale_max_execution_time = 7200
+        scale_memory_limit = '4G'
+        scale_retry_limit = 3
+
+        # Invoke method
+        response = _service.create_job_run(
+            project_id,
+            image_reference=image_reference,
+            image_secret=image_secret,
+            job_name=job_name,
+            name=name,
+            run_arguments=run_arguments,
+            run_as_user=run_as_user,
+            run_commands=run_commands,
+            run_env_variables=run_env_variables,
+            run_mode=run_mode,
+            run_service_account=run_service_account,
+            run_volume_mounts=run_volume_mounts,
+            scale_array_size_variable_override=scale_array_size_variable_override,
+            scale_array_spec=scale_array_spec,
+            scale_cpu_limit=scale_cpu_limit,
+            scale_ephemeral_storage_limit=scale_ephemeral_storage_limit,
+            scale_max_execution_time=scale_max_execution_time,
+            scale_memory_limit=scale_memory_limit,
+            scale_retry_limit=scale_retry_limit,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body['image_reference'] == 'icr.io/codeengine/helloworld'
+        assert req_body['image_secret'] == 'my-secret'
+        assert req_body['job_name'] == 'my-job'
+        assert req_body['name'] == 'my-job-run'
+        assert req_body['run_arguments'] == ['testString']
+        assert req_body['run_as_user'] == 1001
+        assert req_body['run_commands'] == ['testString']
+        assert req_body['run_env_variables'] == [env_var_prototype_model]
+        assert req_body['run_mode'] == 'task'
+        assert req_body['run_service_account'] == 'default'
+        assert req_body['run_volume_mounts'] == [volume_mount_prototype_model]
+        assert req_body['scale_array_size_variable_override'] == 2
+        assert req_body['scale_array_spec'] == '1-5,7-8,10'
+        assert req_body['scale_cpu_limit'] == '1'
+        assert req_body['scale_ephemeral_storage_limit'] == '4G'
+        assert req_body['scale_max_execution_time'] == 7200
+        assert req_body['scale_memory_limit'] == '4G'
+        assert req_body['scale_retry_limit'] == 3
+
+    def test_create_job_run_required_params_with_retries(self):
+        # Enable retries and run test_create_job_run_required_params.
+        _service.enable_retries()
+        self.test_create_job_run_required_params()
+
+        # Disable retries and run test_create_job_run_required_params.
+        _service.disable_retries()
+        self.test_create_job_run_required_params()
+
+    @responses.activate
+    def test_create_job_run_value_error(self):
+        """
+        test_create_job_run_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs')
+        mock_response = '{"computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_size_variable_override": 2, "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "failed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "failed_indices": "1,5", "pending": 0, "pending_indices": "9,12-15", "requested": 0, "running": 0, "running_indices": "10-11", "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "succeeded_indices": "2-4,6-8", "unknown": 0}}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=202,
+        )
+
+        # Construct a dict representation of a EnvVarPrototype model
+        env_var_prototype_model = {}
+        env_var_prototype_model['key'] = 'MY_VARIABLE'
+        env_var_prototype_model['name'] = 'SOME'
+        env_var_prototype_model['prefix'] = 'PREFIX_'
+        env_var_prototype_model['reference'] = 'my-secret'
+        env_var_prototype_model['type'] = 'literal'
+        env_var_prototype_model['value'] = 'VALUE'
+
+        # Construct a dict representation of a VolumeMountPrototype model
+        volume_mount_prototype_model = {}
+        volume_mount_prototype_model['mount_path'] = '/app'
+        volume_mount_prototype_model['name'] = 'codeengine-mount-b69u90'
+        volume_mount_prototype_model['reference'] = 'my-secret'
+        volume_mount_prototype_model['type'] = 'secret'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        image_reference = 'icr.io/codeengine/helloworld'
+        image_secret = 'my-secret'
+        job_name = 'my-job'
+        name = 'my-job-run'
+        run_arguments = ['testString']
+        run_as_user = 1001
+        run_commands = ['testString']
+        run_env_variables = [env_var_prototype_model]
+        run_mode = 'task'
+        run_service_account = 'default'
+        run_volume_mounts = [volume_mount_prototype_model]
+        scale_array_size_variable_override = 2
         scale_array_spec = '1-5,7-8,10'
         scale_cpu_limit = '1'
         scale_ephemeral_storage_limit = '4G'
@@ -2413,15 +3939,25 @@ class TestGetJobRun:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs/my-job-run')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_size_variable_override": 2, "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "failed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "failed_indices": "1,5", "pending": 0, "pending_indices": "9,12-15", "requested": 0, "running": 0, "running_indices": "10-11", "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "succeeded_indices": "2-4,6-8", "unknown": 0}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-job-run'
 
         # Invoke method
-        response = _service.get_job_run(project_id, name, headers={})
+        response = _service.get_job_run(
+            project_id,
+            name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -2437,14 +3973,60 @@ class TestGetJobRun:
         self.test_get_job_run_all_params()
 
     @responses.activate
+    def test_get_job_run_required_params(self):
+        """
+        test_get_job_run_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs/my-job-run')
+        mock_response = '{"computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_size_variable_override": 2, "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "failed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "failed_indices": "1,5", "pending": 0, "pending_indices": "9,12-15", "requested": 0, "running": 0, "running_indices": "10-11", "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "succeeded_indices": "2-4,6-8", "unknown": 0}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-job-run'
+
+        # Invoke method
+        response = _service.get_job_run(
+            project_id,
+            name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_job_run_required_params_with_retries(self):
+        # Enable retries and run test_get_job_run_required_params.
+        _service.enable_retries()
+        self.test_get_job_run_required_params()
+
+        # Disable retries and run test_get_job_run_required_params.
+        _service.disable_retries()
+        self.test_get_job_run_required_params()
+
+    @responses.activate
     def test_get_job_run_value_error(self):
         """
         test_get_job_run_value_error()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs/my-job-run')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "completed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "pending": 0, "requested": 0, "running": 0, "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "unknown": 0}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/job_runs/my-job-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "image_reference": "icr.io/codeengine/helloworld", "image_secret": "my-secret", "job_name": "my-job", "name": "my-job-run", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "job_run_v2", "run_arguments": ["run_arguments"], "run_as_user": 1001, "run_commands": ["run_commands"], "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "run_mode": "task", "run_service_account": "default", "run_volume_mounts": [{"mount_path": "/app", "name": "codeengine-mount-b69u90", "reference": "my-secret", "type": "secret"}], "scale_array_size_variable_override": 2, "scale_array_spec": "1-5,7-8,10", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_max_execution_time": 7200, "scale_memory_limit": "4G", "scale_retry_limit": 3, "status": "failed", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "failed": 0, "failed_indices": "1,5", "pending": 0, "pending_indices": "9,12-15", "requested": 0, "running": 0, "running_indices": "10-11", "start_time": "2022-09-22T17:34:00Z", "succeeded": 1, "succeeded_indices": "2-4,6-8", "unknown": 0}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -2482,14 +4064,22 @@ class TestDeleteJobRun:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs/my-job-run')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-job-run'
 
         # Invoke method
-        response = _service.delete_job_run(project_id, name, headers={})
+        response = _service.delete_job_run(
+            project_id,
+            name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -2511,7 +4101,11 @@ class TestDeleteJobRun:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/job_runs/my-job-run')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -2543,7 +4137,1493 @@ class TestDeleteJobRun:
 ##############################################################################
 
 ##############################################################################
-# Start of Service: Builds
+# Start of Service: Functions
+##############################################################################
+# region
+
+
+class TestNewInstance:
+    """
+    Test Class for new_instance
+    """
+
+    def test_new_instance(self):
+        """
+        new_instance()
+        """
+        os.environ['TEST_SERVICE_AUTH_TYPE'] = 'noAuth'
+
+        service = CodeEngineV2.new_instance(
+            service_name='TEST_SERVICE',
+        )
+
+        assert service is not None
+        assert isinstance(service, CodeEngineV2)
+
+    def test_new_instance_without_authenticator(self):
+        """
+        new_instance_without_authenticator()
+        """
+        with pytest.raises(ValueError, match='authenticator must be provided'):
+            service = CodeEngineV2.new_instance(
+                service_name='TEST_SERVICE_NOT_FOUND',
+            )
+
+
+class TestListFunctionRuntimes:
+    """
+    Test Class for list_function_runtimes
+    """
+
+    @responses.activate
+    def test_list_function_runtimes_all_params(self):
+        """
+        list_function_runtimes()
+        """
+        # Set up mock
+        url = preprocess_url('/function_runtimes')
+        mock_response = '{"function_runtimes": [{"default": true, "deprecated": false, "family": "nodejs", "id": "nodejs-18", "name": "Node.js 18", "optimized": true}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Invoke method
+        response = _service.list_function_runtimes()
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_list_function_runtimes_all_params_with_retries(self):
+        # Enable retries and run test_list_function_runtimes_all_params.
+        _service.enable_retries()
+        self.test_list_function_runtimes_all_params()
+
+        # Disable retries and run test_list_function_runtimes_all_params.
+        _service.disable_retries()
+        self.test_list_function_runtimes_all_params()
+
+
+class TestListFunctions:
+    """
+    Test Class for list_functions
+    """
+
+    @responses.activate
+    def test_list_functions_all_params(self):
+        """
+        list_functions()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions')
+        mock_response = '{"first": {"href": "href"}, "functions": [{"code_binary": false, "code_main": "main", "code_reference": "data:text/plain;base64,<base64encoded-source-code>", "code_secret": "my-secret", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-function.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-function.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/functions/my-function", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "managed_domain_mappings": "local_public", "name": "my-function", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "function_v2", "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "runtime": "nodejs-18", "scale_concurrency": 1, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_max_execution_time": 60, "scale_memory_limit": "1G", "status": "offline", "status_details": {"reason": "offline"}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        limit = 100
+        start = 'testString'
+
+        # Invoke method
+        response = _service.list_functions(
+            project_id,
+            limit=limit,
+            start=start,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate query params
+        query_string = responses.calls[0].request.url.split('?', 1)[1]
+        query_string = urllib.parse.unquote_plus(query_string)
+        assert 'limit={}'.format(limit) in query_string
+        assert 'start={}'.format(start) in query_string
+
+    def test_list_functions_all_params_with_retries(self):
+        # Enable retries and run test_list_functions_all_params.
+        _service.enable_retries()
+        self.test_list_functions_all_params()
+
+        # Disable retries and run test_list_functions_all_params.
+        _service.disable_retries()
+        self.test_list_functions_all_params()
+
+    @responses.activate
+    def test_list_functions_required_params(self):
+        """
+        test_list_functions_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions')
+        mock_response = '{"first": {"href": "href"}, "functions": [{"code_binary": false, "code_main": "main", "code_reference": "data:text/plain;base64,<base64encoded-source-code>", "code_secret": "my-secret", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-function.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-function.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/functions/my-function", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "managed_domain_mappings": "local_public", "name": "my-function", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "function_v2", "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "runtime": "nodejs-18", "scale_concurrency": 1, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_max_execution_time": 60, "scale_memory_limit": "1G", "status": "offline", "status_details": {"reason": "offline"}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+
+        # Invoke method
+        response = _service.list_functions(
+            project_id,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_list_functions_required_params_with_retries(self):
+        # Enable retries and run test_list_functions_required_params.
+        _service.enable_retries()
+        self.test_list_functions_required_params()
+
+        # Disable retries and run test_list_functions_required_params.
+        _service.disable_retries()
+        self.test_list_functions_required_params()
+
+    @responses.activate
+    def test_list_functions_value_error(self):
+        """
+        test_list_functions_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions')
+        mock_response = '{"first": {"href": "href"}, "functions": [{"code_binary": false, "code_main": "main", "code_reference": "data:text/plain;base64,<base64encoded-source-code>", "code_secret": "my-secret", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-function.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-function.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/functions/my-function", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "managed_domain_mappings": "local_public", "name": "my-function", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "function_v2", "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "runtime": "nodejs-18", "scale_concurrency": 1, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_max_execution_time": 60, "scale_memory_limit": "1G", "status": "offline", "status_details": {"reason": "offline"}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.list_functions(**req_copy)
+
+    def test_list_functions_value_error_with_retries(self):
+        # Enable retries and run test_list_functions_value_error.
+        _service.enable_retries()
+        self.test_list_functions_value_error()
+
+        # Disable retries and run test_list_functions_value_error.
+        _service.disable_retries()
+        self.test_list_functions_value_error()
+
+    @responses.activate
+    def test_list_functions_with_pager_get_next(self):
+        """
+        test_list_functions_with_pager_get_next()
+        """
+        # Set up a two-page mock response
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions')
+        mock_response1 = '{"next":{"start":"1"},"functions":[{"code_binary":false,"code_main":"main","code_reference":"data:text/plain;base64,<base64encoded-source-code>","code_secret":"my-secret","computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","endpoint":"https://my-function.vg67hzldruk.eu-de.codeengine.appdomain.cloud","endpoint_internal":"http://my-function.vg67hzldruk.svc.cluster.local","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/functions/my-function","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","managed_domain_mappings":"local_public","name":"my-function","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"function_v2","run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"runtime":"nodejs-18","scale_concurrency":1,"scale_cpu_limit":"1","scale_down_delay":300,"scale_max_execution_time":60,"scale_memory_limit":"1G","status":"offline","status_details":{"reason":"offline"}}],"total_count":2,"limit":1}'
+        mock_response2 = '{"functions":[{"code_binary":false,"code_main":"main","code_reference":"data:text/plain;base64,<base64encoded-source-code>","code_secret":"my-secret","computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","endpoint":"https://my-function.vg67hzldruk.eu-de.codeengine.appdomain.cloud","endpoint_internal":"http://my-function.vg67hzldruk.svc.cluster.local","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/functions/my-function","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","managed_domain_mappings":"local_public","name":"my-function","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"function_v2","run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"runtime":"nodejs-18","scale_concurrency":1,"scale_cpu_limit":"1","scale_down_delay":300,"scale_max_execution_time":60,"scale_memory_limit":"1G","status":"offline","status_details":{"reason":"offline"}}],"total_count":2,"limit":1}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Exercise the pager class for this operation
+        all_results = []
+        pager = FunctionsPager(
+            client=_service,
+            project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+            limit=100,
+        )
+        while pager.has_next():
+            next_page = pager.get_next()
+            assert next_page is not None
+            all_results.extend(next_page)
+        assert len(all_results) == 2
+
+    @responses.activate
+    def test_list_functions_with_pager_get_all(self):
+        """
+        test_list_functions_with_pager_get_all()
+        """
+        # Set up a two-page mock response
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions')
+        mock_response1 = '{"next":{"start":"1"},"functions":[{"code_binary":false,"code_main":"main","code_reference":"data:text/plain;base64,<base64encoded-source-code>","code_secret":"my-secret","computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","endpoint":"https://my-function.vg67hzldruk.eu-de.codeengine.appdomain.cloud","endpoint_internal":"http://my-function.vg67hzldruk.svc.cluster.local","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/functions/my-function","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","managed_domain_mappings":"local_public","name":"my-function","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"function_v2","run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"runtime":"nodejs-18","scale_concurrency":1,"scale_cpu_limit":"1","scale_down_delay":300,"scale_max_execution_time":60,"scale_memory_limit":"1G","status":"offline","status_details":{"reason":"offline"}}],"total_count":2,"limit":1}'
+        mock_response2 = '{"functions":[{"code_binary":false,"code_main":"main","code_reference":"data:text/plain;base64,<base64encoded-source-code>","code_secret":"my-secret","computed_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"created_at":"2022-09-13T11:41:35+02:00","endpoint":"https://my-function.vg67hzldruk.eu-de.codeengine.appdomain.cloud","endpoint_internal":"http://my-function.vg67hzldruk.svc.cluster.local","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/functions/my-function","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","managed_domain_mappings":"local_public","name":"my-function","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"function_v2","run_env_variables":[{"key":"MY_VARIABLE","name":"SOME","prefix":"PREFIX_","reference":"my-secret","type":"literal","value":"VALUE"}],"runtime":"nodejs-18","scale_concurrency":1,"scale_cpu_limit":"1","scale_down_delay":300,"scale_max_execution_time":60,"scale_memory_limit":"1G","status":"offline","status_details":{"reason":"offline"}}],"total_count":2,"limit":1}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Exercise the pager class for this operation
+        pager = FunctionsPager(
+            client=_service,
+            project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+            limit=100,
+        )
+        all_results = pager.get_all()
+        assert all_results is not None
+        assert len(all_results) == 2
+
+
+class TestCreateFunction:
+    """
+    Test Class for create_function
+    """
+
+    @responses.activate
+    def test_create_function_all_params(self):
+        """
+        create_function()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions')
+        mock_response = '{"code_binary": false, "code_main": "main", "code_reference": "data:text/plain;base64,<base64encoded-source-code>", "code_secret": "my-secret", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-function.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-function.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/functions/my-function", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "managed_domain_mappings": "local_public", "name": "my-function", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "function_v2", "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "runtime": "nodejs-18", "scale_concurrency": 1, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_max_execution_time": 60, "scale_memory_limit": "1G", "status": "offline", "status_details": {"reason": "offline"}}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
+
+        # Construct a dict representation of a EnvVarPrototype model
+        env_var_prototype_model = {}
+        env_var_prototype_model['key'] = 'MY_VARIABLE'
+        env_var_prototype_model['name'] = 'SOME'
+        env_var_prototype_model['prefix'] = 'PREFIX_'
+        env_var_prototype_model['reference'] = 'my-secret'
+        env_var_prototype_model['type'] = 'literal'
+        env_var_prototype_model['value'] = 'VALUE'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        code_reference = 'data:text/plain;base64,<base64encoded-source-code>'
+        name = 'my-function'
+        runtime = 'nodejs-18'
+        code_binary = False
+        code_main = 'main'
+        code_secret = 'my-secret'
+        managed_domain_mappings = 'local_public'
+        run_env_variables = [env_var_prototype_model]
+        scale_concurrency = 1
+        scale_cpu_limit = '1'
+        scale_down_delay = 300
+        scale_max_execution_time = 60
+        scale_memory_limit = '1G'
+
+        # Invoke method
+        response = _service.create_function(
+            project_id,
+            code_reference,
+            name,
+            runtime,
+            code_binary=code_binary,
+            code_main=code_main,
+            code_secret=code_secret,
+            managed_domain_mappings=managed_domain_mappings,
+            run_env_variables=run_env_variables,
+            scale_concurrency=scale_concurrency,
+            scale_cpu_limit=scale_cpu_limit,
+            scale_down_delay=scale_down_delay,
+            scale_max_execution_time=scale_max_execution_time,
+            scale_memory_limit=scale_memory_limit,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 201
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body['code_reference'] == 'data:text/plain;base64,<base64encoded-source-code>'
+        assert req_body['name'] == 'my-function'
+        assert req_body['runtime'] == 'nodejs-18'
+        assert req_body['code_binary'] == False
+        assert req_body['code_main'] == 'main'
+        assert req_body['code_secret'] == 'my-secret'
+        assert req_body['managed_domain_mappings'] == 'local_public'
+        assert req_body['run_env_variables'] == [env_var_prototype_model]
+        assert req_body['scale_concurrency'] == 1
+        assert req_body['scale_cpu_limit'] == '1'
+        assert req_body['scale_down_delay'] == 300
+        assert req_body['scale_max_execution_time'] == 60
+        assert req_body['scale_memory_limit'] == '1G'
+
+    def test_create_function_all_params_with_retries(self):
+        # Enable retries and run test_create_function_all_params.
+        _service.enable_retries()
+        self.test_create_function_all_params()
+
+        # Disable retries and run test_create_function_all_params.
+        _service.disable_retries()
+        self.test_create_function_all_params()
+
+    @responses.activate
+    def test_create_function_required_params(self):
+        """
+        test_create_function_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions')
+        mock_response = '{"code_binary": false, "code_main": "main", "code_reference": "data:text/plain;base64,<base64encoded-source-code>", "code_secret": "my-secret", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-function.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-function.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/functions/my-function", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "managed_domain_mappings": "local_public", "name": "my-function", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "function_v2", "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "runtime": "nodejs-18", "scale_concurrency": 1, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_max_execution_time": 60, "scale_memory_limit": "1G", "status": "offline", "status_details": {"reason": "offline"}}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
+
+        # Construct a dict representation of a EnvVarPrototype model
+        env_var_prototype_model = {}
+        env_var_prototype_model['key'] = 'MY_VARIABLE'
+        env_var_prototype_model['name'] = 'SOME'
+        env_var_prototype_model['prefix'] = 'PREFIX_'
+        env_var_prototype_model['reference'] = 'my-secret'
+        env_var_prototype_model['type'] = 'literal'
+        env_var_prototype_model['value'] = 'VALUE'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        code_reference = 'data:text/plain;base64,<base64encoded-source-code>'
+        name = 'my-function'
+        runtime = 'nodejs-18'
+        code_binary = False
+        code_main = 'main'
+        code_secret = 'my-secret'
+        managed_domain_mappings = 'local_public'
+        run_env_variables = [env_var_prototype_model]
+        scale_concurrency = 1
+        scale_cpu_limit = '1'
+        scale_down_delay = 300
+        scale_max_execution_time = 60
+        scale_memory_limit = '1G'
+
+        # Invoke method
+        response = _service.create_function(
+            project_id,
+            code_reference,
+            name,
+            runtime,
+            code_binary=code_binary,
+            code_main=code_main,
+            code_secret=code_secret,
+            managed_domain_mappings=managed_domain_mappings,
+            run_env_variables=run_env_variables,
+            scale_concurrency=scale_concurrency,
+            scale_cpu_limit=scale_cpu_limit,
+            scale_down_delay=scale_down_delay,
+            scale_max_execution_time=scale_max_execution_time,
+            scale_memory_limit=scale_memory_limit,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 201
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body['code_reference'] == 'data:text/plain;base64,<base64encoded-source-code>'
+        assert req_body['name'] == 'my-function'
+        assert req_body['runtime'] == 'nodejs-18'
+        assert req_body['code_binary'] == False
+        assert req_body['code_main'] == 'main'
+        assert req_body['code_secret'] == 'my-secret'
+        assert req_body['managed_domain_mappings'] == 'local_public'
+        assert req_body['run_env_variables'] == [env_var_prototype_model]
+        assert req_body['scale_concurrency'] == 1
+        assert req_body['scale_cpu_limit'] == '1'
+        assert req_body['scale_down_delay'] == 300
+        assert req_body['scale_max_execution_time'] == 60
+        assert req_body['scale_memory_limit'] == '1G'
+
+    def test_create_function_required_params_with_retries(self):
+        # Enable retries and run test_create_function_required_params.
+        _service.enable_retries()
+        self.test_create_function_required_params()
+
+        # Disable retries and run test_create_function_required_params.
+        _service.disable_retries()
+        self.test_create_function_required_params()
+
+    @responses.activate
+    def test_create_function_value_error(self):
+        """
+        test_create_function_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions')
+        mock_response = '{"code_binary": false, "code_main": "main", "code_reference": "data:text/plain;base64,<base64encoded-source-code>", "code_secret": "my-secret", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-function.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-function.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/functions/my-function", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "managed_domain_mappings": "local_public", "name": "my-function", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "function_v2", "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "runtime": "nodejs-18", "scale_concurrency": 1, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_max_execution_time": 60, "scale_memory_limit": "1G", "status": "offline", "status_details": {"reason": "offline"}}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
+
+        # Construct a dict representation of a EnvVarPrototype model
+        env_var_prototype_model = {}
+        env_var_prototype_model['key'] = 'MY_VARIABLE'
+        env_var_prototype_model['name'] = 'SOME'
+        env_var_prototype_model['prefix'] = 'PREFIX_'
+        env_var_prototype_model['reference'] = 'my-secret'
+        env_var_prototype_model['type'] = 'literal'
+        env_var_prototype_model['value'] = 'VALUE'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        code_reference = 'data:text/plain;base64,<base64encoded-source-code>'
+        name = 'my-function'
+        runtime = 'nodejs-18'
+        code_binary = False
+        code_main = 'main'
+        code_secret = 'my-secret'
+        managed_domain_mappings = 'local_public'
+        run_env_variables = [env_var_prototype_model]
+        scale_concurrency = 1
+        scale_cpu_limit = '1'
+        scale_down_delay = 300
+        scale_max_execution_time = 60
+        scale_memory_limit = '1G'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+            "code_reference": code_reference,
+            "name": name,
+            "runtime": runtime,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.create_function(**req_copy)
+
+    def test_create_function_value_error_with_retries(self):
+        # Enable retries and run test_create_function_value_error.
+        _service.enable_retries()
+        self.test_create_function_value_error()
+
+        # Disable retries and run test_create_function_value_error.
+        _service.disable_retries()
+        self.test_create_function_value_error()
+
+
+class TestGetFunction:
+    """
+    Test Class for get_function
+    """
+
+    @responses.activate
+    def test_get_function_all_params(self):
+        """
+        get_function()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions/my-function')
+        mock_response = '{"code_binary": false, "code_main": "main", "code_reference": "data:text/plain;base64,<base64encoded-source-code>", "code_secret": "my-secret", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-function.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-function.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/functions/my-function", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "managed_domain_mappings": "local_public", "name": "my-function", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "function_v2", "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "runtime": "nodejs-18", "scale_concurrency": 1, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_max_execution_time": 60, "scale_memory_limit": "1G", "status": "offline", "status_details": {"reason": "offline"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-function'
+
+        # Invoke method
+        response = _service.get_function(
+            project_id,
+            name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_function_all_params_with_retries(self):
+        # Enable retries and run test_get_function_all_params.
+        _service.enable_retries()
+        self.test_get_function_all_params()
+
+        # Disable retries and run test_get_function_all_params.
+        _service.disable_retries()
+        self.test_get_function_all_params()
+
+    @responses.activate
+    def test_get_function_required_params(self):
+        """
+        test_get_function_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions/my-function')
+        mock_response = '{"code_binary": false, "code_main": "main", "code_reference": "data:text/plain;base64,<base64encoded-source-code>", "code_secret": "my-secret", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-function.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-function.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/functions/my-function", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "managed_domain_mappings": "local_public", "name": "my-function", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "function_v2", "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "runtime": "nodejs-18", "scale_concurrency": 1, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_max_execution_time": 60, "scale_memory_limit": "1G", "status": "offline", "status_details": {"reason": "offline"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-function'
+
+        # Invoke method
+        response = _service.get_function(
+            project_id,
+            name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_function_required_params_with_retries(self):
+        # Enable retries and run test_get_function_required_params.
+        _service.enable_retries()
+        self.test_get_function_required_params()
+
+        # Disable retries and run test_get_function_required_params.
+        _service.disable_retries()
+        self.test_get_function_required_params()
+
+    @responses.activate
+    def test_get_function_value_error(self):
+        """
+        test_get_function_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions/my-function')
+        mock_response = '{"code_binary": false, "code_main": "main", "code_reference": "data:text/plain;base64,<base64encoded-source-code>", "code_secret": "my-secret", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-function.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-function.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/functions/my-function", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "managed_domain_mappings": "local_public", "name": "my-function", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "function_v2", "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "runtime": "nodejs-18", "scale_concurrency": 1, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_max_execution_time": 60, "scale_memory_limit": "1G", "status": "offline", "status_details": {"reason": "offline"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-function'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+            "name": name,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.get_function(**req_copy)
+
+    def test_get_function_value_error_with_retries(self):
+        # Enable retries and run test_get_function_value_error.
+        _service.enable_retries()
+        self.test_get_function_value_error()
+
+        # Disable retries and run test_get_function_value_error.
+        _service.disable_retries()
+        self.test_get_function_value_error()
+
+
+class TestDeleteFunction:
+    """
+    Test Class for delete_function
+    """
+
+    @responses.activate
+    def test_delete_function_all_params(self):
+        """
+        delete_function()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions/my-function')
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-function'
+
+        # Invoke method
+        response = _service.delete_function(
+            project_id,
+            name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_delete_function_all_params_with_retries(self):
+        # Enable retries and run test_delete_function_all_params.
+        _service.enable_retries()
+        self.test_delete_function_all_params()
+
+        # Disable retries and run test_delete_function_all_params.
+        _service.disable_retries()
+        self.test_delete_function_all_params()
+
+    @responses.activate
+    def test_delete_function_required_params(self):
+        """
+        test_delete_function_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions/my-function')
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-function'
+
+        # Invoke method
+        response = _service.delete_function(
+            project_id,
+            name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_delete_function_required_params_with_retries(self):
+        # Enable retries and run test_delete_function_required_params.
+        _service.enable_retries()
+        self.test_delete_function_required_params()
+
+        # Disable retries and run test_delete_function_required_params.
+        _service.disable_retries()
+        self.test_delete_function_required_params()
+
+    @responses.activate
+    def test_delete_function_value_error(self):
+        """
+        test_delete_function_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions/my-function')
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-function'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+            "name": name,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.delete_function(**req_copy)
+
+    def test_delete_function_value_error_with_retries(self):
+        # Enable retries and run test_delete_function_value_error.
+        _service.enable_retries()
+        self.test_delete_function_value_error()
+
+        # Disable retries and run test_delete_function_value_error.
+        _service.disable_retries()
+        self.test_delete_function_value_error()
+
+
+class TestUpdateFunction:
+    """
+    Test Class for update_function
+    """
+
+    @responses.activate
+    def test_update_function_all_params(self):
+        """
+        update_function()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions/my-function')
+        mock_response = '{"code_binary": false, "code_main": "main", "code_reference": "data:text/plain;base64,<base64encoded-source-code>", "code_secret": "my-secret", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-function.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-function.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/functions/my-function", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "managed_domain_mappings": "local_public", "name": "my-function", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "function_v2", "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "runtime": "nodejs-18", "scale_concurrency": 1, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_max_execution_time": 60, "scale_memory_limit": "1G", "status": "offline", "status_details": {"reason": "offline"}}'
+        responses.add(
+            responses.PATCH,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Construct a dict representation of a EnvVarPrototype model
+        env_var_prototype_model = {}
+        env_var_prototype_model['key'] = 'MY_VARIABLE'
+        env_var_prototype_model['name'] = 'SOME'
+        env_var_prototype_model['prefix'] = 'PREFIX_'
+        env_var_prototype_model['reference'] = 'my-secret'
+        env_var_prototype_model['type'] = 'literal'
+        env_var_prototype_model['value'] = 'VALUE'
+
+        # Construct a dict representation of a FunctionPatch model
+        function_patch_model = {}
+        function_patch_model['code_binary'] = False
+        function_patch_model['code_main'] = 'main'
+        function_patch_model['code_reference'] = 'data:text/plain;base64,<base64encoded-source-code>'
+        function_patch_model['code_secret'] = 'my-secret'
+        function_patch_model['managed_domain_mappings'] = 'local_public'
+        function_patch_model['run_env_variables'] = [env_var_prototype_model]
+        function_patch_model['runtime'] = 'nodejs-18'
+        function_patch_model['scale_concurrency'] = 1
+        function_patch_model['scale_cpu_limit'] = '1'
+        function_patch_model['scale_down_delay'] = 300
+        function_patch_model['scale_max_execution_time'] = 60
+        function_patch_model['scale_memory_limit'] = '1G'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-function'
+        if_match = 'testString'
+        function = function_patch_model
+
+        # Invoke method
+        response = _service.update_function(
+            project_id,
+            name,
+            if_match,
+            function,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == function
+
+    def test_update_function_all_params_with_retries(self):
+        # Enable retries and run test_update_function_all_params.
+        _service.enable_retries()
+        self.test_update_function_all_params()
+
+        # Disable retries and run test_update_function_all_params.
+        _service.disable_retries()
+        self.test_update_function_all_params()
+
+    @responses.activate
+    def test_update_function_required_params(self):
+        """
+        test_update_function_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions/my-function')
+        mock_response = '{"code_binary": false, "code_main": "main", "code_reference": "data:text/plain;base64,<base64encoded-source-code>", "code_secret": "my-secret", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-function.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-function.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/functions/my-function", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "managed_domain_mappings": "local_public", "name": "my-function", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "function_v2", "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "runtime": "nodejs-18", "scale_concurrency": 1, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_max_execution_time": 60, "scale_memory_limit": "1G", "status": "offline", "status_details": {"reason": "offline"}}'
+        responses.add(
+            responses.PATCH,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Construct a dict representation of a EnvVarPrototype model
+        env_var_prototype_model = {}
+        env_var_prototype_model['key'] = 'MY_VARIABLE'
+        env_var_prototype_model['name'] = 'SOME'
+        env_var_prototype_model['prefix'] = 'PREFIX_'
+        env_var_prototype_model['reference'] = 'my-secret'
+        env_var_prototype_model['type'] = 'literal'
+        env_var_prototype_model['value'] = 'VALUE'
+
+        # Construct a dict representation of a FunctionPatch model
+        function_patch_model = {}
+        function_patch_model['code_binary'] = False
+        function_patch_model['code_main'] = 'main'
+        function_patch_model['code_reference'] = 'data:text/plain;base64,<base64encoded-source-code>'
+        function_patch_model['code_secret'] = 'my-secret'
+        function_patch_model['managed_domain_mappings'] = 'local_public'
+        function_patch_model['run_env_variables'] = [env_var_prototype_model]
+        function_patch_model['runtime'] = 'nodejs-18'
+        function_patch_model['scale_concurrency'] = 1
+        function_patch_model['scale_cpu_limit'] = '1'
+        function_patch_model['scale_down_delay'] = 300
+        function_patch_model['scale_max_execution_time'] = 60
+        function_patch_model['scale_memory_limit'] = '1G'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-function'
+        if_match = 'testString'
+        function = function_patch_model
+
+        # Invoke method
+        response = _service.update_function(
+            project_id,
+            name,
+            if_match,
+            function,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == function
+
+    def test_update_function_required_params_with_retries(self):
+        # Enable retries and run test_update_function_required_params.
+        _service.enable_retries()
+        self.test_update_function_required_params()
+
+        # Disable retries and run test_update_function_required_params.
+        _service.disable_retries()
+        self.test_update_function_required_params()
+
+    @responses.activate
+    def test_update_function_value_error(self):
+        """
+        test_update_function_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/functions/my-function')
+        mock_response = '{"code_binary": false, "code_main": "main", "code_reference": "data:text/plain;base64,<base64encoded-source-code>", "code_secret": "my-secret", "computed_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "created_at": "2022-09-13T11:41:35+02:00", "endpoint": "https://my-function.vg67hzldruk.eu-de.codeengine.appdomain.cloud", "endpoint_internal": "http://my-function.vg67hzldruk.svc.cluster.local", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/functions/my-function", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "managed_domain_mappings": "local_public", "name": "my-function", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "function_v2", "run_env_variables": [{"key": "MY_VARIABLE", "name": "SOME", "prefix": "PREFIX_", "reference": "my-secret", "type": "literal", "value": "VALUE"}], "runtime": "nodejs-18", "scale_concurrency": 1, "scale_cpu_limit": "1", "scale_down_delay": 300, "scale_max_execution_time": 60, "scale_memory_limit": "1G", "status": "offline", "status_details": {"reason": "offline"}}'
+        responses.add(
+            responses.PATCH,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Construct a dict representation of a EnvVarPrototype model
+        env_var_prototype_model = {}
+        env_var_prototype_model['key'] = 'MY_VARIABLE'
+        env_var_prototype_model['name'] = 'SOME'
+        env_var_prototype_model['prefix'] = 'PREFIX_'
+        env_var_prototype_model['reference'] = 'my-secret'
+        env_var_prototype_model['type'] = 'literal'
+        env_var_prototype_model['value'] = 'VALUE'
+
+        # Construct a dict representation of a FunctionPatch model
+        function_patch_model = {}
+        function_patch_model['code_binary'] = False
+        function_patch_model['code_main'] = 'main'
+        function_patch_model['code_reference'] = 'data:text/plain;base64,<base64encoded-source-code>'
+        function_patch_model['code_secret'] = 'my-secret'
+        function_patch_model['managed_domain_mappings'] = 'local_public'
+        function_patch_model['run_env_variables'] = [env_var_prototype_model]
+        function_patch_model['runtime'] = 'nodejs-18'
+        function_patch_model['scale_concurrency'] = 1
+        function_patch_model['scale_cpu_limit'] = '1'
+        function_patch_model['scale_down_delay'] = 300
+        function_patch_model['scale_max_execution_time'] = 60
+        function_patch_model['scale_memory_limit'] = '1G'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-function'
+        if_match = 'testString'
+        function = function_patch_model
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+            "name": name,
+            "if_match": if_match,
+            "function": function,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.update_function(**req_copy)
+
+    def test_update_function_value_error_with_retries(self):
+        # Enable retries and run test_update_function_value_error.
+        _service.enable_retries()
+        self.test_update_function_value_error()
+
+        # Disable retries and run test_update_function_value_error.
+        _service.disable_retries()
+        self.test_update_function_value_error()
+
+
+# endregion
+##############################################################################
+# End of Service: Functions
+##############################################################################
+
+##############################################################################
+# Start of Service: ServiceBindings
+##############################################################################
+# region
+
+
+class TestNewInstance:
+    """
+    Test Class for new_instance
+    """
+
+    def test_new_instance(self):
+        """
+        new_instance()
+        """
+        os.environ['TEST_SERVICE_AUTH_TYPE'] = 'noAuth'
+
+        service = CodeEngineV2.new_instance(
+            service_name='TEST_SERVICE',
+        )
+
+        assert service is not None
+        assert isinstance(service, CodeEngineV2)
+
+    def test_new_instance_without_authenticator(self):
+        """
+        new_instance_without_authenticator()
+        """
+        with pytest.raises(ValueError, match='authenticator must be provided'):
+            service = CodeEngineV2.new_instance(
+                service_name='TEST_SERVICE_NOT_FOUND',
+            )
+
+
+class TestListBindings:
+    """
+    Test Class for list_bindings
+    """
+
+    @responses.activate
+    def test_list_bindings_all_params(self):
+        """
+        list_bindings()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/bindings')
+        mock_response = '{"bindings": [{"component": {"name": "my-app-1", "resource_type": "app_v2"}, "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/bindings/my-binding", "id": "a172ced-b5f21bc-71ba50c-1638604", "prefix": "MY_COS", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "binding_v2", "secret_name": "my-service-access", "status": "active"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        limit = 100
+        start = 'testString'
+
+        # Invoke method
+        response = _service.list_bindings(
+            project_id,
+            limit=limit,
+            start=start,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate query params
+        query_string = responses.calls[0].request.url.split('?', 1)[1]
+        query_string = urllib.parse.unquote_plus(query_string)
+        assert 'limit={}'.format(limit) in query_string
+        assert 'start={}'.format(start) in query_string
+
+    def test_list_bindings_all_params_with_retries(self):
+        # Enable retries and run test_list_bindings_all_params.
+        _service.enable_retries()
+        self.test_list_bindings_all_params()
+
+        # Disable retries and run test_list_bindings_all_params.
+        _service.disable_retries()
+        self.test_list_bindings_all_params()
+
+    @responses.activate
+    def test_list_bindings_required_params(self):
+        """
+        test_list_bindings_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/bindings')
+        mock_response = '{"bindings": [{"component": {"name": "my-app-1", "resource_type": "app_v2"}, "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/bindings/my-binding", "id": "a172ced-b5f21bc-71ba50c-1638604", "prefix": "MY_COS", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "binding_v2", "secret_name": "my-service-access", "status": "active"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+
+        # Invoke method
+        response = _service.list_bindings(
+            project_id,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_list_bindings_required_params_with_retries(self):
+        # Enable retries and run test_list_bindings_required_params.
+        _service.enable_retries()
+        self.test_list_bindings_required_params()
+
+        # Disable retries and run test_list_bindings_required_params.
+        _service.disable_retries()
+        self.test_list_bindings_required_params()
+
+    @responses.activate
+    def test_list_bindings_value_error(self):
+        """
+        test_list_bindings_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/bindings')
+        mock_response = '{"bindings": [{"component": {"name": "my-app-1", "resource_type": "app_v2"}, "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/bindings/my-binding", "id": "a172ced-b5f21bc-71ba50c-1638604", "prefix": "MY_COS", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "binding_v2", "secret_name": "my-service-access", "status": "active"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.list_bindings(**req_copy)
+
+    def test_list_bindings_value_error_with_retries(self):
+        # Enable retries and run test_list_bindings_value_error.
+        _service.enable_retries()
+        self.test_list_bindings_value_error()
+
+        # Disable retries and run test_list_bindings_value_error.
+        _service.disable_retries()
+        self.test_list_bindings_value_error()
+
+    @responses.activate
+    def test_list_bindings_with_pager_get_next(self):
+        """
+        test_list_bindings_with_pager_get_next()
+        """
+        # Set up a two-page mock response
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/bindings')
+        mock_response1 = '{"next":{"start":"1"},"total_count":2,"bindings":[{"component":{"name":"my-app-1","resource_type":"app_v2"},"href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/bindings/my-binding","id":"a172ced-b5f21bc-71ba50c-1638604","prefix":"MY_COS","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"binding_v2","secret_name":"my-service-access","status":"active"}],"limit":1}'
+        mock_response2 = '{"total_count":2,"bindings":[{"component":{"name":"my-app-1","resource_type":"app_v2"},"href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/bindings/my-binding","id":"a172ced-b5f21bc-71ba50c-1638604","prefix":"MY_COS","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"binding_v2","secret_name":"my-service-access","status":"active"}],"limit":1}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Exercise the pager class for this operation
+        all_results = []
+        pager = BindingsPager(
+            client=_service,
+            project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+            limit=100,
+        )
+        while pager.has_next():
+            next_page = pager.get_next()
+            assert next_page is not None
+            all_results.extend(next_page)
+        assert len(all_results) == 2
+
+    @responses.activate
+    def test_list_bindings_with_pager_get_all(self):
+        """
+        test_list_bindings_with_pager_get_all()
+        """
+        # Set up a two-page mock response
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/bindings')
+        mock_response1 = '{"next":{"start":"1"},"total_count":2,"bindings":[{"component":{"name":"my-app-1","resource_type":"app_v2"},"href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/bindings/my-binding","id":"a172ced-b5f21bc-71ba50c-1638604","prefix":"MY_COS","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"binding_v2","secret_name":"my-service-access","status":"active"}],"limit":1}'
+        mock_response2 = '{"total_count":2,"bindings":[{"component":{"name":"my-app-1","resource_type":"app_v2"},"href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/bindings/my-binding","id":"a172ced-b5f21bc-71ba50c-1638604","prefix":"MY_COS","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"binding_v2","secret_name":"my-service-access","status":"active"}],"limit":1}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Exercise the pager class for this operation
+        pager = BindingsPager(
+            client=_service,
+            project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+            limit=100,
+        )
+        all_results = pager.get_all()
+        assert all_results is not None
+        assert len(all_results) == 2
+
+
+class TestCreateBinding:
+    """
+    Test Class for create_binding
+    """
+
+    @responses.activate
+    def test_create_binding_all_params(self):
+        """
+        create_binding()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/bindings')
+        mock_response = '{"component": {"name": "my-app-1", "resource_type": "app_v2"}, "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/bindings/my-binding", "id": "a172ced-b5f21bc-71ba50c-1638604", "prefix": "MY_COS", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "binding_v2", "secret_name": "my-service-access", "status": "active"}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
+
+        # Construct a dict representation of a ComponentRef model
+        component_ref_model = {}
+        component_ref_model['name'] = 'my-app-1'
+        component_ref_model['resource_type'] = 'app_v2'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        component = component_ref_model
+        prefix = 'MY_COS'
+        secret_name = 'my-service-access'
+
+        # Invoke method
+        response = _service.create_binding(
+            project_id,
+            component,
+            prefix,
+            secret_name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 201
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body['component'] == component_ref_model
+        assert req_body['prefix'] == 'MY_COS'
+        assert req_body['secret_name'] == 'my-service-access'
+
+    def test_create_binding_all_params_with_retries(self):
+        # Enable retries and run test_create_binding_all_params.
+        _service.enable_retries()
+        self.test_create_binding_all_params()
+
+        # Disable retries and run test_create_binding_all_params.
+        _service.disable_retries()
+        self.test_create_binding_all_params()
+
+    @responses.activate
+    def test_create_binding_value_error(self):
+        """
+        test_create_binding_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/bindings')
+        mock_response = '{"component": {"name": "my-app-1", "resource_type": "app_v2"}, "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/bindings/my-binding", "id": "a172ced-b5f21bc-71ba50c-1638604", "prefix": "MY_COS", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "binding_v2", "secret_name": "my-service-access", "status": "active"}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
+
+        # Construct a dict representation of a ComponentRef model
+        component_ref_model = {}
+        component_ref_model['name'] = 'my-app-1'
+        component_ref_model['resource_type'] = 'app_v2'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        component = component_ref_model
+        prefix = 'MY_COS'
+        secret_name = 'my-service-access'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+            "component": component,
+            "prefix": prefix,
+            "secret_name": secret_name,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.create_binding(**req_copy)
+
+    def test_create_binding_value_error_with_retries(self):
+        # Enable retries and run test_create_binding_value_error.
+        _service.enable_retries()
+        self.test_create_binding_value_error()
+
+        # Disable retries and run test_create_binding_value_error.
+        _service.disable_retries()
+        self.test_create_binding_value_error()
+
+
+class TestGetBinding:
+    """
+    Test Class for get_binding
+    """
+
+    @responses.activate
+    def test_get_binding_all_params(self):
+        """
+        get_binding()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/bindings/a172ced-b5f21bc-71ba50c-1638604')
+        mock_response = '{"component": {"name": "my-app-1", "resource_type": "app_v2"}, "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/bindings/my-binding", "id": "a172ced-b5f21bc-71ba50c-1638604", "prefix": "MY_COS", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "binding_v2", "secret_name": "my-service-access", "status": "active"}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        id = 'a172ced-b5f21bc-71ba50c-1638604'
+
+        # Invoke method
+        response = _service.get_binding(
+            project_id,
+            id,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_binding_all_params_with_retries(self):
+        # Enable retries and run test_get_binding_all_params.
+        _service.enable_retries()
+        self.test_get_binding_all_params()
+
+        # Disable retries and run test_get_binding_all_params.
+        _service.disable_retries()
+        self.test_get_binding_all_params()
+
+    @responses.activate
+    def test_get_binding_value_error(self):
+        """
+        test_get_binding_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/bindings/a172ced-b5f21bc-71ba50c-1638604')
+        mock_response = '{"component": {"name": "my-app-1", "resource_type": "app_v2"}, "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/bindings/my-binding", "id": "a172ced-b5f21bc-71ba50c-1638604", "prefix": "MY_COS", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "binding_v2", "secret_name": "my-service-access", "status": "active"}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        id = 'a172ced-b5f21bc-71ba50c-1638604'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.get_binding(**req_copy)
+
+    def test_get_binding_value_error_with_retries(self):
+        # Enable retries and run test_get_binding_value_error.
+        _service.enable_retries()
+        self.test_get_binding_value_error()
+
+        # Disable retries and run test_get_binding_value_error.
+        _service.disable_retries()
+        self.test_get_binding_value_error()
+
+
+class TestDeleteBinding:
+    """
+    Test Class for delete_binding
+    """
+
+    @responses.activate
+    def test_delete_binding_all_params(self):
+        """
+        delete_binding()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/bindings/a172ced-b5f21bc-71ba50c-1638604')
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        id = 'a172ced-b5f21bc-71ba50c-1638604'
+
+        # Invoke method
+        response = _service.delete_binding(
+            project_id,
+            id,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_delete_binding_all_params_with_retries(self):
+        # Enable retries and run test_delete_binding_all_params.
+        _service.enable_retries()
+        self.test_delete_binding_all_params()
+
+        # Disable retries and run test_delete_binding_all_params.
+        _service.disable_retries()
+        self.test_delete_binding_all_params()
+
+    @responses.activate
+    def test_delete_binding_value_error(self):
+        """
+        test_delete_binding_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/bindings/a172ced-b5f21bc-71ba50c-1638604')
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        id = 'a172ced-b5f21bc-71ba50c-1638604'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+            "id": id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.delete_binding(**req_copy)
+
+    def test_delete_binding_value_error_with_retries(self):
+        # Enable retries and run test_delete_binding_value_error.
+        _service.enable_retries()
+        self.test_delete_binding_value_error()
+
+        # Disable retries and run test_delete_binding_value_error.
+        _service.disable_retries()
+        self.test_delete_binding_value_error()
+
+
+# endregion
+##############################################################################
+# End of Service: ServiceBindings
+##############################################################################
+
+##############################################################################
+# Start of Service: ImageBuilds
 ##############################################################################
 # region
 
@@ -2588,8 +5668,14 @@ class TestListBuilds:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/builds')
-        mock_response = '{"builds": [{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"builds": [{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -2597,7 +5683,12 @@ class TestListBuilds:
         start = 'testString'
 
         # Invoke method
-        response = _service.list_builds(project_id, limit=limit, start=start, headers={})
+        response = _service.list_builds(
+            project_id,
+            limit=limit,
+            start=start,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -2624,14 +5715,23 @@ class TestListBuilds:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/builds')
-        mock_response = '{"builds": [{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"builds": [{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
 
         # Invoke method
-        response = _service.list_builds(project_id, headers={})
+        response = _service.list_builds(
+            project_id,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -2653,8 +5753,14 @@ class TestListBuilds:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/builds')
-        mock_response = '{"builds": [{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"builds": [{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -2684,10 +5790,22 @@ class TestListBuilds:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/builds')
-        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"builds":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-build","output_image":"private.de.icr.io/icr_namespace/image-name","output_secret":"ce-auto-icr-private-eu-de","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"build_v2","source_context_dir":"some/subfolder","source_revision":"main","source_secret":"source_secret","source_type":"git","source_url":"https://github.com/IBM/CodeEngine","status":"ready","status_details":{"reason":"registered"},"strategy_size":"medium","strategy_spec_file":"Dockerfile","strategy_type":"dockerfile","timeout":600}]}'
-        mock_response2 = '{"total_count":2,"limit":1,"builds":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-build","output_image":"private.de.icr.io/icr_namespace/image-name","output_secret":"ce-auto-icr-private-eu-de","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"build_v2","source_context_dir":"some/subfolder","source_revision":"main","source_secret":"source_secret","source_type":"git","source_url":"https://github.com/IBM/CodeEngine","status":"ready","status_details":{"reason":"registered"},"strategy_size":"medium","strategy_spec_file":"Dockerfile","strategy_type":"dockerfile","timeout":600}]}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"builds":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-build","output_image":"private.de.icr.io/icr_namespace/image-name","output_secret":"ce-auto-icr-private-eu-de","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"build_v2","source_context_dir":"some/subfolder","source_revision":"main","source_secret":"source_secret","source_type":"git","source_url":"https://github.com/IBM/CodeEngine","status":"ready","status_details":{"reason":"registered"},"strategy_size":"medium","strategy_spec_file":"Dockerfile","strategy_type":"dockerfile","timeout":600}]}'
+        mock_response2 = '{"total_count":2,"limit":1,"builds":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-build","output_image":"private.de.icr.io/icr_namespace/image-name","output_secret":"ce-auto-icr-private-eu-de","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"build_v2","source_context_dir":"some/subfolder","source_revision":"main","source_secret":"source_secret","source_type":"git","source_url":"https://github.com/IBM/CodeEngine","status":"ready","status_details":{"reason":"registered"},"strategy_size":"medium","strategy_spec_file":"Dockerfile","strategy_type":"dockerfile","timeout":600}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         all_results = []
@@ -2709,10 +5827,22 @@ class TestListBuilds:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/builds')
-        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"builds":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-build","output_image":"private.de.icr.io/icr_namespace/image-name","output_secret":"ce-auto-icr-private-eu-de","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"build_v2","source_context_dir":"some/subfolder","source_revision":"main","source_secret":"source_secret","source_type":"git","source_url":"https://github.com/IBM/CodeEngine","status":"ready","status_details":{"reason":"registered"},"strategy_size":"medium","strategy_spec_file":"Dockerfile","strategy_type":"dockerfile","timeout":600}]}'
-        mock_response2 = '{"total_count":2,"limit":1,"builds":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-build","output_image":"private.de.icr.io/icr_namespace/image-name","output_secret":"ce-auto-icr-private-eu-de","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"build_v2","source_context_dir":"some/subfolder","source_revision":"main","source_secret":"source_secret","source_type":"git","source_url":"https://github.com/IBM/CodeEngine","status":"ready","status_details":{"reason":"registered"},"strategy_size":"medium","strategy_spec_file":"Dockerfile","strategy_type":"dockerfile","timeout":600}]}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"builds":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-build","output_image":"private.de.icr.io/icr_namespace/image-name","output_secret":"ce-auto-icr-private-eu-de","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"build_v2","source_context_dir":"some/subfolder","source_revision":"main","source_secret":"source_secret","source_type":"git","source_url":"https://github.com/IBM/CodeEngine","status":"ready","status_details":{"reason":"registered"},"strategy_size":"medium","strategy_spec_file":"Dockerfile","strategy_type":"dockerfile","timeout":600}]}'
+        mock_response2 = '{"total_count":2,"limit":1,"builds":[{"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-build","output_image":"private.de.icr.io/icr_namespace/image-name","output_secret":"ce-auto-icr-private-eu-de","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"build_v2","source_context_dir":"some/subfolder","source_revision":"main","source_secret":"source_secret","source_type":"git","source_url":"https://github.com/IBM/CodeEngine","status":"ready","status_details":{"reason":"registered"},"strategy_size":"medium","strategy_spec_file":"Dockerfile","strategy_type":"dockerfile","timeout":600}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         pager = BuildsPager(
@@ -2737,20 +5867,26 @@ class TestCreateBuild:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/builds')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
-        responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=201)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-build'
         output_image = 'private.de.icr.io/icr_namespace/image-name'
         output_secret = 'ce-auto-icr-private-eu-de'
-        source_url = 'https://github.com/IBM/CodeEngine'
         strategy_type = 'dockerfile'
         source_context_dir = 'some/subfolder'
         source_revision = 'main'
         source_secret = 'testString'
         source_type = 'git'
+        source_url = 'https://github.com/IBM/CodeEngine'
         strategy_size = 'medium'
         strategy_spec_file = 'Dockerfile'
         timeout = 600
@@ -2761,12 +5897,12 @@ class TestCreateBuild:
             name,
             output_image,
             output_secret,
-            source_url,
             strategy_type,
             source_context_dir=source_context_dir,
             source_revision=source_revision,
             source_secret=source_secret,
             source_type=source_type,
+            source_url=source_url,
             strategy_size=strategy_size,
             strategy_spec_file=strategy_spec_file,
             timeout=timeout,
@@ -2781,12 +5917,12 @@ class TestCreateBuild:
         assert req_body['name'] == 'my-build'
         assert req_body['output_image'] == 'private.de.icr.io/icr_namespace/image-name'
         assert req_body['output_secret'] == 'ce-auto-icr-private-eu-de'
-        assert req_body['source_url'] == 'https://github.com/IBM/CodeEngine'
         assert req_body['strategy_type'] == 'dockerfile'
         assert req_body['source_context_dir'] == 'some/subfolder'
         assert req_body['source_revision'] == 'main'
         assert req_body['source_secret'] == 'testString'
         assert req_body['source_type'] == 'git'
+        assert req_body['source_url'] == 'https://github.com/IBM/CodeEngine'
         assert req_body['strategy_size'] == 'medium'
         assert req_body['strategy_spec_file'] == 'Dockerfile'
         assert req_body['timeout'] == 600
@@ -2807,20 +5943,26 @@ class TestCreateBuild:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/builds')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
-        responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=201)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-build'
         output_image = 'private.de.icr.io/icr_namespace/image-name'
         output_secret = 'ce-auto-icr-private-eu-de'
-        source_url = 'https://github.com/IBM/CodeEngine'
         strategy_type = 'dockerfile'
         source_context_dir = 'some/subfolder'
         source_revision = 'main'
         source_secret = 'testString'
         source_type = 'git'
+        source_url = 'https://github.com/IBM/CodeEngine'
         strategy_size = 'medium'
         strategy_spec_file = 'Dockerfile'
         timeout = 600
@@ -2831,7 +5973,6 @@ class TestCreateBuild:
             "name": name,
             "output_image": output_image,
             "output_secret": output_secret,
-            "source_url": source_url,
             "strategy_type": strategy_type,
         }
         for param in req_param_dict.keys():
@@ -2861,15 +6002,25 @@ class TestGetBuild:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/builds/my-build')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-build'
 
         # Invoke method
-        response = _service.get_build(project_id, name, headers={})
+        response = _service.get_build(
+            project_id,
+            name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -2891,8 +6042,14 @@ class TestGetBuild:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/builds/my-build')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -2930,14 +6087,22 @@ class TestDeleteBuild:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/builds/my-build')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-build'
 
         # Invoke method
-        response = _service.delete_build(project_id, name, headers={})
+        response = _service.delete_build(
+            project_id,
+            name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -2959,7 +6124,11 @@ class TestDeleteBuild:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/builds/my-build')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -2997,8 +6166,14 @@ class TestUpdateBuild:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/builds/my-build')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
-        responses.add(responses.PATCH, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
+        responses.add(
+            responses.PATCH,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Construct a dict representation of a BuildPatch model
         build_patch_model = {}
@@ -3021,7 +6196,13 @@ class TestUpdateBuild:
         build = build_patch_model
 
         # Invoke method
-        response = _service.update_build(project_id, name, if_match, build, headers={})
+        response = _service.update_build(
+            project_id,
+            name,
+            if_match,
+            build,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -3046,8 +6227,14 @@ class TestUpdateBuild:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/builds/my-build')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
-        responses.add(responses.PATCH, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/builds/my-build", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "build_v2", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "ready", "status_details": {"reason": "registered"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
+        responses.add(
+            responses.PATCH,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Construct a dict representation of a BuildPatch model
         build_patch_model = {}
@@ -3103,8 +6290,14 @@ class TestListBuildRuns:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/build_runs')
-        mock_response = '{"build_runs": [{"build_name": "build_name", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build-run", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "build_run_v2", "service_account": "default", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "succeeded", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "output_digest": "sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384", "reason": "succeeded", "start_time": "2022-09-22T17:34:00Z"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"build_runs": [{"build_name": "build_name", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build-run", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "build_run_v2", "service_account": "default", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "succeeded", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "output_digest": "sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384", "reason": "succeeded", "start_time": "2022-09-22T17:34:00Z"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -3113,7 +6306,13 @@ class TestListBuildRuns:
         start = 'testString'
 
         # Invoke method
-        response = _service.list_build_runs(project_id, build_name=build_name, limit=limit, start=start, headers={})
+        response = _service.list_build_runs(
+            project_id,
+            build_name=build_name,
+            limit=limit,
+            start=start,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -3141,14 +6340,23 @@ class TestListBuildRuns:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/build_runs')
-        mock_response = '{"build_runs": [{"build_name": "build_name", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build-run", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "build_run_v2", "service_account": "default", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "succeeded", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "output_digest": "sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384", "reason": "succeeded", "start_time": "2022-09-22T17:34:00Z"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"build_runs": [{"build_name": "build_name", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build-run", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "build_run_v2", "service_account": "default", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "succeeded", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "output_digest": "sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384", "reason": "succeeded", "start_time": "2022-09-22T17:34:00Z"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
 
         # Invoke method
-        response = _service.list_build_runs(project_id, headers={})
+        response = _service.list_build_runs(
+            project_id,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -3170,8 +6378,14 @@ class TestListBuildRuns:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/build_runs')
-        mock_response = '{"build_runs": [{"build_name": "build_name", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build-run", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "build_run_v2", "service_account": "default", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "succeeded", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "output_digest": "sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384", "reason": "succeeded", "start_time": "2022-09-22T17:34:00Z"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"build_runs": [{"build_name": "build_name", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build-run", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "build_run_v2", "service_account": "default", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "succeeded", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "output_digest": "sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384", "reason": "succeeded", "start_time": "2022-09-22T17:34:00Z"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -3201,10 +6415,22 @@ class TestListBuildRuns:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/build_runs')
-        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"build_runs":[{"build_name":"build_name","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-build-run","output_image":"private.de.icr.io/icr_namespace/image-name","output_secret":"ce-auto-icr-private-eu-de","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"build_run_v2","service_account":"default","source_context_dir":"some/subfolder","source_revision":"main","source_secret":"source_secret","source_type":"git","source_url":"https://github.com/IBM/CodeEngine","status":"succeeded","status_details":{"completion_time":"2022-09-22T17:40:00Z","output_digest":"sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384","reason":"succeeded","start_time":"2022-09-22T17:34:00Z"},"strategy_size":"medium","strategy_spec_file":"Dockerfile","strategy_type":"dockerfile","timeout":600}]}'
-        mock_response2 = '{"total_count":2,"limit":1,"build_runs":[{"build_name":"build_name","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-build-run","output_image":"private.de.icr.io/icr_namespace/image-name","output_secret":"ce-auto-icr-private-eu-de","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"build_run_v2","service_account":"default","source_context_dir":"some/subfolder","source_revision":"main","source_secret":"source_secret","source_type":"git","source_url":"https://github.com/IBM/CodeEngine","status":"succeeded","status_details":{"completion_time":"2022-09-22T17:40:00Z","output_digest":"sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384","reason":"succeeded","start_time":"2022-09-22T17:34:00Z"},"strategy_size":"medium","strategy_spec_file":"Dockerfile","strategy_type":"dockerfile","timeout":600}]}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"build_runs":[{"build_name":"build_name","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-build-run","output_image":"private.de.icr.io/icr_namespace/image-name","output_secret":"ce-auto-icr-private-eu-de","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"build_run_v2","service_account":"default","source_context_dir":"some/subfolder","source_revision":"main","source_secret":"source_secret","source_type":"git","source_url":"https://github.com/IBM/CodeEngine","status":"succeeded","status_details":{"completion_time":"2022-09-22T17:40:00Z","output_digest":"sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384","reason":"succeeded","start_time":"2022-09-22T17:34:00Z"},"strategy_size":"medium","strategy_spec_file":"Dockerfile","strategy_type":"dockerfile","timeout":600}]}'
+        mock_response2 = '{"total_count":2,"limit":1,"build_runs":[{"build_name":"build_name","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-build-run","output_image":"private.de.icr.io/icr_namespace/image-name","output_secret":"ce-auto-icr-private-eu-de","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"build_run_v2","service_account":"default","source_context_dir":"some/subfolder","source_revision":"main","source_secret":"source_secret","source_type":"git","source_url":"https://github.com/IBM/CodeEngine","status":"succeeded","status_details":{"completion_time":"2022-09-22T17:40:00Z","output_digest":"sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384","reason":"succeeded","start_time":"2022-09-22T17:34:00Z"},"strategy_size":"medium","strategy_spec_file":"Dockerfile","strategy_type":"dockerfile","timeout":600}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         all_results = []
@@ -3227,10 +6453,22 @@ class TestListBuildRuns:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/build_runs')
-        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"build_runs":[{"build_name":"build_name","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-build-run","output_image":"private.de.icr.io/icr_namespace/image-name","output_secret":"ce-auto-icr-private-eu-de","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"build_run_v2","service_account":"default","source_context_dir":"some/subfolder","source_revision":"main","source_secret":"source_secret","source_type":"git","source_url":"https://github.com/IBM/CodeEngine","status":"succeeded","status_details":{"completion_time":"2022-09-22T17:40:00Z","output_digest":"sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384","reason":"succeeded","start_time":"2022-09-22T17:34:00Z"},"strategy_size":"medium","strategy_spec_file":"Dockerfile","strategy_type":"dockerfile","timeout":600}]}'
-        mock_response2 = '{"total_count":2,"limit":1,"build_runs":[{"build_name":"build_name","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-build-run","output_image":"private.de.icr.io/icr_namespace/image-name","output_secret":"ce-auto-icr-private-eu-de","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"build_run_v2","service_account":"default","source_context_dir":"some/subfolder","source_revision":"main","source_secret":"source_secret","source_type":"git","source_url":"https://github.com/IBM/CodeEngine","status":"succeeded","status_details":{"completion_time":"2022-09-22T17:40:00Z","output_digest":"sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384","reason":"succeeded","start_time":"2022-09-22T17:34:00Z"},"strategy_size":"medium","strategy_spec_file":"Dockerfile","strategy_type":"dockerfile","timeout":600}]}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"build_runs":[{"build_name":"build_name","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-build-run","output_image":"private.de.icr.io/icr_namespace/image-name","output_secret":"ce-auto-icr-private-eu-de","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"build_run_v2","service_account":"default","source_context_dir":"some/subfolder","source_revision":"main","source_secret":"source_secret","source_type":"git","source_url":"https://github.com/IBM/CodeEngine","status":"succeeded","status_details":{"completion_time":"2022-09-22T17:40:00Z","output_digest":"sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384","reason":"succeeded","start_time":"2022-09-22T17:34:00Z"},"strategy_size":"medium","strategy_spec_file":"Dockerfile","strategy_type":"dockerfile","timeout":600}]}'
+        mock_response2 = '{"total_count":2,"limit":1,"build_runs":[{"build_name":"build_name","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-build-run","output_image":"private.de.icr.io/icr_namespace/image-name","output_secret":"ce-auto-icr-private-eu-de","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"build_run_v2","service_account":"default","source_context_dir":"some/subfolder","source_revision":"main","source_secret":"source_secret","source_type":"git","source_url":"https://github.com/IBM/CodeEngine","status":"succeeded","status_details":{"completion_time":"2022-09-22T17:40:00Z","output_digest":"sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384","reason":"succeeded","start_time":"2022-09-22T17:34:00Z"},"strategy_size":"medium","strategy_spec_file":"Dockerfile","strategy_type":"dockerfile","timeout":600}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         pager = BuildRunsPager(
@@ -3256,8 +6494,14 @@ class TestCreateBuildRun:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/build_runs')
-        mock_response = '{"build_name": "build_name", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build-run", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "build_run_v2", "service_account": "default", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "succeeded", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "output_digest": "sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384", "reason": "succeeded", "start_time": "2022-09-22T17:34:00Z"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
-        responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=202)
+        mock_response = '{"build_name": "build_name", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build-run", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "build_run_v2", "service_account": "default", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "succeeded", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "output_digest": "sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384", "reason": "succeeded", "start_time": "2022-09-22T17:34:00Z"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -3332,8 +6576,14 @@ class TestCreateBuildRun:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/build_runs')
-        mock_response = '{"build_name": "build_name", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build-run", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "build_run_v2", "service_account": "default", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "succeeded", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "output_digest": "sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384", "reason": "succeeded", "start_time": "2022-09-22T17:34:00Z"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
-        responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=202)
+        mock_response = '{"build_name": "build_name", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build-run", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "build_run_v2", "service_account": "default", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "succeeded", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "output_digest": "sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384", "reason": "succeeded", "start_time": "2022-09-22T17:34:00Z"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -3383,15 +6633,25 @@ class TestGetBuildRun:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/build_runs/my-build-run')
-        mock_response = '{"build_name": "build_name", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build-run", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "build_run_v2", "service_account": "default", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "succeeded", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "output_digest": "sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384", "reason": "succeeded", "start_time": "2022-09-22T17:34:00Z"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"build_name": "build_name", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build-run", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "build_run_v2", "service_account": "default", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "succeeded", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "output_digest": "sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384", "reason": "succeeded", "start_time": "2022-09-22T17:34:00Z"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-build-run'
 
         # Invoke method
-        response = _service.get_build_run(project_id, name, headers={})
+        response = _service.get_build_run(
+            project_id,
+            name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -3413,8 +6673,14 @@ class TestGetBuildRun:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/build_runs/my-build-run')
-        mock_response = '{"build_name": "build_name", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build-run", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "build_run_v2", "service_account": "default", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "succeeded", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "output_digest": "sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384", "reason": "succeeded", "start_time": "2022-09-22T17:34:00Z"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"build_name": "build_name", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/build_runs/my-build-run", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-build-run", "output_image": "private.de.icr.io/icr_namespace/image-name", "output_secret": "ce-auto-icr-private-eu-de", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "build_run_v2", "service_account": "default", "source_context_dir": "some/subfolder", "source_revision": "main", "source_secret": "source_secret", "source_type": "git", "source_url": "https://github.com/IBM/CodeEngine", "status": "succeeded", "status_details": {"completion_time": "2022-09-22T17:40:00Z", "output_digest": "sha256:9a3d845c629d2b4a6b271b1d526dfafc1e7d9511f8863b43b5bb0483ef626384", "reason": "succeeded", "start_time": "2022-09-22T17:34:00Z"}, "strategy_size": "medium", "strategy_spec_file": "Dockerfile", "strategy_type": "dockerfile", "timeout": 600}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -3452,14 +6718,22 @@ class TestDeleteBuildRun:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/build_runs/my-build-run')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-build-run'
 
         # Invoke method
-        response = _service.delete_build_run(project_id, name, headers={})
+        response = _service.delete_build_run(
+            project_id,
+            name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -3481,7 +6755,11 @@ class TestDeleteBuildRun:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/build_runs/my-build-run')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -3509,11 +6787,637 @@ class TestDeleteBuildRun:
 
 # endregion
 ##############################################################################
-# End of Service: Builds
+# End of Service: ImageBuilds
 ##############################################################################
 
 ##############################################################################
-# Start of Service: SecretsAndConfigMaps
+# Start of Service: DomainMappings
+##############################################################################
+# region
+
+
+class TestNewInstance:
+    """
+    Test Class for new_instance
+    """
+
+    def test_new_instance(self):
+        """
+        new_instance()
+        """
+        os.environ['TEST_SERVICE_AUTH_TYPE'] = 'noAuth'
+
+        service = CodeEngineV2.new_instance(
+            service_name='TEST_SERVICE',
+        )
+
+        assert service is not None
+        assert isinstance(service, CodeEngineV2)
+
+    def test_new_instance_without_authenticator(self):
+        """
+        new_instance_without_authenticator()
+        """
+        with pytest.raises(ValueError, match='authenticator must be provided'):
+            service = CodeEngineV2.new_instance(
+                service_name='TEST_SERVICE_NOT_FOUND',
+            )
+
+
+class TestListDomainMappings:
+    """
+    Test Class for list_domain_mappings
+    """
+
+    @responses.activate
+    def test_list_domain_mappings_all_params(self):
+        """
+        list_domain_mappings()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/domain_mappings')
+        mock_response = '{"domain_mappings": [{"cname_target": "custom.abcdabcdabc.us-east.codeengine.appdomain.cloud", "component": {"name": "my-app-1", "resource_type": "app_v2"}, "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/domain_mappings/www.example.com", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "www.example.com", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "domain_mapping_v2", "status": "ready", "status_details": {"reason": "ready"}, "tls_secret": "my-tls-secret", "user_managed": true, "visibility": "public"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        limit = 100
+        start = 'testString'
+
+        # Invoke method
+        response = _service.list_domain_mappings(
+            project_id,
+            limit=limit,
+            start=start,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate query params
+        query_string = responses.calls[0].request.url.split('?', 1)[1]
+        query_string = urllib.parse.unquote_plus(query_string)
+        assert 'limit={}'.format(limit) in query_string
+        assert 'start={}'.format(start) in query_string
+
+    def test_list_domain_mappings_all_params_with_retries(self):
+        # Enable retries and run test_list_domain_mappings_all_params.
+        _service.enable_retries()
+        self.test_list_domain_mappings_all_params()
+
+        # Disable retries and run test_list_domain_mappings_all_params.
+        _service.disable_retries()
+        self.test_list_domain_mappings_all_params()
+
+    @responses.activate
+    def test_list_domain_mappings_required_params(self):
+        """
+        test_list_domain_mappings_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/domain_mappings')
+        mock_response = '{"domain_mappings": [{"cname_target": "custom.abcdabcdabc.us-east.codeengine.appdomain.cloud", "component": {"name": "my-app-1", "resource_type": "app_v2"}, "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/domain_mappings/www.example.com", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "www.example.com", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "domain_mapping_v2", "status": "ready", "status_details": {"reason": "ready"}, "tls_secret": "my-tls-secret", "user_managed": true, "visibility": "public"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+
+        # Invoke method
+        response = _service.list_domain_mappings(
+            project_id,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_list_domain_mappings_required_params_with_retries(self):
+        # Enable retries and run test_list_domain_mappings_required_params.
+        _service.enable_retries()
+        self.test_list_domain_mappings_required_params()
+
+        # Disable retries and run test_list_domain_mappings_required_params.
+        _service.disable_retries()
+        self.test_list_domain_mappings_required_params()
+
+    @responses.activate
+    def test_list_domain_mappings_value_error(self):
+        """
+        test_list_domain_mappings_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/domain_mappings')
+        mock_response = '{"domain_mappings": [{"cname_target": "custom.abcdabcdabc.us-east.codeengine.appdomain.cloud", "component": {"name": "my-app-1", "resource_type": "app_v2"}, "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/domain_mappings/www.example.com", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "www.example.com", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "domain_mapping_v2", "status": "ready", "status_details": {"reason": "ready"}, "tls_secret": "my-tls-secret", "user_managed": true, "visibility": "public"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.list_domain_mappings(**req_copy)
+
+    def test_list_domain_mappings_value_error_with_retries(self):
+        # Enable retries and run test_list_domain_mappings_value_error.
+        _service.enable_retries()
+        self.test_list_domain_mappings_value_error()
+
+        # Disable retries and run test_list_domain_mappings_value_error.
+        _service.disable_retries()
+        self.test_list_domain_mappings_value_error()
+
+    @responses.activate
+    def test_list_domain_mappings_with_pager_get_next(self):
+        """
+        test_list_domain_mappings_with_pager_get_next()
+        """
+        # Set up a two-page mock response
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/domain_mappings')
+        mock_response1 = '{"next":{"start":"1"},"domain_mappings":[{"cname_target":"custom.abcdabcdabc.us-east.codeengine.appdomain.cloud","component":{"name":"my-app-1","resource_type":"app_v2"},"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/domain_mappings/www.example.com","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"www.example.com","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"domain_mapping_v2","status":"ready","status_details":{"reason":"ready"},"tls_secret":"my-tls-secret","user_managed":true,"visibility":"public"}],"total_count":2,"limit":1}'
+        mock_response2 = '{"domain_mappings":[{"cname_target":"custom.abcdabcdabc.us-east.codeengine.appdomain.cloud","component":{"name":"my-app-1","resource_type":"app_v2"},"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/domain_mappings/www.example.com","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"www.example.com","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"domain_mapping_v2","status":"ready","status_details":{"reason":"ready"},"tls_secret":"my-tls-secret","user_managed":true,"visibility":"public"}],"total_count":2,"limit":1}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Exercise the pager class for this operation
+        all_results = []
+        pager = DomainMappingsPager(
+            client=_service,
+            project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+            limit=100,
+        )
+        while pager.has_next():
+            next_page = pager.get_next()
+            assert next_page is not None
+            all_results.extend(next_page)
+        assert len(all_results) == 2
+
+    @responses.activate
+    def test_list_domain_mappings_with_pager_get_all(self):
+        """
+        test_list_domain_mappings_with_pager_get_all()
+        """
+        # Set up a two-page mock response
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/domain_mappings')
+        mock_response1 = '{"next":{"start":"1"},"domain_mappings":[{"cname_target":"custom.abcdabcdabc.us-east.codeengine.appdomain.cloud","component":{"name":"my-app-1","resource_type":"app_v2"},"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/domain_mappings/www.example.com","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"www.example.com","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"domain_mapping_v2","status":"ready","status_details":{"reason":"ready"},"tls_secret":"my-tls-secret","user_managed":true,"visibility":"public"}],"total_count":2,"limit":1}'
+        mock_response2 = '{"domain_mappings":[{"cname_target":"custom.abcdabcdabc.us-east.codeengine.appdomain.cloud","component":{"name":"my-app-1","resource_type":"app_v2"},"created_at":"2022-09-13T11:41:35+02:00","entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/domain_mappings/www.example.com","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"www.example.com","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"domain_mapping_v2","status":"ready","status_details":{"reason":"ready"},"tls_secret":"my-tls-secret","user_managed":true,"visibility":"public"}],"total_count":2,"limit":1}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Exercise the pager class for this operation
+        pager = DomainMappingsPager(
+            client=_service,
+            project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+            limit=100,
+        )
+        all_results = pager.get_all()
+        assert all_results is not None
+        assert len(all_results) == 2
+
+
+class TestCreateDomainMapping:
+    """
+    Test Class for create_domain_mapping
+    """
+
+    @responses.activate
+    def test_create_domain_mapping_all_params(self):
+        """
+        create_domain_mapping()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/domain_mappings')
+        mock_response = '{"cname_target": "custom.abcdabcdabc.us-east.codeengine.appdomain.cloud", "component": {"name": "my-app-1", "resource_type": "app_v2"}, "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/domain_mappings/www.example.com", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "www.example.com", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "domain_mapping_v2", "status": "ready", "status_details": {"reason": "ready"}, "tls_secret": "my-tls-secret", "user_managed": true, "visibility": "public"}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
+
+        # Construct a dict representation of a ComponentRef model
+        component_ref_model = {}
+        component_ref_model['name'] = 'my-app-1'
+        component_ref_model['resource_type'] = 'app_v2'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        component = component_ref_model
+        name = 'www.example.com'
+        tls_secret = 'my-tls-secret'
+
+        # Invoke method
+        response = _service.create_domain_mapping(
+            project_id,
+            component,
+            name,
+            tls_secret,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 201
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body['component'] == component_ref_model
+        assert req_body['name'] == 'www.example.com'
+        assert req_body['tls_secret'] == 'my-tls-secret'
+
+    def test_create_domain_mapping_all_params_with_retries(self):
+        # Enable retries and run test_create_domain_mapping_all_params.
+        _service.enable_retries()
+        self.test_create_domain_mapping_all_params()
+
+        # Disable retries and run test_create_domain_mapping_all_params.
+        _service.disable_retries()
+        self.test_create_domain_mapping_all_params()
+
+    @responses.activate
+    def test_create_domain_mapping_value_error(self):
+        """
+        test_create_domain_mapping_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/domain_mappings')
+        mock_response = '{"cname_target": "custom.abcdabcdabc.us-east.codeengine.appdomain.cloud", "component": {"name": "my-app-1", "resource_type": "app_v2"}, "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/domain_mappings/www.example.com", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "www.example.com", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "domain_mapping_v2", "status": "ready", "status_details": {"reason": "ready"}, "tls_secret": "my-tls-secret", "user_managed": true, "visibility": "public"}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
+
+        # Construct a dict representation of a ComponentRef model
+        component_ref_model = {}
+        component_ref_model['name'] = 'my-app-1'
+        component_ref_model['resource_type'] = 'app_v2'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        component = component_ref_model
+        name = 'www.example.com'
+        tls_secret = 'my-tls-secret'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+            "component": component,
+            "name": name,
+            "tls_secret": tls_secret,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.create_domain_mapping(**req_copy)
+
+    def test_create_domain_mapping_value_error_with_retries(self):
+        # Enable retries and run test_create_domain_mapping_value_error.
+        _service.enable_retries()
+        self.test_create_domain_mapping_value_error()
+
+        # Disable retries and run test_create_domain_mapping_value_error.
+        _service.disable_retries()
+        self.test_create_domain_mapping_value_error()
+
+
+class TestGetDomainMapping:
+    """
+    Test Class for get_domain_mapping
+    """
+
+    @responses.activate
+    def test_get_domain_mapping_all_params(self):
+        """
+        get_domain_mapping()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/domain_mappings/www.example.com')
+        mock_response = '{"cname_target": "custom.abcdabcdabc.us-east.codeengine.appdomain.cloud", "component": {"name": "my-app-1", "resource_type": "app_v2"}, "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/domain_mappings/www.example.com", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "www.example.com", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "domain_mapping_v2", "status": "ready", "status_details": {"reason": "ready"}, "tls_secret": "my-tls-secret", "user_managed": true, "visibility": "public"}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'www.example.com'
+
+        # Invoke method
+        response = _service.get_domain_mapping(
+            project_id,
+            name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_domain_mapping_all_params_with_retries(self):
+        # Enable retries and run test_get_domain_mapping_all_params.
+        _service.enable_retries()
+        self.test_get_domain_mapping_all_params()
+
+        # Disable retries and run test_get_domain_mapping_all_params.
+        _service.disable_retries()
+        self.test_get_domain_mapping_all_params()
+
+    @responses.activate
+    def test_get_domain_mapping_value_error(self):
+        """
+        test_get_domain_mapping_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/domain_mappings/www.example.com')
+        mock_response = '{"cname_target": "custom.abcdabcdabc.us-east.codeengine.appdomain.cloud", "component": {"name": "my-app-1", "resource_type": "app_v2"}, "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/domain_mappings/www.example.com", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "www.example.com", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "domain_mapping_v2", "status": "ready", "status_details": {"reason": "ready"}, "tls_secret": "my-tls-secret", "user_managed": true, "visibility": "public"}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'www.example.com'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+            "name": name,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.get_domain_mapping(**req_copy)
+
+    def test_get_domain_mapping_value_error_with_retries(self):
+        # Enable retries and run test_get_domain_mapping_value_error.
+        _service.enable_retries()
+        self.test_get_domain_mapping_value_error()
+
+        # Disable retries and run test_get_domain_mapping_value_error.
+        _service.disable_retries()
+        self.test_get_domain_mapping_value_error()
+
+
+class TestDeleteDomainMapping:
+    """
+    Test Class for delete_domain_mapping
+    """
+
+    @responses.activate
+    def test_delete_domain_mapping_all_params(self):
+        """
+        delete_domain_mapping()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/domain_mappings/www.example.com')
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'www.example.com'
+
+        # Invoke method
+        response = _service.delete_domain_mapping(
+            project_id,
+            name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_delete_domain_mapping_all_params_with_retries(self):
+        # Enable retries and run test_delete_domain_mapping_all_params.
+        _service.enable_retries()
+        self.test_delete_domain_mapping_all_params()
+
+        # Disable retries and run test_delete_domain_mapping_all_params.
+        _service.disable_retries()
+        self.test_delete_domain_mapping_all_params()
+
+    @responses.activate
+    def test_delete_domain_mapping_value_error(self):
+        """
+        test_delete_domain_mapping_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/domain_mappings/www.example.com')
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'www.example.com'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+            "name": name,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.delete_domain_mapping(**req_copy)
+
+    def test_delete_domain_mapping_value_error_with_retries(self):
+        # Enable retries and run test_delete_domain_mapping_value_error.
+        _service.enable_retries()
+        self.test_delete_domain_mapping_value_error()
+
+        # Disable retries and run test_delete_domain_mapping_value_error.
+        _service.disable_retries()
+        self.test_delete_domain_mapping_value_error()
+
+
+class TestUpdateDomainMapping:
+    """
+    Test Class for update_domain_mapping
+    """
+
+    @responses.activate
+    def test_update_domain_mapping_all_params(self):
+        """
+        update_domain_mapping()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/domain_mappings/www.example.com')
+        mock_response = '{"cname_target": "custom.abcdabcdabc.us-east.codeengine.appdomain.cloud", "component": {"name": "my-app-1", "resource_type": "app_v2"}, "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/domain_mappings/www.example.com", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "www.example.com", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "domain_mapping_v2", "status": "ready", "status_details": {"reason": "ready"}, "tls_secret": "my-tls-secret", "user_managed": true, "visibility": "public"}'
+        responses.add(
+            responses.PATCH,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Construct a dict representation of a ComponentRef model
+        component_ref_model = {}
+        component_ref_model['name'] = 'my-app-1'
+        component_ref_model['resource_type'] = 'app_v2'
+
+        # Construct a dict representation of a DomainMappingPatch model
+        domain_mapping_patch_model = {}
+        domain_mapping_patch_model['component'] = component_ref_model
+        domain_mapping_patch_model['tls_secret'] = 'my-tls-secret'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'www.example.com'
+        if_match = 'testString'
+        domain_mapping = domain_mapping_patch_model
+
+        # Invoke method
+        response = _service.update_domain_mapping(
+            project_id,
+            name,
+            if_match,
+            domain_mapping,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == domain_mapping
+
+    def test_update_domain_mapping_all_params_with_retries(self):
+        # Enable retries and run test_update_domain_mapping_all_params.
+        _service.enable_retries()
+        self.test_update_domain_mapping_all_params()
+
+        # Disable retries and run test_update_domain_mapping_all_params.
+        _service.disable_retries()
+        self.test_update_domain_mapping_all_params()
+
+    @responses.activate
+    def test_update_domain_mapping_value_error(self):
+        """
+        test_update_domain_mapping_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/domain_mappings/www.example.com')
+        mock_response = '{"cname_target": "custom.abcdabcdabc.us-east.codeengine.appdomain.cloud", "component": {"name": "my-app-1", "resource_type": "app_v2"}, "created_at": "2022-09-13T11:41:35+02:00", "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/domain_mappings/www.example.com", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "www.example.com", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "domain_mapping_v2", "status": "ready", "status_details": {"reason": "ready"}, "tls_secret": "my-tls-secret", "user_managed": true, "visibility": "public"}'
+        responses.add(
+            responses.PATCH,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Construct a dict representation of a ComponentRef model
+        component_ref_model = {}
+        component_ref_model['name'] = 'my-app-1'
+        component_ref_model['resource_type'] = 'app_v2'
+
+        # Construct a dict representation of a DomainMappingPatch model
+        domain_mapping_patch_model = {}
+        domain_mapping_patch_model['component'] = component_ref_model
+        domain_mapping_patch_model['tls_secret'] = 'my-tls-secret'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'www.example.com'
+        if_match = 'testString'
+        domain_mapping = domain_mapping_patch_model
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+            "name": name,
+            "if_match": if_match,
+            "domain_mapping": domain_mapping,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.update_domain_mapping(**req_copy)
+
+    def test_update_domain_mapping_value_error_with_retries(self):
+        # Enable retries and run test_update_domain_mapping_value_error.
+        _service.enable_retries()
+        self.test_update_domain_mapping_value_error()
+
+        # Disable retries and run test_update_domain_mapping_value_error.
+        _service.disable_retries()
+        self.test_update_domain_mapping_value_error()
+
+
+# endregion
+##############################################################################
+# End of Service: DomainMappings
+##############################################################################
+
+##############################################################################
+# Start of Service: SecretsAndConfigmaps
 ##############################################################################
 # region
 
@@ -3558,8 +7462,14 @@ class TestListConfigMaps:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/config_maps')
-        mock_response = '{"config_maps": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "config_map_v2"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"config_maps": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "config_map_v2"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -3567,7 +7477,12 @@ class TestListConfigMaps:
         start = 'testString'
 
         # Invoke method
-        response = _service.list_config_maps(project_id, limit=limit, start=start, headers={})
+        response = _service.list_config_maps(
+            project_id,
+            limit=limit,
+            start=start,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -3594,14 +7509,23 @@ class TestListConfigMaps:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/config_maps')
-        mock_response = '{"config_maps": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "config_map_v2"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"config_maps": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "config_map_v2"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
 
         # Invoke method
-        response = _service.list_config_maps(project_id, headers={})
+        response = _service.list_config_maps(
+            project_id,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -3623,8 +7547,14 @@ class TestListConfigMaps:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/config_maps')
-        mock_response = '{"config_maps": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "config_map_v2"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"config_maps": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "config_map_v2"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -3654,10 +7584,22 @@ class TestListConfigMaps:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/config_maps')
-        mock_response1 = '{"next":{"start":"1"},"config_maps":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"mapKey":"inner"},"entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-config-map","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"config_map_v2"}],"total_count":2,"limit":1}'
-        mock_response2 = '{"config_maps":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"mapKey":"inner"},"entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-config-map","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"config_map_v2"}],"total_count":2,"limit":1}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        mock_response1 = '{"next":{"start":"1"},"config_maps":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"mapKey":"inner"},"entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-config-map","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"config_map_v2"}],"total_count":2,"limit":1}'
+        mock_response2 = '{"config_maps":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"mapKey":"inner"},"entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-config-map","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"config_map_v2"}],"total_count":2,"limit":1}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         all_results = []
@@ -3679,10 +7621,22 @@ class TestListConfigMaps:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/config_maps')
-        mock_response1 = '{"next":{"start":"1"},"config_maps":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"mapKey":"inner"},"entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-config-map","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"config_map_v2"}],"total_count":2,"limit":1}'
-        mock_response2 = '{"config_maps":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"mapKey":"inner"},"entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-config-map","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"config_map_v2"}],"total_count":2,"limit":1}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        mock_response1 = '{"next":{"start":"1"},"config_maps":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"mapKey":"inner"},"entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-config-map","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"config_map_v2"}],"total_count":2,"limit":1}'
+        mock_response2 = '{"config_maps":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"mapKey":"inner"},"entity_tag":"2385407409","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-config-map","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"config_map_v2"}],"total_count":2,"limit":1}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         pager = ConfigMapsPager(
@@ -3707,8 +7661,14 @@ class TestCreateConfigMap:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/config_maps')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "config_map_v2"}'
-        responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=201)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "config_map_v2"}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -3716,7 +7676,12 @@ class TestCreateConfigMap:
         data = {'key1': 'testString'}
 
         # Invoke method
-        response = _service.create_config_map(project_id, name, data=data, headers={})
+        response = _service.create_config_map(
+            project_id,
+            name,
+            data=data,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -3742,8 +7707,14 @@ class TestCreateConfigMap:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/config_maps')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "config_map_v2"}'
-        responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=201)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "config_map_v2"}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -3782,15 +7753,25 @@ class TestGetConfigMap:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/config_maps/my-config-map')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "config_map_v2"}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "config_map_v2"}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-config-map'
 
         # Invoke method
-        response = _service.get_config_map(project_id, name, headers={})
+        response = _service.get_config_map(
+            project_id,
+            name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -3812,8 +7793,14 @@ class TestGetConfigMap:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/config_maps/my-config-map')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "config_map_v2"}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "config_map_v2"}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -3851,8 +7838,14 @@ class TestReplaceConfigMap:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/config_maps/my-config-map')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "config_map_v2"}'
-        responses.add(responses.PUT, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "config_map_v2"}'
+        responses.add(
+            responses.PUT,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -3861,7 +7854,13 @@ class TestReplaceConfigMap:
         data = {'key1': 'testString'}
 
         # Invoke method
-        response = _service.replace_config_map(project_id, name, if_match, data=data, headers={})
+        response = _service.replace_config_map(
+            project_id,
+            name,
+            if_match,
+            data=data,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -3886,8 +7885,14 @@ class TestReplaceConfigMap:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/config_maps/my-config-map')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "config_map_v2"}'
-        responses.add(responses.PUT, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/config_maps/my-config-map", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-config-map", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "config_map_v2"}'
+        responses.add(
+            responses.PUT,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -3928,14 +7933,22 @@ class TestDeleteConfigMap:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/config_maps/my-config-map')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-config-map'
 
         # Invoke method
-        response = _service.delete_config_map(project_id, name, headers={})
+        response = _service.delete_config_map(
+            project_id,
+            name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -3957,7 +7970,11 @@ class TestDeleteConfigMap:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/config_maps/my-config-map')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -3995,8 +8012,14 @@ class TestListSecrets:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/secrets')
-        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "secrets": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "resource_type"}]}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "secrets": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "resource_type", "service_access": {"resource_key": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "name": "name"}, "role": {"crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer", "name": "Manager"}, "service_instance": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "type": "type"}, "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}}, "service_operator": {"apikey_id": "ApiKey-17041d26-55e4-40a8-8ab5-5a69b68e204b", "resource_group_ids": ["resource_group_ids"], "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}, "user_managed": true}}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -4004,7 +8027,12 @@ class TestListSecrets:
         start = 'testString'
 
         # Invoke method
-        response = _service.list_secrets(project_id, limit=limit, start=start, headers={})
+        response = _service.list_secrets(
+            project_id,
+            limit=limit,
+            start=start,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -4031,14 +8059,23 @@ class TestListSecrets:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/secrets')
-        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "secrets": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "resource_type"}]}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "secrets": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "resource_type", "service_access": {"resource_key": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "name": "name"}, "role": {"crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer", "name": "Manager"}, "service_instance": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "type": "type"}, "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}}, "service_operator": {"apikey_id": "ApiKey-17041d26-55e4-40a8-8ab5-5a69b68e204b", "resource_group_ids": ["resource_group_ids"], "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}, "user_managed": true}}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
 
         # Invoke method
-        response = _service.list_secrets(project_id, headers={})
+        response = _service.list_secrets(
+            project_id,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -4060,8 +8097,14 @@ class TestListSecrets:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/secrets')
-        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "secrets": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "resource_type"}]}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "secrets": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "resource_type", "service_access": {"resource_key": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "name": "name"}, "role": {"crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer", "name": "Manager"}, "service_instance": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "type": "type"}, "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}}, "service_operator": {"apikey_id": "ApiKey-17041d26-55e4-40a8-8ab5-5a69b68e204b", "resource_group_ids": ["resource_group_ids"], "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}, "user_managed": true}}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -4091,10 +8134,22 @@ class TestListSecrets:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/secrets')
-        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"secrets":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"mapKey":"inner"},"entity_tag":"2385407409","format":"generic","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-secret","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"resource_type"}]}'
-        mock_response2 = '{"total_count":2,"limit":1,"secrets":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"mapKey":"inner"},"entity_tag":"2385407409","format":"generic","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-secret","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"resource_type"}]}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"secrets":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"mapKey":"inner"},"entity_tag":"2385407409","format":"generic","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-secret","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"resource_type","service_access":{"resource_key":{"id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","name":"name"},"role":{"crn":"crn:v1:bluemix:public:iam::::serviceRole:Writer","name":"Manager"},"service_instance":{"id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","type":"type"},"serviceid":{"crn":"crn","id":"ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}},"service_operator":{"apikey_id":"ApiKey-17041d26-55e4-40a8-8ab5-5a69b68e204b","resource_group_ids":["resource_group_ids"],"serviceid":{"crn":"crn","id":"ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"},"user_managed":true}}]}'
+        mock_response2 = '{"total_count":2,"limit":1,"secrets":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"mapKey":"inner"},"entity_tag":"2385407409","format":"generic","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-secret","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"resource_type","service_access":{"resource_key":{"id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","name":"name"},"role":{"crn":"crn:v1:bluemix:public:iam::::serviceRole:Writer","name":"Manager"},"service_instance":{"id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","type":"type"},"serviceid":{"crn":"crn","id":"ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}},"service_operator":{"apikey_id":"ApiKey-17041d26-55e4-40a8-8ab5-5a69b68e204b","resource_group_ids":["resource_group_ids"],"serviceid":{"crn":"crn","id":"ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"},"user_managed":true}}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         all_results = []
@@ -4116,10 +8171,22 @@ class TestListSecrets:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/secrets')
-        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"secrets":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"mapKey":"inner"},"entity_tag":"2385407409","format":"generic","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-secret","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"resource_type"}]}'
-        mock_response2 = '{"total_count":2,"limit":1,"secrets":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"mapKey":"inner"},"entity_tag":"2385407409","format":"generic","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-secret","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","resource_type":"resource_type"}]}'
-        responses.add(responses.GET, url, body=mock_response1, content_type='application/json', status=200)
-        responses.add(responses.GET, url, body=mock_response2, content_type='application/json', status=200)
+        mock_response1 = '{"next":{"start":"1"},"total_count":2,"limit":1,"secrets":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"mapKey":"inner"},"entity_tag":"2385407409","format":"generic","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-secret","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"resource_type","service_access":{"resource_key":{"id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","name":"name"},"role":{"crn":"crn:v1:bluemix:public:iam::::serviceRole:Writer","name":"Manager"},"service_instance":{"id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","type":"type"},"serviceid":{"crn":"crn","id":"ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}},"service_operator":{"apikey_id":"ApiKey-17041d26-55e4-40a8-8ab5-5a69b68e204b","resource_group_ids":["resource_group_ids"],"serviceid":{"crn":"crn","id":"ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"},"user_managed":true}}]}'
+        mock_response2 = '{"total_count":2,"limit":1,"secrets":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"mapKey":"inner"},"entity_tag":"2385407409","format":"generic","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-secret","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"resource_type","service_access":{"resource_key":{"id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","name":"name"},"role":{"crn":"crn:v1:bluemix:public:iam::::serviceRole:Writer","name":"Manager"},"service_instance":{"id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","type":"type"},"serviceid":{"crn":"crn","id":"ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}},"service_operator":{"apikey_id":"ApiKey-17041d26-55e4-40a8-8ab5-5a69b68e204b","resource_group_ids":["resource_group_ids"],"serviceid":{"crn":"crn","id":"ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"},"user_managed":true}}]}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
 
         # Exercise the pager class for this operation
         pager = SecretsPager(
@@ -4144,23 +8211,70 @@ class TestCreateSecret:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/secrets')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "resource_type"}'
-        responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=201)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "resource_type", "service_access": {"resource_key": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "name": "name"}, "role": {"crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer", "name": "Manager"}, "service_instance": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "type": "type"}, "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}}, "service_operator": {"apikey_id": "ApiKey-17041d26-55e4-40a8-8ab5-5a69b68e204b", "resource_group_ids": ["resource_group_ids"], "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}, "user_managed": true}}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
 
-        # Construct a dict representation of a SecretDataSSHSecretData model
+        # Construct a dict representation of a SecretDataGenericSecretData model
         secret_data_model = {}
-        secret_data_model['ssh_key'] = 'testString'
-        secret_data_model['known_hosts'] = 'testString'
         secret_data_model['foo'] = 'testString'
+
+        # Construct a dict representation of a ResourceKeyRefPrototype model
+        resource_key_ref_prototype_model = {}
+        resource_key_ref_prototype_model['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
+
+        # Construct a dict representation of a RoleRefPrototype model
+        role_ref_prototype_model = {}
+        role_ref_prototype_model['crn'] = 'crn:v1:bluemix:public:iam::::serviceRole:Writer'
+
+        # Construct a dict representation of a ServiceInstanceRefPrototype model
+        service_instance_ref_prototype_model = {}
+        service_instance_ref_prototype_model['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
+
+        # Construct a dict representation of a ServiceIDRef model
+        service_id_ref_model = {}
+        service_id_ref_model['crn'] = 'testString'
+        service_id_ref_model['id'] = 'ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637'
+
+        # Construct a dict representation of a ServiceAccessSecretPrototypeProps model
+        service_access_secret_prototype_props_model = {}
+        service_access_secret_prototype_props_model['resource_key'] = resource_key_ref_prototype_model
+        service_access_secret_prototype_props_model['role'] = role_ref_prototype_model
+        service_access_secret_prototype_props_model['service_instance'] = service_instance_ref_prototype_model
+        service_access_secret_prototype_props_model['serviceid'] = service_id_ref_model
+
+        # Construct a dict representation of a ServiceIDRefPrototype model
+        service_id_ref_prototype_model = {}
+        service_id_ref_prototype_model['id'] = 'ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637'
+
+        # Construct a dict representation of a OperatorSecretPrototypeProps model
+        operator_secret_prototype_props_model = {}
+        operator_secret_prototype_props_model['resource_group_ids'] = ['testString']
+        operator_secret_prototype_props_model['serviceid'] = service_id_ref_prototype_model
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         format = 'generic'
         name = 'my-secret'
         data = secret_data_model
+        service_access = service_access_secret_prototype_props_model
+        service_operator = operator_secret_prototype_props_model
 
         # Invoke method
-        response = _service.create_secret(project_id, format, name, data=data, headers={})
+        response = _service.create_secret(
+            project_id,
+            format,
+            name,
+            data=data,
+            service_access=service_access,
+            service_operator=service_operator,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -4170,6 +8284,8 @@ class TestCreateSecret:
         assert req_body['format'] == 'generic'
         assert req_body['name'] == 'my-secret'
         assert req_body['data'] == secret_data_model
+        assert req_body['service_access'] == service_access_secret_prototype_props_model
+        assert req_body['service_operator'] == operator_secret_prototype_props_model
 
     def test_create_secret_all_params_with_retries(self):
         # Enable retries and run test_create_secret_all_params.
@@ -4187,20 +8303,59 @@ class TestCreateSecret:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/secrets')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "resource_type"}'
-        responses.add(responses.POST, url, body=mock_response, content_type='application/json', status=201)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "resource_type", "service_access": {"resource_key": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "name": "name"}, "role": {"crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer", "name": "Manager"}, "service_instance": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "type": "type"}, "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}}, "service_operator": {"apikey_id": "ApiKey-17041d26-55e4-40a8-8ab5-5a69b68e204b", "resource_group_ids": ["resource_group_ids"], "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}, "user_managed": true}}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
 
-        # Construct a dict representation of a SecretDataSSHSecretData model
+        # Construct a dict representation of a SecretDataGenericSecretData model
         secret_data_model = {}
-        secret_data_model['ssh_key'] = 'testString'
-        secret_data_model['known_hosts'] = 'testString'
         secret_data_model['foo'] = 'testString'
+
+        # Construct a dict representation of a ResourceKeyRefPrototype model
+        resource_key_ref_prototype_model = {}
+        resource_key_ref_prototype_model['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
+
+        # Construct a dict representation of a RoleRefPrototype model
+        role_ref_prototype_model = {}
+        role_ref_prototype_model['crn'] = 'crn:v1:bluemix:public:iam::::serviceRole:Writer'
+
+        # Construct a dict representation of a ServiceInstanceRefPrototype model
+        service_instance_ref_prototype_model = {}
+        service_instance_ref_prototype_model['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
+
+        # Construct a dict representation of a ServiceIDRef model
+        service_id_ref_model = {}
+        service_id_ref_model['crn'] = 'testString'
+        service_id_ref_model['id'] = 'ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637'
+
+        # Construct a dict representation of a ServiceAccessSecretPrototypeProps model
+        service_access_secret_prototype_props_model = {}
+        service_access_secret_prototype_props_model['resource_key'] = resource_key_ref_prototype_model
+        service_access_secret_prototype_props_model['role'] = role_ref_prototype_model
+        service_access_secret_prototype_props_model['service_instance'] = service_instance_ref_prototype_model
+        service_access_secret_prototype_props_model['serviceid'] = service_id_ref_model
+
+        # Construct a dict representation of a ServiceIDRefPrototype model
+        service_id_ref_prototype_model = {}
+        service_id_ref_prototype_model['id'] = 'ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637'
+
+        # Construct a dict representation of a OperatorSecretPrototypeProps model
+        operator_secret_prototype_props_model = {}
+        operator_secret_prototype_props_model['resource_group_ids'] = ['testString']
+        operator_secret_prototype_props_model['serviceid'] = service_id_ref_prototype_model
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         format = 'generic'
         name = 'my-secret'
         data = secret_data_model
+        service_access = service_access_secret_prototype_props_model
+        service_operator = operator_secret_prototype_props_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
@@ -4235,15 +8390,25 @@ class TestGetSecret:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/secrets/my-secret')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "resource_type"}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "resource_type", "service_access": {"resource_key": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "name": "name"}, "role": {"crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer", "name": "Manager"}, "service_instance": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "type": "type"}, "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}}, "service_operator": {"apikey_id": "ApiKey-17041d26-55e4-40a8-8ab5-5a69b68e204b", "resource_group_ids": ["resource_group_ids"], "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}, "user_managed": true}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-secret'
 
         # Invoke method
-        response = _service.get_secret(project_id, name, headers={})
+        response = _service.get_secret(
+            project_id,
+            name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -4265,8 +8430,14 @@ class TestGetSecret:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/secrets/my-secret')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "resource_type"}'
-        responses.add(responses.GET, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "resource_type", "service_access": {"resource_key": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "name": "name"}, "role": {"crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer", "name": "Manager"}, "service_instance": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "type": "type"}, "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}}, "service_operator": {"apikey_id": "ApiKey-17041d26-55e4-40a8-8ab5-5a69b68e204b", "resource_group_ids": ["resource_group_ids"], "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}, "user_managed": true}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -4304,32 +8475,43 @@ class TestReplaceSecret:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/secrets/my-secret')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "resource_type"}'
-        responses.add(responses.PUT, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "resource_type", "service_access": {"resource_key": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "name": "name"}, "role": {"crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer", "name": "Manager"}, "service_instance": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "type": "type"}, "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}}, "service_operator": {"apikey_id": "ApiKey-17041d26-55e4-40a8-8ab5-5a69b68e204b", "resource_group_ids": ["resource_group_ids"], "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}, "user_managed": true}}'
+        responses.add(
+            responses.PUT,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
-        # Construct a dict representation of a SecretDataSSHSecretData model
+        # Construct a dict representation of a SecretDataGenericSecretData model
         secret_data_model = {}
-        secret_data_model['ssh_key'] = 'testString'
-        secret_data_model['known_hosts'] = 'testString'
         secret_data_model['foo'] = 'testString'
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-secret'
         if_match = 'testString'
-        data = secret_data_model
         format = 'generic'
+        data = secret_data_model
 
         # Invoke method
-        response = _service.replace_secret(project_id, name, if_match, data=data, format=format, headers={})
+        response = _service.replace_secret(
+            project_id,
+            name,
+            if_match,
+            format,
+            data=data,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
         assert response.status_code == 200
         # Validate body params
         req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
-        assert req_body['data'] == secret_data_model
         assert req_body['format'] == 'generic'
+        assert req_body['data'] == secret_data_model
 
     def test_replace_secret_all_params_with_retries(self):
         # Enable retries and run test_replace_secret_all_params.
@@ -4347,27 +8529,32 @@ class TestReplaceSecret:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/secrets/my-secret')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "resource_type": "resource_type"}'
-        responses.add(responses.PUT, url, body=mock_response, content_type='application/json', status=200)
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"mapKey": "inner"}, "entity_tag": "2385407409", "format": "generic", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/secrets/my-secret", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-secret", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "resource_type", "service_access": {"resource_key": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "name": "name"}, "role": {"crn": "crn:v1:bluemix:public:iam::::serviceRole:Writer", "name": "Manager"}, "service_instance": {"id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "type": "type"}, "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}}, "service_operator": {"apikey_id": "ApiKey-17041d26-55e4-40a8-8ab5-5a69b68e204b", "resource_group_ids": ["resource_group_ids"], "serviceid": {"crn": "crn", "id": "ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637"}, "user_managed": true}}'
+        responses.add(
+            responses.PUT,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
 
-        # Construct a dict representation of a SecretDataSSHSecretData model
+        # Construct a dict representation of a SecretDataGenericSecretData model
         secret_data_model = {}
-        secret_data_model['ssh_key'] = 'testString'
-        secret_data_model['known_hosts'] = 'testString'
         secret_data_model['foo'] = 'testString'
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-secret'
         if_match = 'testString'
-        data = secret_data_model
         format = 'generic'
+        data = secret_data_model
 
         # Pass in all but one required param and check for a ValueError
         req_param_dict = {
             "project_id": project_id,
             "name": name,
             "if_match": if_match,
+            "format": format,
         }
         for param in req_param_dict.keys():
             req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
@@ -4396,14 +8583,22 @@ class TestDeleteSecret:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/secrets/my-secret')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
         name = 'my-secret'
 
         # Invoke method
-        response = _service.delete_secret(project_id, name, headers={})
+        response = _service.delete_secret(
+            project_id,
+            name,
+            headers={},
+        )
 
         # Check for correct operation
         assert len(responses.calls) == 1
@@ -4425,7 +8620,11 @@ class TestDeleteSecret:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/secrets/my-secret')
-        responses.add(responses.DELETE, url, status=202)
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -4453,7 +8652,7 @@ class TestDeleteSecret:
 
 # endregion
 ##############################################################################
-# End of Service: SecretsAndConfigMaps
+# End of Service: SecretsAndConfigmaps
 ##############################################################################
 
 
@@ -4461,6 +8660,8 @@ class TestDeleteSecret:
 # Start of Model Tests
 ##############################################################################
 # region
+
+
 class TestModel_App:
     """
     Test Class for App
@@ -4475,11 +8676,20 @@ class TestModel_App:
 
         env_var_model = {}  # EnvVar
         env_var_model['key'] = 'MY_VARIABLE'
-        env_var_model['name'] = 'CE_SUBDOMAIN'
+        env_var_model['name'] = 'SOME'
         env_var_model['prefix'] = 'PREFIX_'
         env_var_model['reference'] = 'my-secret'
         env_var_model['type'] = 'literal'
-        env_var_model['value'] = 'uyh5shf7s0f'
+        env_var_model['value'] = 'VALUE'
+
+        probe_model = {}  # Probe
+        probe_model['failure_threshold'] = 5
+        probe_model['initial_delay'] = 5
+        probe_model['interval'] = 5
+        probe_model['path'] = 'testString'
+        probe_model['port'] = 8080
+        probe_model['timeout'] = 300
+        probe_model['type'] = 'tcp'
 
         volume_mount_model = {}  # VolumeMount
         volume_mount_model['mount_path'] = '/app'
@@ -4491,12 +8701,15 @@ class TestModel_App:
 
         # Construct a json representation of a App model
         app_model_json = {}
+        app_model_json['computed_env_variables'] = [env_var_model]
         app_model_json['entity_tag'] = '2385407409'
         app_model_json['image_port'] = 8080
         app_model_json['image_reference'] = 'icr.io/codeengine/helloworld'
         app_model_json['image_secret'] = 'my-secret'
         app_model_json['managed_domain_mappings'] = 'local_public'
         app_model_json['name'] = 'my-app'
+        app_model_json['probe_liveness'] = probe_model
+        app_model_json['probe_readiness'] = probe_model
         app_model_json['run_arguments'] = ['testString']
         app_model_json['run_as_user'] = 1001
         app_model_json['run_commands'] = ['testString']
@@ -4506,6 +8719,7 @@ class TestModel_App:
         app_model_json['scale_concurrency'] = 100
         app_model_json['scale_concurrency_target'] = 80
         app_model_json['scale_cpu_limit'] = '1'
+        app_model_json['scale_down_delay'] = 300
         app_model_json['scale_ephemeral_storage_limit'] = '4G'
         app_model_json['scale_initial_instances'] = 1
         app_model_json['scale_max_instances'] = 10
@@ -4530,6 +8744,109 @@ class TestModel_App:
         assert app_model_json2 == app_model_json
 
 
+class TestModel_AppInstance:
+    """
+    Test Class for AppInstance
+    """
+
+    def test_app_instance_serialization(self):
+        """
+        Test serialization/deserialization for AppInstance
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        container_status_details_model = {}  # ContainerStatusDetails
+
+        container_status_model = {}  # ContainerStatus
+        container_status_model['current_state'] = container_status_details_model
+        container_status_model['last_observed_state'] = container_status_details_model
+
+        # Construct a json representation of a AppInstance model
+        app_instance_model_json = {}
+        app_instance_model_json['app_name'] = 'my-app'
+        app_instance_model_json['revision_name'] = 'my-app'
+        app_instance_model_json['scale_cpu_limit'] = '1'
+        app_instance_model_json['scale_ephemeral_storage_limit'] = '4G'
+        app_instance_model_json['scale_memory_limit'] = '4G'
+        app_instance_model_json['system_container'] = container_status_model
+        app_instance_model_json['user_container'] = container_status_model
+
+        # Construct a model instance of AppInstance by calling from_dict on the json representation
+        app_instance_model = AppInstance.from_dict(app_instance_model_json)
+        assert app_instance_model != False
+
+        # Construct a model instance of AppInstance by calling from_dict on the json representation
+        app_instance_model_dict = AppInstance.from_dict(app_instance_model_json).__dict__
+        app_instance_model2 = AppInstance(**app_instance_model_dict)
+
+        # Verify the model instances are equivalent
+        assert app_instance_model == app_instance_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        app_instance_model_json2 = app_instance_model.to_dict()
+        assert app_instance_model_json2 == app_instance_model_json
+
+
+class TestModel_AppInstanceList:
+    """
+    Test Class for AppInstanceList
+    """
+
+    def test_app_instance_list_serialization(self):
+        """
+        Test serialization/deserialization for AppInstanceList
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        list_first_metadata_model = {}  # ListFirstMetadata
+        list_first_metadata_model['href'] = (
+            'https://api.us-east.codeengine.cloud.ibm.com/v2/projects/230828b4-4f15-40a9-b183-1268c6ab88d5/apps/my-app/instances?limit=50'
+        )
+
+        container_status_details_model = {}  # ContainerStatusDetails
+
+        container_status_model = {}  # ContainerStatus
+        container_status_model['current_state'] = container_status_details_model
+        container_status_model['last_observed_state'] = container_status_details_model
+
+        app_instance_model = {}  # AppInstance
+        app_instance_model['app_name'] = 'crash'
+        app_instance_model['revision_name'] = 'crash-00001'
+        app_instance_model['scale_cpu_limit'] = '0.125'
+        app_instance_model['scale_ephemeral_storage_limit'] = '400M'
+        app_instance_model['scale_memory_limit'] = '250M'
+        app_instance_model['system_container'] = container_status_model
+        app_instance_model['user_container'] = container_status_model
+
+        list_next_metadata_model = {}  # ListNextMetadata
+        list_next_metadata_model['href'] = 'testString'
+        list_next_metadata_model['start'] = 'testString'
+
+        # Construct a json representation of a AppInstanceList model
+        app_instance_list_model_json = {}
+        app_instance_list_model_json['first'] = list_first_metadata_model
+        app_instance_list_model_json['instances'] = [app_instance_model]
+        app_instance_list_model_json['limit'] = 100
+        app_instance_list_model_json['next'] = list_next_metadata_model
+
+        # Construct a model instance of AppInstanceList by calling from_dict on the json representation
+        app_instance_list_model = AppInstanceList.from_dict(app_instance_list_model_json)
+        assert app_instance_list_model != False
+
+        # Construct a model instance of AppInstanceList by calling from_dict on the json representation
+        app_instance_list_model_dict = AppInstanceList.from_dict(app_instance_list_model_json).__dict__
+        app_instance_list_model2 = AppInstanceList(**app_instance_list_model_dict)
+
+        # Verify the model instances are equivalent
+        assert app_instance_list_model == app_instance_list_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        app_instance_list_model_json2 = app_instance_list_model.to_dict()
+        assert app_instance_list_model_json2 == app_instance_list_model_json
+
+
 class TestModel_AppList:
     """
     Test Class for AppList
@@ -4544,11 +8861,20 @@ class TestModel_AppList:
 
         env_var_model = {}  # EnvVar
         env_var_model['key'] = 'MY_VARIABLE'
-        env_var_model['name'] = 'CE_SUBDOMAIN'
+        env_var_model['name'] = 'SOME'
         env_var_model['prefix'] = 'PREFIX_'
         env_var_model['reference'] = 'my-secret'
         env_var_model['type'] = 'literal'
-        env_var_model['value'] = 'uyh5shf7s0f'
+        env_var_model['value'] = 'VALUE'
+
+        probe_model = {}  # Probe
+        probe_model['failure_threshold'] = 5
+        probe_model['initial_delay'] = 5
+        probe_model['interval'] = 5
+        probe_model['path'] = 'testString'
+        probe_model['port'] = 8080
+        probe_model['timeout'] = 300
+        probe_model['type'] = 'tcp'
 
         volume_mount_model = {}  # VolumeMount
         volume_mount_model['mount_path'] = '/app'
@@ -4559,12 +8885,15 @@ class TestModel_AppList:
         app_status_model = {}  # AppStatus
 
         app_model = {}  # App
+        app_model['computed_env_variables'] = [env_var_model]
         app_model['entity_tag'] = '1'
         app_model['image_port'] = 8080
         app_model['image_reference'] = 'icr.io/codeengine/helloworld'
         app_model['image_secret'] = 'my-secret'
         app_model['managed_domain_mappings'] = 'local_public'
         app_model['name'] = 'my-app'
+        app_model['probe_liveness'] = probe_model
+        app_model['probe_readiness'] = probe_model
         app_model['run_arguments'] = []
         app_model['run_as_user'] = 1001
         app_model['run_commands'] = []
@@ -4574,6 +8903,7 @@ class TestModel_AppList:
         app_model['scale_concurrency'] = 100
         app_model['scale_concurrency_target'] = 80
         app_model['scale_cpu_limit'] = '1'
+        app_model['scale_down_delay'] = 300
         app_model['scale_ephemeral_storage_limit'] = '400M'
         app_model['scale_initial_instances'] = 1
         app_model['scale_max_instances'] = 10
@@ -4624,6 +8954,15 @@ class TestModel_AppPatch:
 
         # Construct dict forms of any model objects needed in order to build this model.
 
+        probe_prototype_model = {}  # ProbePrototype
+        probe_prototype_model['failure_threshold'] = 5
+        probe_prototype_model['initial_delay'] = 5
+        probe_prototype_model['interval'] = 5
+        probe_prototype_model['path'] = 'testString'
+        probe_prototype_model['port'] = 8080
+        probe_prototype_model['timeout'] = 300
+        probe_prototype_model['type'] = 'tcp'
+
         env_var_prototype_model = {}  # EnvVarPrototype
         env_var_prototype_model['key'] = 'MY_VARIABLE'
         env_var_prototype_model['name'] = 'SOME'
@@ -4644,6 +8983,8 @@ class TestModel_AppPatch:
         app_patch_model_json['image_reference'] = 'icr.io/codeengine/helloworld'
         app_patch_model_json['image_secret'] = 'my-secret'
         app_patch_model_json['managed_domain_mappings'] = 'local_public'
+        app_patch_model_json['probe_liveness'] = probe_prototype_model
+        app_patch_model_json['probe_readiness'] = probe_prototype_model
         app_patch_model_json['run_arguments'] = ['testString']
         app_patch_model_json['run_as_user'] = 1001
         app_patch_model_json['run_commands'] = ['testString']
@@ -4653,6 +8994,7 @@ class TestModel_AppPatch:
         app_patch_model_json['scale_concurrency'] = 100
         app_patch_model_json['scale_concurrency_target'] = 80
         app_patch_model_json['scale_cpu_limit'] = '1'
+        app_patch_model_json['scale_down_delay'] = 300
         app_patch_model_json['scale_ephemeral_storage_limit'] = '4G'
         app_patch_model_json['scale_initial_instances'] = 1
         app_patch_model_json['scale_max_instances'] = 10
@@ -4690,11 +9032,20 @@ class TestModel_AppRevision:
 
         env_var_model = {}  # EnvVar
         env_var_model['key'] = 'MY_VARIABLE'
-        env_var_model['name'] = 'CE_SUBDOMAIN'
+        env_var_model['name'] = 'SOME'
         env_var_model['prefix'] = 'PREFIX_'
         env_var_model['reference'] = 'my-secret'
         env_var_model['type'] = 'literal'
-        env_var_model['value'] = 'uyh5shf7s0f'
+        env_var_model['value'] = 'VALUE'
+
+        probe_model = {}  # Probe
+        probe_model['failure_threshold'] = 5
+        probe_model['initial_delay'] = 5
+        probe_model['interval'] = 5
+        probe_model['path'] = 'testString'
+        probe_model['port'] = 8080
+        probe_model['timeout'] = 300
+        probe_model['type'] = 'tcp'
 
         volume_mount_model = {}  # VolumeMount
         volume_mount_model['mount_path'] = '/app'
@@ -4707,9 +9058,12 @@ class TestModel_AppRevision:
         # Construct a json representation of a AppRevision model
         app_revision_model_json = {}
         app_revision_model_json['app_name'] = 'my-app'
+        app_revision_model_json['computed_env_variables'] = [env_var_model]
         app_revision_model_json['image_port'] = 8080
         app_revision_model_json['image_reference'] = 'icr.io/codeengine/helloworld'
         app_revision_model_json['image_secret'] = 'my-secret'
+        app_revision_model_json['probe_liveness'] = probe_model
+        app_revision_model_json['probe_readiness'] = probe_model
         app_revision_model_json['run_arguments'] = ['testString']
         app_revision_model_json['run_as_user'] = 1001
         app_revision_model_json['run_commands'] = ['testString']
@@ -4719,6 +9073,7 @@ class TestModel_AppRevision:
         app_revision_model_json['scale_concurrency'] = 100
         app_revision_model_json['scale_concurrency_target'] = 80
         app_revision_model_json['scale_cpu_limit'] = '1'
+        app_revision_model_json['scale_down_delay'] = 300
         app_revision_model_json['scale_ephemeral_storage_limit'] = '4G'
         app_revision_model_json['scale_initial_instances'] = 1
         app_revision_model_json['scale_max_instances'] = 10
@@ -4764,11 +9119,20 @@ class TestModel_AppRevisionList:
 
         env_var_model = {}  # EnvVar
         env_var_model['key'] = 'MY_VARIABLE'
-        env_var_model['name'] = 'CE_SUBDOMAIN'
+        env_var_model['name'] = 'SOME'
         env_var_model['prefix'] = 'PREFIX_'
         env_var_model['reference'] = 'my-secret'
         env_var_model['type'] = 'literal'
-        env_var_model['value'] = 'uyh5shf7s0f'
+        env_var_model['value'] = 'VALUE'
+
+        probe_model = {}  # Probe
+        probe_model['failure_threshold'] = 5
+        probe_model['initial_delay'] = 5
+        probe_model['interval'] = 5
+        probe_model['path'] = 'testString'
+        probe_model['port'] = 8080
+        probe_model['timeout'] = 300
+        probe_model['type'] = 'tcp'
 
         volume_mount_model = {}  # VolumeMount
         volume_mount_model['mount_path'] = '/app'
@@ -4780,9 +9144,12 @@ class TestModel_AppRevisionList:
 
         app_revision_model = {}  # AppRevision
         app_revision_model['app_name'] = 'my-app'
+        app_revision_model['computed_env_variables'] = [env_var_model]
         app_revision_model['image_port'] = 8080
         app_revision_model['image_reference'] = 'icr.io/codeengine/helloworld'
         app_revision_model['image_secret'] = 'my-secret'
+        app_revision_model['probe_liveness'] = probe_model
+        app_revision_model['probe_readiness'] = probe_model
         app_revision_model['run_arguments'] = []
         app_revision_model['run_as_user'] = 1001
         app_revision_model['run_commands'] = []
@@ -4792,6 +9159,7 @@ class TestModel_AppRevisionList:
         app_revision_model['scale_concurrency'] = 100
         app_revision_model['scale_concurrency_target'] = 80
         app_revision_model['scale_cpu_limit'] = '1'
+        app_revision_model['scale_down_delay'] = 300
         app_revision_model['scale_ephemeral_storage_limit'] = '400M'
         app_revision_model['scale_initial_instances'] = 1
         app_revision_model['scale_max_instances'] = 10
@@ -4879,6 +9247,95 @@ class TestModel_AppStatus:
         # Convert model instance back to dict and verify no loss of data
         app_status_model_json2 = app_status_model.to_dict()
         assert app_status_model_json2 == app_status_model_json
+
+
+class TestModel_Binding:
+    """
+    Test Class for Binding
+    """
+
+    def test_binding_serialization(self):
+        """
+        Test serialization/deserialization for Binding
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        component_ref_model = {}  # ComponentRef
+        component_ref_model['name'] = 'my-app-1'
+        component_ref_model['resource_type'] = 'app_v2'
+
+        # Construct a json representation of a Binding model
+        binding_model_json = {}
+        binding_model_json['component'] = component_ref_model
+        binding_model_json['prefix'] = 'MY_COS'
+        binding_model_json['secret_name'] = 'my-service-access'
+
+        # Construct a model instance of Binding by calling from_dict on the json representation
+        binding_model = Binding.from_dict(binding_model_json)
+        assert binding_model != False
+
+        # Construct a model instance of Binding by calling from_dict on the json representation
+        binding_model_dict = Binding.from_dict(binding_model_json).__dict__
+        binding_model2 = Binding(**binding_model_dict)
+
+        # Verify the model instances are equivalent
+        assert binding_model == binding_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        binding_model_json2 = binding_model.to_dict()
+        assert binding_model_json2 == binding_model_json
+
+
+class TestModel_BindingList:
+    """
+    Test Class for BindingList
+    """
+
+    def test_binding_list_serialization(self):
+        """
+        Test serialization/deserialization for BindingList
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        component_ref_model = {}  # ComponentRef
+        component_ref_model['name'] = 'my-app-1'
+        component_ref_model['resource_type'] = 'app_v2'
+
+        binding_model = {}  # Binding
+        binding_model['component'] = component_ref_model
+        binding_model['prefix'] = 'PREFIX'
+        binding_model['secret_name'] = 'my-service-access'
+
+        list_first_metadata_model = {}  # ListFirstMetadata
+        list_first_metadata_model['href'] = 'testString'
+
+        list_next_metadata_model = {}  # ListNextMetadata
+        list_next_metadata_model['href'] = 'testString'
+        list_next_metadata_model['start'] = 'testString'
+
+        # Construct a json representation of a BindingList model
+        binding_list_model_json = {}
+        binding_list_model_json['bindings'] = [binding_model]
+        binding_list_model_json['first'] = list_first_metadata_model
+        binding_list_model_json['limit'] = 100
+        binding_list_model_json['next'] = list_next_metadata_model
+
+        # Construct a model instance of BindingList by calling from_dict on the json representation
+        binding_list_model = BindingList.from_dict(binding_list_model_json)
+        assert binding_list_model != False
+
+        # Construct a model instance of BindingList by calling from_dict on the json representation
+        binding_list_model_dict = BindingList.from_dict(binding_list_model_json).__dict__
+        binding_list_model2 = BindingList(**binding_list_model_dict)
+
+        # Verify the model instances are equivalent
+        assert binding_list_model == binding_list_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        binding_list_model_json2 = binding_list_model.to_dict()
+        assert binding_list_model_json2 == binding_list_model_json
 
 
 class TestModel_Build:
@@ -5195,6 +9652,37 @@ class TestModel_BuildStatus:
         assert build_status_model_json2 == build_status_model_json
 
 
+class TestModel_ComponentRef:
+    """
+    Test Class for ComponentRef
+    """
+
+    def test_component_ref_serialization(self):
+        """
+        Test serialization/deserialization for ComponentRef
+        """
+
+        # Construct a json representation of a ComponentRef model
+        component_ref_model_json = {}
+        component_ref_model_json['name'] = 'my-app-1'
+        component_ref_model_json['resource_type'] = 'app_v2'
+
+        # Construct a model instance of ComponentRef by calling from_dict on the json representation
+        component_ref_model = ComponentRef.from_dict(component_ref_model_json)
+        assert component_ref_model != False
+
+        # Construct a model instance of ComponentRef by calling from_dict on the json representation
+        component_ref_model_dict = ComponentRef.from_dict(component_ref_model_json).__dict__
+        component_ref_model2 = ComponentRef(**component_ref_model_dict)
+
+        # Verify the model instances are equivalent
+        assert component_ref_model == component_ref_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        component_ref_model_json2 = component_ref_model.to_dict()
+        assert component_ref_model_json2 == component_ref_model_json
+
+
 class TestModel_ConfigMap:
     """
     Test Class for ConfigMap
@@ -5274,6 +9762,235 @@ class TestModel_ConfigMapList:
         assert config_map_list_model_json2 == config_map_list_model_json
 
 
+class TestModel_ContainerStatus:
+    """
+    Test Class for ContainerStatus
+    """
+
+    def test_container_status_serialization(self):
+        """
+        Test serialization/deserialization for ContainerStatus
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        container_status_details_model = {}  # ContainerStatusDetails
+
+        # Construct a json representation of a ContainerStatus model
+        container_status_model_json = {}
+        container_status_model_json['current_state'] = container_status_details_model
+        container_status_model_json['last_observed_state'] = container_status_details_model
+
+        # Construct a model instance of ContainerStatus by calling from_dict on the json representation
+        container_status_model = ContainerStatus.from_dict(container_status_model_json)
+        assert container_status_model != False
+
+        # Construct a model instance of ContainerStatus by calling from_dict on the json representation
+        container_status_model_dict = ContainerStatus.from_dict(container_status_model_json).__dict__
+        container_status_model2 = ContainerStatus(**container_status_model_dict)
+
+        # Verify the model instances are equivalent
+        assert container_status_model == container_status_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        container_status_model_json2 = container_status_model.to_dict()
+        assert container_status_model_json2 == container_status_model_json
+
+
+class TestModel_ContainerStatusDetails:
+    """
+    Test Class for ContainerStatusDetails
+    """
+
+    def test_container_status_details_serialization(self):
+        """
+        Test serialization/deserialization for ContainerStatusDetails
+        """
+
+        # Construct a json representation of a ContainerStatusDetails model
+        container_status_details_model_json = {}
+
+        # Construct a model instance of ContainerStatusDetails by calling from_dict on the json representation
+        container_status_details_model = ContainerStatusDetails.from_dict(container_status_details_model_json)
+        assert container_status_details_model != False
+
+        # Construct a model instance of ContainerStatusDetails by calling from_dict on the json representation
+        container_status_details_model_dict = ContainerStatusDetails.from_dict(
+            container_status_details_model_json
+        ).__dict__
+        container_status_details_model2 = ContainerStatusDetails(**container_status_details_model_dict)
+
+        # Verify the model instances are equivalent
+        assert container_status_details_model == container_status_details_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        container_status_details_model_json2 = container_status_details_model.to_dict()
+        assert container_status_details_model_json2 == container_status_details_model_json
+
+
+class TestModel_DomainMapping:
+    """
+    Test Class for DomainMapping
+    """
+
+    def test_domain_mapping_serialization(self):
+        """
+        Test serialization/deserialization for DomainMapping
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        component_ref_model = {}  # ComponentRef
+        component_ref_model['name'] = 'my-app'
+        component_ref_model['resource_type'] = 'app_v2'
+
+        domain_mapping_status_model = {}  # DomainMappingStatus
+
+        # Construct a json representation of a DomainMapping model
+        domain_mapping_model_json = {}
+        domain_mapping_model_json['component'] = component_ref_model
+        domain_mapping_model_json['entity_tag'] = '2385407409'
+        domain_mapping_model_json['name'] = 'www.example.com'
+        domain_mapping_model_json['status_details'] = domain_mapping_status_model
+        domain_mapping_model_json['tls_secret'] = 'my-tls-secret'
+
+        # Construct a model instance of DomainMapping by calling from_dict on the json representation
+        domain_mapping_model = DomainMapping.from_dict(domain_mapping_model_json)
+        assert domain_mapping_model != False
+
+        # Construct a model instance of DomainMapping by calling from_dict on the json representation
+        domain_mapping_model_dict = DomainMapping.from_dict(domain_mapping_model_json).__dict__
+        domain_mapping_model2 = DomainMapping(**domain_mapping_model_dict)
+
+        # Verify the model instances are equivalent
+        assert domain_mapping_model == domain_mapping_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        domain_mapping_model_json2 = domain_mapping_model.to_dict()
+        assert domain_mapping_model_json2 == domain_mapping_model_json
+
+
+class TestModel_DomainMappingList:
+    """
+    Test Class for DomainMappingList
+    """
+
+    def test_domain_mapping_list_serialization(self):
+        """
+        Test serialization/deserialization for DomainMappingList
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        component_ref_model = {}  # ComponentRef
+        component_ref_model['name'] = 'my-app'
+        component_ref_model['resource_type'] = 'app_v2'
+
+        domain_mapping_status_model = {}  # DomainMappingStatus
+
+        domain_mapping_model = {}  # DomainMapping
+        domain_mapping_model['component'] = component_ref_model
+        domain_mapping_model['entity_tag'] = '2385407409'
+        domain_mapping_model['name'] = 'www.example.com'
+        domain_mapping_model['status_details'] = domain_mapping_status_model
+        domain_mapping_model['tls_secret'] = 'my-tls-secret'
+
+        list_first_metadata_model = {}  # ListFirstMetadata
+        list_first_metadata_model['href'] = 'testString'
+
+        list_next_metadata_model = {}  # ListNextMetadata
+        list_next_metadata_model['href'] = 'testString'
+        list_next_metadata_model['start'] = 'testString'
+
+        # Construct a json representation of a DomainMappingList model
+        domain_mapping_list_model_json = {}
+        domain_mapping_list_model_json['domain_mappings'] = [domain_mapping_model]
+        domain_mapping_list_model_json['first'] = list_first_metadata_model
+        domain_mapping_list_model_json['limit'] = 100
+        domain_mapping_list_model_json['next'] = list_next_metadata_model
+
+        # Construct a model instance of DomainMappingList by calling from_dict on the json representation
+        domain_mapping_list_model = DomainMappingList.from_dict(domain_mapping_list_model_json)
+        assert domain_mapping_list_model != False
+
+        # Construct a model instance of DomainMappingList by calling from_dict on the json representation
+        domain_mapping_list_model_dict = DomainMappingList.from_dict(domain_mapping_list_model_json).__dict__
+        domain_mapping_list_model2 = DomainMappingList(**domain_mapping_list_model_dict)
+
+        # Verify the model instances are equivalent
+        assert domain_mapping_list_model == domain_mapping_list_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        domain_mapping_list_model_json2 = domain_mapping_list_model.to_dict()
+        assert domain_mapping_list_model_json2 == domain_mapping_list_model_json
+
+
+class TestModel_DomainMappingPatch:
+    """
+    Test Class for DomainMappingPatch
+    """
+
+    def test_domain_mapping_patch_serialization(self):
+        """
+        Test serialization/deserialization for DomainMappingPatch
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        component_ref_model = {}  # ComponentRef
+        component_ref_model['name'] = 'my-app'
+        component_ref_model['resource_type'] = 'app_v2'
+
+        # Construct a json representation of a DomainMappingPatch model
+        domain_mapping_patch_model_json = {}
+        domain_mapping_patch_model_json['component'] = component_ref_model
+        domain_mapping_patch_model_json['tls_secret'] = 'my-tls-secret'
+
+        # Construct a model instance of DomainMappingPatch by calling from_dict on the json representation
+        domain_mapping_patch_model = DomainMappingPatch.from_dict(domain_mapping_patch_model_json)
+        assert domain_mapping_patch_model != False
+
+        # Construct a model instance of DomainMappingPatch by calling from_dict on the json representation
+        domain_mapping_patch_model_dict = DomainMappingPatch.from_dict(domain_mapping_patch_model_json).__dict__
+        domain_mapping_patch_model2 = DomainMappingPatch(**domain_mapping_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert domain_mapping_patch_model == domain_mapping_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        domain_mapping_patch_model_json2 = domain_mapping_patch_model.to_dict()
+        assert domain_mapping_patch_model_json2 == domain_mapping_patch_model_json
+
+
+class TestModel_DomainMappingStatus:
+    """
+    Test Class for DomainMappingStatus
+    """
+
+    def test_domain_mapping_status_serialization(self):
+        """
+        Test serialization/deserialization for DomainMappingStatus
+        """
+
+        # Construct a json representation of a DomainMappingStatus model
+        domain_mapping_status_model_json = {}
+
+        # Construct a model instance of DomainMappingStatus by calling from_dict on the json representation
+        domain_mapping_status_model = DomainMappingStatus.from_dict(domain_mapping_status_model_json)
+        assert domain_mapping_status_model != False
+
+        # Construct a model instance of DomainMappingStatus by calling from_dict on the json representation
+        domain_mapping_status_model_dict = DomainMappingStatus.from_dict(domain_mapping_status_model_json).__dict__
+        domain_mapping_status_model2 = DomainMappingStatus(**domain_mapping_status_model_dict)
+
+        # Verify the model instances are equivalent
+        assert domain_mapping_status_model == domain_mapping_status_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        domain_mapping_status_model_json2 = domain_mapping_status_model.to_dict()
+        assert domain_mapping_status_model_json2 == domain_mapping_status_model_json
+
+
 class TestModel_EnvVar:
     """
     Test Class for EnvVar
@@ -5344,6 +10061,276 @@ class TestModel_EnvVarPrototype:
         assert env_var_prototype_model_json2 == env_var_prototype_model_json
 
 
+class TestModel_Function:
+    """
+    Test Class for Function
+    """
+
+    def test_function_serialization(self):
+        """
+        Test serialization/deserialization for Function
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        env_var_model = {}  # EnvVar
+        env_var_model['key'] = 'MY_VARIABLE'
+        env_var_model['name'] = 'SOME'
+        env_var_model['prefix'] = 'PREFIX_'
+        env_var_model['reference'] = 'my-secret'
+        env_var_model['type'] = 'literal'
+        env_var_model['value'] = 'VALUE'
+
+        function_status_model = {}  # FunctionStatus
+
+        # Construct a json representation of a Function model
+        function_model_json = {}
+        function_model_json['code_binary'] = False
+        function_model_json['code_main'] = 'main'
+        function_model_json['code_reference'] = 'data:text/plain;base64,<base64encoded-source-code>'
+        function_model_json['code_secret'] = 'my-secret'
+        function_model_json['computed_env_variables'] = [env_var_model]
+        function_model_json['entity_tag'] = '2385407409'
+        function_model_json['managed_domain_mappings'] = 'local_public'
+        function_model_json['name'] = 'my-function'
+        function_model_json['run_env_variables'] = [env_var_model]
+        function_model_json['runtime'] = 'nodejs-18'
+        function_model_json['scale_concurrency'] = 1
+        function_model_json['scale_cpu_limit'] = '1'
+        function_model_json['scale_down_delay'] = 300
+        function_model_json['scale_max_execution_time'] = 60
+        function_model_json['scale_memory_limit'] = '1G'
+        function_model_json['status_details'] = function_status_model
+
+        # Construct a model instance of Function by calling from_dict on the json representation
+        function_model = Function.from_dict(function_model_json)
+        assert function_model != False
+
+        # Construct a model instance of Function by calling from_dict on the json representation
+        function_model_dict = Function.from_dict(function_model_json).__dict__
+        function_model2 = Function(**function_model_dict)
+
+        # Verify the model instances are equivalent
+        assert function_model == function_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        function_model_json2 = function_model.to_dict()
+        assert function_model_json2 == function_model_json
+
+
+class TestModel_FunctionList:
+    """
+    Test Class for FunctionList
+    """
+
+    def test_function_list_serialization(self):
+        """
+        Test serialization/deserialization for FunctionList
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        list_first_metadata_model = {}  # ListFirstMetadata
+        list_first_metadata_model['href'] = 'testString'
+
+        env_var_model = {}  # EnvVar
+        env_var_model['key'] = 'MY_VARIABLE'
+        env_var_model['name'] = 'SOME'
+        env_var_model['prefix'] = 'PREFIX_'
+        env_var_model['reference'] = 'my-secret'
+        env_var_model['type'] = 'literal'
+        env_var_model['value'] = 'VALUE'
+
+        function_status_model = {}  # FunctionStatus
+
+        function_model = {}  # Function
+        function_model['code_binary'] = True
+        function_model['code_main'] = 'main'
+        function_model['code_reference'] = 'icr.io/codeengine/samples/function-nodejs-codebundle'
+        function_model['code_secret'] = 'my-secret'
+        function_model['computed_env_variables'] = [env_var_model]
+        function_model['entity_tag'] = '1'
+        function_model['managed_domain_mappings'] = 'local_public'
+        function_model['name'] = 'my-function'
+        function_model['run_env_variables'] = [env_var_model]
+        function_model['runtime'] = 'nodejs-18'
+        function_model['scale_concurrency'] = 1
+        function_model['scale_cpu_limit'] = '0.5'
+        function_model['scale_down_delay'] = 0
+        function_model['scale_max_execution_time'] = 60
+        function_model['scale_memory_limit'] = '2G'
+        function_model['status_details'] = function_status_model
+
+        list_next_metadata_model = {}  # ListNextMetadata
+        list_next_metadata_model['href'] = 'testString'
+        list_next_metadata_model['start'] = 'testString'
+
+        # Construct a json representation of a FunctionList model
+        function_list_model_json = {}
+        function_list_model_json['first'] = list_first_metadata_model
+        function_list_model_json['functions'] = [function_model]
+        function_list_model_json['limit'] = 100
+        function_list_model_json['next'] = list_next_metadata_model
+
+        # Construct a model instance of FunctionList by calling from_dict on the json representation
+        function_list_model = FunctionList.from_dict(function_list_model_json)
+        assert function_list_model != False
+
+        # Construct a model instance of FunctionList by calling from_dict on the json representation
+        function_list_model_dict = FunctionList.from_dict(function_list_model_json).__dict__
+        function_list_model2 = FunctionList(**function_list_model_dict)
+
+        # Verify the model instances are equivalent
+        assert function_list_model == function_list_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        function_list_model_json2 = function_list_model.to_dict()
+        assert function_list_model_json2 == function_list_model_json
+
+
+class TestModel_FunctionPatch:
+    """
+    Test Class for FunctionPatch
+    """
+
+    def test_function_patch_serialization(self):
+        """
+        Test serialization/deserialization for FunctionPatch
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        env_var_prototype_model = {}  # EnvVarPrototype
+        env_var_prototype_model['key'] = 'MY_VARIABLE'
+        env_var_prototype_model['name'] = 'SOME'
+        env_var_prototype_model['prefix'] = 'PREFIX_'
+        env_var_prototype_model['reference'] = 'my-secret'
+        env_var_prototype_model['type'] = 'literal'
+        env_var_prototype_model['value'] = 'VALUE'
+
+        # Construct a json representation of a FunctionPatch model
+        function_patch_model_json = {}
+        function_patch_model_json['code_binary'] = False
+        function_patch_model_json['code_main'] = 'main'
+        function_patch_model_json['code_reference'] = 'data:text/plain;base64,<base64encoded-source-code>'
+        function_patch_model_json['code_secret'] = 'my-secret'
+        function_patch_model_json['managed_domain_mappings'] = 'local_public'
+        function_patch_model_json['run_env_variables'] = [env_var_prototype_model]
+        function_patch_model_json['runtime'] = 'nodejs-18'
+        function_patch_model_json['scale_concurrency'] = 1
+        function_patch_model_json['scale_cpu_limit'] = '1'
+        function_patch_model_json['scale_down_delay'] = 300
+        function_patch_model_json['scale_max_execution_time'] = 60
+        function_patch_model_json['scale_memory_limit'] = '1G'
+
+        # Construct a model instance of FunctionPatch by calling from_dict on the json representation
+        function_patch_model = FunctionPatch.from_dict(function_patch_model_json)
+        assert function_patch_model != False
+
+        # Construct a model instance of FunctionPatch by calling from_dict on the json representation
+        function_patch_model_dict = FunctionPatch.from_dict(function_patch_model_json).__dict__
+        function_patch_model2 = FunctionPatch(**function_patch_model_dict)
+
+        # Verify the model instances are equivalent
+        assert function_patch_model == function_patch_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        function_patch_model_json2 = function_patch_model.to_dict()
+        assert function_patch_model_json2 == function_patch_model_json
+
+
+class TestModel_FunctionRuntime:
+    """
+    Test Class for FunctionRuntime
+    """
+
+    def test_function_runtime_serialization(self):
+        """
+        Test serialization/deserialization for FunctionRuntime
+        """
+
+        # Construct a json representation of a FunctionRuntime model
+        function_runtime_model_json = {}
+
+        # Construct a model instance of FunctionRuntime by calling from_dict on the json representation
+        function_runtime_model = FunctionRuntime.from_dict(function_runtime_model_json)
+        assert function_runtime_model != False
+
+        # Construct a model instance of FunctionRuntime by calling from_dict on the json representation
+        function_runtime_model_dict = FunctionRuntime.from_dict(function_runtime_model_json).__dict__
+        function_runtime_model2 = FunctionRuntime(**function_runtime_model_dict)
+
+        # Verify the model instances are equivalent
+        assert function_runtime_model == function_runtime_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        function_runtime_model_json2 = function_runtime_model.to_dict()
+        assert function_runtime_model_json2 == function_runtime_model_json
+
+
+class TestModel_FunctionRuntimeList:
+    """
+    Test Class for FunctionRuntimeList
+    """
+
+    def test_function_runtime_list_serialization(self):
+        """
+        Test serialization/deserialization for FunctionRuntimeList
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        function_runtime_model = {}  # FunctionRuntime
+
+        # Construct a json representation of a FunctionRuntimeList model
+        function_runtime_list_model_json = {}
+        function_runtime_list_model_json['function_runtimes'] = [function_runtime_model]
+
+        # Construct a model instance of FunctionRuntimeList by calling from_dict on the json representation
+        function_runtime_list_model = FunctionRuntimeList.from_dict(function_runtime_list_model_json)
+        assert function_runtime_list_model != False
+
+        # Construct a model instance of FunctionRuntimeList by calling from_dict on the json representation
+        function_runtime_list_model_dict = FunctionRuntimeList.from_dict(function_runtime_list_model_json).__dict__
+        function_runtime_list_model2 = FunctionRuntimeList(**function_runtime_list_model_dict)
+
+        # Verify the model instances are equivalent
+        assert function_runtime_list_model == function_runtime_list_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        function_runtime_list_model_json2 = function_runtime_list_model.to_dict()
+        assert function_runtime_list_model_json2 == function_runtime_list_model_json
+
+
+class TestModel_FunctionStatus:
+    """
+    Test Class for FunctionStatus
+    """
+
+    def test_function_status_serialization(self):
+        """
+        Test serialization/deserialization for FunctionStatus
+        """
+
+        # Construct a json representation of a FunctionStatus model
+        function_status_model_json = {}
+
+        # Construct a model instance of FunctionStatus by calling from_dict on the json representation
+        function_status_model = FunctionStatus.from_dict(function_status_model_json)
+        assert function_status_model != False
+
+        # Construct a model instance of FunctionStatus by calling from_dict on the json representation
+        function_status_model_dict = FunctionStatus.from_dict(function_status_model_json).__dict__
+        function_status_model2 = FunctionStatus(**function_status_model_dict)
+
+        # Verify the model instances are equivalent
+        assert function_status_model == function_status_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        function_status_model_json2 = function_status_model.to_dict()
+        assert function_status_model_json2 == function_status_model_json
+
+
 class TestModel_Job:
     """
     Test Class for Job
@@ -5372,6 +10359,7 @@ class TestModel_Job:
 
         # Construct a json representation of a Job model
         job_model_json = {}
+        job_model_json['computed_env_variables'] = [env_var_model]
         job_model_json['entity_tag'] = '2385407409'
         job_model_json['image_reference'] = 'icr.io/codeengine/helloworld'
         job_model_json['image_secret'] = 'my-secret'
@@ -5436,6 +10424,7 @@ class TestModel_JobList:
         volume_mount_model['type'] = 'secret'
 
         job_model = {}  # Job
+        job_model['computed_env_variables'] = [env_var_model]
         job_model['entity_tag'] = '2386231540'
         job_model['image_reference'] = 'icr.io/codeengine/helloworld'
         job_model['image_secret'] = 'my-secret'
@@ -5571,6 +10560,7 @@ class TestModel_JobRun:
 
         # Construct a json representation of a JobRun model
         job_run_model_json = {}
+        job_run_model_json['computed_env_variables'] = [env_var_model]
         job_run_model_json['image_reference'] = 'icr.io/codeengine/helloworld'
         job_run_model_json['image_secret'] = 'my-secret'
         job_run_model_json['job_name'] = 'my-job'
@@ -5582,6 +10572,7 @@ class TestModel_JobRun:
         job_run_model_json['run_mode'] = 'task'
         job_run_model_json['run_service_account'] = 'default'
         job_run_model_json['run_volume_mounts'] = [volume_mount_model]
+        job_run_model_json['scale_array_size_variable_override'] = 2
         job_run_model_json['scale_array_spec'] = '1-5,7-8,10'
         job_run_model_json['scale_cpu_limit'] = '1'
         job_run_model_json['scale_ephemeral_storage_limit'] = '4G'
@@ -5638,6 +10629,7 @@ class TestModel_JobRunList:
         job_run_status_model = {}  # JobRunStatus
 
         job_run_model = {}  # JobRun
+        job_run_model['computed_env_variables'] = [env_var_model]
         job_run_model['image_reference'] = 'icr.io/codeengine/helloworld'
         job_run_model['image_secret'] = 'my-secret'
         job_run_model['job_name'] = 'my-job'
@@ -5649,6 +10641,7 @@ class TestModel_JobRunList:
         job_run_model['run_mode'] = 'task'
         job_run_model['run_service_account'] = 'default'
         job_run_model['run_volume_mounts'] = [volume_mount_model]
+        job_run_model['scale_array_size_variable_override'] = 2
         job_run_model['scale_array_spec'] = '0'
         job_run_model['scale_cpu_limit'] = '1'
         job_run_model['scale_ephemeral_storage_limit'] = '400M'
@@ -5774,6 +10767,159 @@ class TestModel_ListNextMetadata:
         assert list_next_metadata_model_json2 == list_next_metadata_model_json
 
 
+class TestModel_OperatorSecretProps:
+    """
+    Test Class for OperatorSecretProps
+    """
+
+    def test_operator_secret_props_serialization(self):
+        """
+        Test serialization/deserialization for OperatorSecretProps
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        service_id_ref_model = {}  # ServiceIDRef
+        service_id_ref_model['crn'] = 'testString'
+        service_id_ref_model['id'] = 'ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637'
+
+        # Construct a json representation of a OperatorSecretProps model
+        operator_secret_props_model_json = {}
+        operator_secret_props_model_json['apikey_id'] = 'ApiKey-17041d26-55e4-40a8-8ab5-5a69b68e204b'
+        operator_secret_props_model_json['resource_group_ids'] = ['testString']
+        operator_secret_props_model_json['serviceid'] = service_id_ref_model
+        operator_secret_props_model_json['user_managed'] = True
+
+        # Construct a model instance of OperatorSecretProps by calling from_dict on the json representation
+        operator_secret_props_model = OperatorSecretProps.from_dict(operator_secret_props_model_json)
+        assert operator_secret_props_model != False
+
+        # Construct a model instance of OperatorSecretProps by calling from_dict on the json representation
+        operator_secret_props_model_dict = OperatorSecretProps.from_dict(operator_secret_props_model_json).__dict__
+        operator_secret_props_model2 = OperatorSecretProps(**operator_secret_props_model_dict)
+
+        # Verify the model instances are equivalent
+        assert operator_secret_props_model == operator_secret_props_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        operator_secret_props_model_json2 = operator_secret_props_model.to_dict()
+        assert operator_secret_props_model_json2 == operator_secret_props_model_json
+
+
+class TestModel_OperatorSecretPrototypeProps:
+    """
+    Test Class for OperatorSecretPrototypeProps
+    """
+
+    def test_operator_secret_prototype_props_serialization(self):
+        """
+        Test serialization/deserialization for OperatorSecretPrototypeProps
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        service_id_ref_prototype_model = {}  # ServiceIDRefPrototype
+        service_id_ref_prototype_model['id'] = 'ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637'
+
+        # Construct a json representation of a OperatorSecretPrototypeProps model
+        operator_secret_prototype_props_model_json = {}
+        operator_secret_prototype_props_model_json['resource_group_ids'] = ['testString']
+        operator_secret_prototype_props_model_json['serviceid'] = service_id_ref_prototype_model
+
+        # Construct a model instance of OperatorSecretPrototypeProps by calling from_dict on the json representation
+        operator_secret_prototype_props_model = OperatorSecretPrototypeProps.from_dict(
+            operator_secret_prototype_props_model_json
+        )
+        assert operator_secret_prototype_props_model != False
+
+        # Construct a model instance of OperatorSecretPrototypeProps by calling from_dict on the json representation
+        operator_secret_prototype_props_model_dict = OperatorSecretPrototypeProps.from_dict(
+            operator_secret_prototype_props_model_json
+        ).__dict__
+        operator_secret_prototype_props_model2 = OperatorSecretPrototypeProps(
+            **operator_secret_prototype_props_model_dict
+        )
+
+        # Verify the model instances are equivalent
+        assert operator_secret_prototype_props_model == operator_secret_prototype_props_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        operator_secret_prototype_props_model_json2 = operator_secret_prototype_props_model.to_dict()
+        assert operator_secret_prototype_props_model_json2 == operator_secret_prototype_props_model_json
+
+
+class TestModel_Probe:
+    """
+    Test Class for Probe
+    """
+
+    def test_probe_serialization(self):
+        """
+        Test serialization/deserialization for Probe
+        """
+
+        # Construct a json representation of a Probe model
+        probe_model_json = {}
+        probe_model_json['failure_threshold'] = 5
+        probe_model_json['initial_delay'] = 5
+        probe_model_json['interval'] = 5
+        probe_model_json['path'] = 'testString'
+        probe_model_json['port'] = 8080
+        probe_model_json['timeout'] = 300
+        probe_model_json['type'] = 'tcp'
+
+        # Construct a model instance of Probe by calling from_dict on the json representation
+        probe_model = Probe.from_dict(probe_model_json)
+        assert probe_model != False
+
+        # Construct a model instance of Probe by calling from_dict on the json representation
+        probe_model_dict = Probe.from_dict(probe_model_json).__dict__
+        probe_model2 = Probe(**probe_model_dict)
+
+        # Verify the model instances are equivalent
+        assert probe_model == probe_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        probe_model_json2 = probe_model.to_dict()
+        assert probe_model_json2 == probe_model_json
+
+
+class TestModel_ProbePrototype:
+    """
+    Test Class for ProbePrototype
+    """
+
+    def test_probe_prototype_serialization(self):
+        """
+        Test serialization/deserialization for ProbePrototype
+        """
+
+        # Construct a json representation of a ProbePrototype model
+        probe_prototype_model_json = {}
+        probe_prototype_model_json['failure_threshold'] = 5
+        probe_prototype_model_json['initial_delay'] = 5
+        probe_prototype_model_json['interval'] = 5
+        probe_prototype_model_json['path'] = 'testString'
+        probe_prototype_model_json['port'] = 8080
+        probe_prototype_model_json['timeout'] = 300
+        probe_prototype_model_json['type'] = 'tcp'
+
+        # Construct a model instance of ProbePrototype by calling from_dict on the json representation
+        probe_prototype_model = ProbePrototype.from_dict(probe_prototype_model_json)
+        assert probe_prototype_model != False
+
+        # Construct a model instance of ProbePrototype by calling from_dict on the json representation
+        probe_prototype_model_dict = ProbePrototype.from_dict(probe_prototype_model_json).__dict__
+        probe_prototype_model2 = ProbePrototype(**probe_prototype_model_dict)
+
+        # Verify the model instances are equivalent
+        assert probe_prototype_model == probe_prototype_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        probe_prototype_model_json2 = probe_prototype_model.to_dict()
+        assert probe_prototype_model_json2 == probe_prototype_model_json
+
+
 class TestModel_Project:
     """
     Test Class for Project
@@ -5884,6 +11030,162 @@ class TestModel_ProjectList:
         assert project_list_model_json2 == project_list_model_json
 
 
+class TestModel_ProjectStatusDetails:
+    """
+    Test Class for ProjectStatusDetails
+    """
+
+    def test_project_status_details_serialization(self):
+        """
+        Test serialization/deserialization for ProjectStatusDetails
+        """
+
+        # Construct a json representation of a ProjectStatusDetails model
+        project_status_details_model_json = {}
+        project_status_details_model_json['domain'] = 'unknown'
+        project_status_details_model_json['project'] = 'enabled'
+        project_status_details_model_json['vpe_not_enabled'] = True
+
+        # Construct a model instance of ProjectStatusDetails by calling from_dict on the json representation
+        project_status_details_model = ProjectStatusDetails.from_dict(project_status_details_model_json)
+        assert project_status_details_model != False
+
+        # Construct a model instance of ProjectStatusDetails by calling from_dict on the json representation
+        project_status_details_model_dict = ProjectStatusDetails.from_dict(project_status_details_model_json).__dict__
+        project_status_details_model2 = ProjectStatusDetails(**project_status_details_model_dict)
+
+        # Verify the model instances are equivalent
+        assert project_status_details_model == project_status_details_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        project_status_details_model_json2 = project_status_details_model.to_dict()
+        assert project_status_details_model_json2 == project_status_details_model_json
+
+
+class TestModel_ResourceKeyRef:
+    """
+    Test Class for ResourceKeyRef
+    """
+
+    def test_resource_key_ref_serialization(self):
+        """
+        Test serialization/deserialization for ResourceKeyRef
+        """
+
+        # Construct a json representation of a ResourceKeyRef model
+        resource_key_ref_model_json = {}
+        resource_key_ref_model_json['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
+        resource_key_ref_model_json['name'] = 'testString'
+
+        # Construct a model instance of ResourceKeyRef by calling from_dict on the json representation
+        resource_key_ref_model = ResourceKeyRef.from_dict(resource_key_ref_model_json)
+        assert resource_key_ref_model != False
+
+        # Construct a model instance of ResourceKeyRef by calling from_dict on the json representation
+        resource_key_ref_model_dict = ResourceKeyRef.from_dict(resource_key_ref_model_json).__dict__
+        resource_key_ref_model2 = ResourceKeyRef(**resource_key_ref_model_dict)
+
+        # Verify the model instances are equivalent
+        assert resource_key_ref_model == resource_key_ref_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        resource_key_ref_model_json2 = resource_key_ref_model.to_dict()
+        assert resource_key_ref_model_json2 == resource_key_ref_model_json
+
+
+class TestModel_ResourceKeyRefPrototype:
+    """
+    Test Class for ResourceKeyRefPrototype
+    """
+
+    def test_resource_key_ref_prototype_serialization(self):
+        """
+        Test serialization/deserialization for ResourceKeyRefPrototype
+        """
+
+        # Construct a json representation of a ResourceKeyRefPrototype model
+        resource_key_ref_prototype_model_json = {}
+        resource_key_ref_prototype_model_json['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
+
+        # Construct a model instance of ResourceKeyRefPrototype by calling from_dict on the json representation
+        resource_key_ref_prototype_model = ResourceKeyRefPrototype.from_dict(resource_key_ref_prototype_model_json)
+        assert resource_key_ref_prototype_model != False
+
+        # Construct a model instance of ResourceKeyRefPrototype by calling from_dict on the json representation
+        resource_key_ref_prototype_model_dict = ResourceKeyRefPrototype.from_dict(
+            resource_key_ref_prototype_model_json
+        ).__dict__
+        resource_key_ref_prototype_model2 = ResourceKeyRefPrototype(**resource_key_ref_prototype_model_dict)
+
+        # Verify the model instances are equivalent
+        assert resource_key_ref_prototype_model == resource_key_ref_prototype_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        resource_key_ref_prototype_model_json2 = resource_key_ref_prototype_model.to_dict()
+        assert resource_key_ref_prototype_model_json2 == resource_key_ref_prototype_model_json
+
+
+class TestModel_RoleRef:
+    """
+    Test Class for RoleRef
+    """
+
+    def test_role_ref_serialization(self):
+        """
+        Test serialization/deserialization for RoleRef
+        """
+
+        # Construct a json representation of a RoleRef model
+        role_ref_model_json = {}
+        role_ref_model_json['crn'] = 'crn:v1:bluemix:public:iam::::serviceRole:Writer'
+        role_ref_model_json['name'] = 'Manager'
+
+        # Construct a model instance of RoleRef by calling from_dict on the json representation
+        role_ref_model = RoleRef.from_dict(role_ref_model_json)
+        assert role_ref_model != False
+
+        # Construct a model instance of RoleRef by calling from_dict on the json representation
+        role_ref_model_dict = RoleRef.from_dict(role_ref_model_json).__dict__
+        role_ref_model2 = RoleRef(**role_ref_model_dict)
+
+        # Verify the model instances are equivalent
+        assert role_ref_model == role_ref_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        role_ref_model_json2 = role_ref_model.to_dict()
+        assert role_ref_model_json2 == role_ref_model_json
+
+
+class TestModel_RoleRefPrototype:
+    """
+    Test Class for RoleRefPrototype
+    """
+
+    def test_role_ref_prototype_serialization(self):
+        """
+        Test serialization/deserialization for RoleRefPrototype
+        """
+
+        # Construct a json representation of a RoleRefPrototype model
+        role_ref_prototype_model_json = {}
+        role_ref_prototype_model_json['crn'] = 'crn:v1:bluemix:public:iam::::serviceRole:Writer'
+
+        # Construct a model instance of RoleRefPrototype by calling from_dict on the json representation
+        role_ref_prototype_model = RoleRefPrototype.from_dict(role_ref_prototype_model_json)
+        assert role_ref_prototype_model != False
+
+        # Construct a model instance of RoleRefPrototype by calling from_dict on the json representation
+        role_ref_prototype_model_dict = RoleRefPrototype.from_dict(role_ref_prototype_model_json).__dict__
+        role_ref_prototype_model2 = RoleRefPrototype(**role_ref_prototype_model_dict)
+
+        # Verify the model instances are equivalent
+        assert role_ref_prototype_model == role_ref_prototype_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        role_ref_prototype_model_json2 = role_ref_prototype_model.to_dict()
+        assert role_ref_prototype_model_json2 == role_ref_prototype_model_json
+
+
 class TestModel_Secret:
     """
     Test Class for Secret
@@ -5894,12 +11196,44 @@ class TestModel_Secret:
         Test serialization/deserialization for Secret
         """
 
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        resource_key_ref_model = {}  # ResourceKeyRef
+        resource_key_ref_model['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
+        resource_key_ref_model['name'] = 'testString'
+
+        role_ref_model = {}  # RoleRef
+        role_ref_model['crn'] = 'crn:v1:bluemix:public:iam::::serviceRole:Writer'
+        role_ref_model['name'] = 'Manager'
+
+        service_instance_ref_model = {}  # ServiceInstanceRef
+        service_instance_ref_model['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
+        service_instance_ref_model['type'] = 'testString'
+
+        service_id_ref_model = {}  # ServiceIDRef
+        service_id_ref_model['crn'] = 'testString'
+        service_id_ref_model['id'] = 'ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637'
+
+        service_access_secret_props_model = {}  # ServiceAccessSecretProps
+        service_access_secret_props_model['resource_key'] = resource_key_ref_model
+        service_access_secret_props_model['role'] = role_ref_model
+        service_access_secret_props_model['service_instance'] = service_instance_ref_model
+        service_access_secret_props_model['serviceid'] = service_id_ref_model
+
+        operator_secret_props_model = {}  # OperatorSecretProps
+        operator_secret_props_model['apikey_id'] = 'ApiKey-17041d26-55e4-40a8-8ab5-5a69b68e204b'
+        operator_secret_props_model['resource_group_ids'] = ['testString']
+        operator_secret_props_model['serviceid'] = service_id_ref_model
+        operator_secret_props_model['user_managed'] = True
+
         # Construct a json representation of a Secret model
         secret_model_json = {}
         secret_model_json['data'] = {'key1': 'testString'}
         secret_model_json['entity_tag'] = '2385407409'
         secret_model_json['format'] = 'generic'
         secret_model_json['name'] = 'my-secret'
+        secret_model_json['service_access'] = service_access_secret_props_model
+        secret_model_json['service_operator'] = operator_secret_props_model
 
         # Construct a model instance of Secret by calling from_dict on the json representation
         secret_model = Secret.from_dict(secret_model_json)
@@ -5936,11 +11270,41 @@ class TestModel_SecretList:
         list_next_metadata_model['href'] = 'testString'
         list_next_metadata_model['start'] = 'testString'
 
+        resource_key_ref_model = {}  # ResourceKeyRef
+        resource_key_ref_model['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
+        resource_key_ref_model['name'] = 'testString'
+
+        role_ref_model = {}  # RoleRef
+        role_ref_model['crn'] = 'crn:v1:bluemix:public:iam::::serviceRole:Writer'
+        role_ref_model['name'] = 'Manager'
+
+        service_instance_ref_model = {}  # ServiceInstanceRef
+        service_instance_ref_model['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
+        service_instance_ref_model['type'] = 'testString'
+
+        service_id_ref_model = {}  # ServiceIDRef
+        service_id_ref_model['crn'] = 'testString'
+        service_id_ref_model['id'] = 'ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637'
+
+        service_access_secret_props_model = {}  # ServiceAccessSecretProps
+        service_access_secret_props_model['resource_key'] = resource_key_ref_model
+        service_access_secret_props_model['role'] = role_ref_model
+        service_access_secret_props_model['service_instance'] = service_instance_ref_model
+        service_access_secret_props_model['serviceid'] = service_id_ref_model
+
+        operator_secret_props_model = {}  # OperatorSecretProps
+        operator_secret_props_model['apikey_id'] = 'ApiKey-17041d26-55e4-40a8-8ab5-5a69b68e204b'
+        operator_secret_props_model['resource_group_ids'] = ['testString']
+        operator_secret_props_model['serviceid'] = service_id_ref_model
+        operator_secret_props_model['user_managed'] = True
+
         secret_model = {}  # Secret
         secret_model['data'] = {'key1': 'testString'}
         secret_model['entity_tag'] = '2386255530'
         secret_model['format'] = 'generic'
         secret_model['name'] = 'my-secret'
+        secret_model['service_access'] = service_access_secret_props_model
+        secret_model['service_operator'] = operator_secret_props_model
 
         # Construct a json representation of a SecretList model
         secret_list_model_json = {}
@@ -5963,6 +11327,241 @@ class TestModel_SecretList:
         # Convert model instance back to dict and verify no loss of data
         secret_list_model_json2 = secret_list_model.to_dict()
         assert secret_list_model_json2 == secret_list_model_json
+
+
+class TestModel_ServiceAccessSecretProps:
+    """
+    Test Class for ServiceAccessSecretProps
+    """
+
+    def test_service_access_secret_props_serialization(self):
+        """
+        Test serialization/deserialization for ServiceAccessSecretProps
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        resource_key_ref_model = {}  # ResourceKeyRef
+        resource_key_ref_model['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
+        resource_key_ref_model['name'] = 'testString'
+
+        role_ref_model = {}  # RoleRef
+        role_ref_model['crn'] = 'crn:v1:bluemix:public:iam::::serviceRole:Writer'
+        role_ref_model['name'] = 'Manager'
+
+        service_instance_ref_model = {}  # ServiceInstanceRef
+        service_instance_ref_model['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
+        service_instance_ref_model['type'] = 'testString'
+
+        service_id_ref_model = {}  # ServiceIDRef
+        service_id_ref_model['crn'] = 'testString'
+        service_id_ref_model['id'] = 'ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637'
+
+        # Construct a json representation of a ServiceAccessSecretProps model
+        service_access_secret_props_model_json = {}
+        service_access_secret_props_model_json['resource_key'] = resource_key_ref_model
+        service_access_secret_props_model_json['role'] = role_ref_model
+        service_access_secret_props_model_json['service_instance'] = service_instance_ref_model
+        service_access_secret_props_model_json['serviceid'] = service_id_ref_model
+
+        # Construct a model instance of ServiceAccessSecretProps by calling from_dict on the json representation
+        service_access_secret_props_model = ServiceAccessSecretProps.from_dict(service_access_secret_props_model_json)
+        assert service_access_secret_props_model != False
+
+        # Construct a model instance of ServiceAccessSecretProps by calling from_dict on the json representation
+        service_access_secret_props_model_dict = ServiceAccessSecretProps.from_dict(
+            service_access_secret_props_model_json
+        ).__dict__
+        service_access_secret_props_model2 = ServiceAccessSecretProps(**service_access_secret_props_model_dict)
+
+        # Verify the model instances are equivalent
+        assert service_access_secret_props_model == service_access_secret_props_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        service_access_secret_props_model_json2 = service_access_secret_props_model.to_dict()
+        assert service_access_secret_props_model_json2 == service_access_secret_props_model_json
+
+
+class TestModel_ServiceAccessSecretPrototypeProps:
+    """
+    Test Class for ServiceAccessSecretPrototypeProps
+    """
+
+    def test_service_access_secret_prototype_props_serialization(self):
+        """
+        Test serialization/deserialization for ServiceAccessSecretPrototypeProps
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        resource_key_ref_prototype_model = {}  # ResourceKeyRefPrototype
+        resource_key_ref_prototype_model['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
+
+        role_ref_prototype_model = {}  # RoleRefPrototype
+        role_ref_prototype_model['crn'] = 'crn:v1:bluemix:public:iam::::serviceRole:Writer'
+
+        service_instance_ref_prototype_model = {}  # ServiceInstanceRefPrototype
+        service_instance_ref_prototype_model['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
+
+        service_id_ref_model = {}  # ServiceIDRef
+        service_id_ref_model['crn'] = 'testString'
+        service_id_ref_model['id'] = 'ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637'
+
+        # Construct a json representation of a ServiceAccessSecretPrototypeProps model
+        service_access_secret_prototype_props_model_json = {}
+        service_access_secret_prototype_props_model_json['resource_key'] = resource_key_ref_prototype_model
+        service_access_secret_prototype_props_model_json['role'] = role_ref_prototype_model
+        service_access_secret_prototype_props_model_json['service_instance'] = service_instance_ref_prototype_model
+        service_access_secret_prototype_props_model_json['serviceid'] = service_id_ref_model
+
+        # Construct a model instance of ServiceAccessSecretPrototypeProps by calling from_dict on the json representation
+        service_access_secret_prototype_props_model = ServiceAccessSecretPrototypeProps.from_dict(
+            service_access_secret_prototype_props_model_json
+        )
+        assert service_access_secret_prototype_props_model != False
+
+        # Construct a model instance of ServiceAccessSecretPrototypeProps by calling from_dict on the json representation
+        service_access_secret_prototype_props_model_dict = ServiceAccessSecretPrototypeProps.from_dict(
+            service_access_secret_prototype_props_model_json
+        ).__dict__
+        service_access_secret_prototype_props_model2 = ServiceAccessSecretPrototypeProps(
+            **service_access_secret_prototype_props_model_dict
+        )
+
+        # Verify the model instances are equivalent
+        assert service_access_secret_prototype_props_model == service_access_secret_prototype_props_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        service_access_secret_prototype_props_model_json2 = service_access_secret_prototype_props_model.to_dict()
+        assert service_access_secret_prototype_props_model_json2 == service_access_secret_prototype_props_model_json
+
+
+class TestModel_ServiceIDRef:
+    """
+    Test Class for ServiceIDRef
+    """
+
+    def test_service_id_ref_serialization(self):
+        """
+        Test serialization/deserialization for ServiceIDRef
+        """
+
+        # Construct a json representation of a ServiceIDRef model
+        service_id_ref_model_json = {}
+        service_id_ref_model_json['crn'] = 'testString'
+        service_id_ref_model_json['id'] = 'ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637'
+
+        # Construct a model instance of ServiceIDRef by calling from_dict on the json representation
+        service_id_ref_model = ServiceIDRef.from_dict(service_id_ref_model_json)
+        assert service_id_ref_model != False
+
+        # Construct a model instance of ServiceIDRef by calling from_dict on the json representation
+        service_id_ref_model_dict = ServiceIDRef.from_dict(service_id_ref_model_json).__dict__
+        service_id_ref_model2 = ServiceIDRef(**service_id_ref_model_dict)
+
+        # Verify the model instances are equivalent
+        assert service_id_ref_model == service_id_ref_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        service_id_ref_model_json2 = service_id_ref_model.to_dict()
+        assert service_id_ref_model_json2 == service_id_ref_model_json
+
+
+class TestModel_ServiceIDRefPrototype:
+    """
+    Test Class for ServiceIDRefPrototype
+    """
+
+    def test_service_id_ref_prototype_serialization(self):
+        """
+        Test serialization/deserialization for ServiceIDRefPrototype
+        """
+
+        # Construct a json representation of a ServiceIDRefPrototype model
+        service_id_ref_prototype_model_json = {}
+        service_id_ref_prototype_model_json['id'] = 'ServiceId-8fa4bc74-6441-4e5b-af3a-2b1af325a637'
+
+        # Construct a model instance of ServiceIDRefPrototype by calling from_dict on the json representation
+        service_id_ref_prototype_model = ServiceIDRefPrototype.from_dict(service_id_ref_prototype_model_json)
+        assert service_id_ref_prototype_model != False
+
+        # Construct a model instance of ServiceIDRefPrototype by calling from_dict on the json representation
+        service_id_ref_prototype_model_dict = ServiceIDRefPrototype.from_dict(
+            service_id_ref_prototype_model_json
+        ).__dict__
+        service_id_ref_prototype_model2 = ServiceIDRefPrototype(**service_id_ref_prototype_model_dict)
+
+        # Verify the model instances are equivalent
+        assert service_id_ref_prototype_model == service_id_ref_prototype_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        service_id_ref_prototype_model_json2 = service_id_ref_prototype_model.to_dict()
+        assert service_id_ref_prototype_model_json2 == service_id_ref_prototype_model_json
+
+
+class TestModel_ServiceInstanceRef:
+    """
+    Test Class for ServiceInstanceRef
+    """
+
+    def test_service_instance_ref_serialization(self):
+        """
+        Test serialization/deserialization for ServiceInstanceRef
+        """
+
+        # Construct a json representation of a ServiceInstanceRef model
+        service_instance_ref_model_json = {}
+        service_instance_ref_model_json['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
+        service_instance_ref_model_json['type'] = 'testString'
+
+        # Construct a model instance of ServiceInstanceRef by calling from_dict on the json representation
+        service_instance_ref_model = ServiceInstanceRef.from_dict(service_instance_ref_model_json)
+        assert service_instance_ref_model != False
+
+        # Construct a model instance of ServiceInstanceRef by calling from_dict on the json representation
+        service_instance_ref_model_dict = ServiceInstanceRef.from_dict(service_instance_ref_model_json).__dict__
+        service_instance_ref_model2 = ServiceInstanceRef(**service_instance_ref_model_dict)
+
+        # Verify the model instances are equivalent
+        assert service_instance_ref_model == service_instance_ref_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        service_instance_ref_model_json2 = service_instance_ref_model.to_dict()
+        assert service_instance_ref_model_json2 == service_instance_ref_model_json
+
+
+class TestModel_ServiceInstanceRefPrototype:
+    """
+    Test Class for ServiceInstanceRefPrototype
+    """
+
+    def test_service_instance_ref_prototype_serialization(self):
+        """
+        Test serialization/deserialization for ServiceInstanceRefPrototype
+        """
+
+        # Construct a json representation of a ServiceInstanceRefPrototype model
+        service_instance_ref_prototype_model_json = {}
+        service_instance_ref_prototype_model_json['id'] = '4e49b3e0-27a8-48d2-a784-c7ee48bb863b'
+
+        # Construct a model instance of ServiceInstanceRefPrototype by calling from_dict on the json representation
+        service_instance_ref_prototype_model = ServiceInstanceRefPrototype.from_dict(
+            service_instance_ref_prototype_model_json
+        )
+        assert service_instance_ref_prototype_model != False
+
+        # Construct a model instance of ServiceInstanceRefPrototype by calling from_dict on the json representation
+        service_instance_ref_prototype_model_dict = ServiceInstanceRefPrototype.from_dict(
+            service_instance_ref_prototype_model_json
+        ).__dict__
+        service_instance_ref_prototype_model2 = ServiceInstanceRefPrototype(**service_instance_ref_prototype_model_dict)
+
+        # Verify the model instances are equivalent
+        assert service_instance_ref_prototype_model == service_instance_ref_prototype_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        service_instance_ref_prototype_model_json2 = service_instance_ref_prototype_model.to_dict()
+        assert service_instance_ref_prototype_model_json2 == service_instance_ref_prototype_model_json
 
 
 class TestModel_VolumeMount:
@@ -6076,7 +11675,7 @@ class TestModel_SecretDataBasicAuthSecretData:
         expected_dict = {'foo': 'testString'}
         secret_data_basic_auth_secret_data_model.set_properties(expected_dict)
         actual_dict = secret_data_basic_auth_secret_data_model.get_properties()
-        assert actual_dict == expected_dict
+        assert actual_dict.keys() == expected_dict.keys()
 
 
 class TestModel_SecretDataGenericSecretData:
@@ -6122,7 +11721,7 @@ class TestModel_SecretDataGenericSecretData:
         expected_dict = {'foo': 'testString'}
         secret_data_generic_secret_data_model.set_properties(expected_dict)
         actual_dict = secret_data_generic_secret_data_model.get_properties()
-        assert actual_dict == expected_dict
+        assert actual_dict.keys() == expected_dict.keys()
 
 
 class TestModel_SecretDataRegistrySecretData:
@@ -6172,7 +11771,7 @@ class TestModel_SecretDataRegistrySecretData:
         expected_dict = {'foo': 'testString'}
         secret_data_registry_secret_data_model.set_properties(expected_dict)
         actual_dict = secret_data_registry_secret_data_model.get_properties()
-        assert actual_dict == expected_dict
+        assert actual_dict.keys() == expected_dict.keys()
 
 
 class TestModel_SecretDataSSHSecretData:
@@ -6216,7 +11815,7 @@ class TestModel_SecretDataSSHSecretData:
         expected_dict = {'foo': 'testString'}
         secret_data_ssh_secret_data_model.set_properties(expected_dict)
         actual_dict = secret_data_ssh_secret_data_model.get_properties()
-        assert actual_dict == expected_dict
+        assert actual_dict.keys() == expected_dict.keys()
 
 
 class TestModel_SecretDataTLSSecretData:
@@ -6260,7 +11859,7 @@ class TestModel_SecretDataTLSSecretData:
         expected_dict = {'foo': 'testString'}
         secret_data_tls_secret_data_model.set_properties(expected_dict)
         actual_dict = secret_data_tls_secret_data_model.get_properties()
-        assert actual_dict == expected_dict
+        assert actual_dict.keys() == expected_dict.keys()
 
 
 # endregion

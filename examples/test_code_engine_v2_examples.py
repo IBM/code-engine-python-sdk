@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (C) Copyright IBM Corp. 2023.
+# (C) Copyright IBM Corp. 2024.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ from ibm_cloud_sdk_core import ApiException, read_external_sources
 import os
 import pytest
 from ibm_code_engine_sdk.code_engine_v2 import *
+
+version = '2024-09-24'
 
 #
 # This file provides an example of how to use the Code Engine service.
@@ -81,6 +83,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nlist_projects() result:')
+
             # begin-list_projects
 
             all_results = []
@@ -106,6 +109,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\ncreate_project() result:')
+
             # begin-create_project
 
             response = code_engine_service.create_project(
@@ -127,6 +131,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nget_project() result:')
+
             # begin-get_project
 
             response = code_engine_service.get_project(
@@ -148,6 +153,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nget_project_egress_ips() result:')
+
             # begin-get_project_egress_ips
 
             response = code_engine_service.get_project_egress_ips(
@@ -163,12 +169,35 @@ class TestCodeEngineV2Examples:
             pytest.fail(str(e))
 
     @needscredentials
+    def test_get_project_status_details_example(self):
+        """
+        get_project_status_details request example
+        """
+        try:
+            print('\nget_project_status_details() result:')
+
+            # begin-get_project_status_details
+
+            response = code_engine_service.get_project_status_details(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+            )
+            project_status_details = response.get_result()
+
+            print(json.dumps(project_status_details, indent=2))
+
+            # end-get_project_status_details
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
     def test_list_apps_example(self):
         """
         list_apps request example
         """
         try:
             print('\nlist_apps() result:')
+
             # begin-list_apps
 
             all_results = []
@@ -195,6 +224,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\ncreate_app() result:')
+
             # begin-create_app
 
             response = code_engine_service.create_app(
@@ -218,6 +248,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nget_app() result:')
+
             # begin-get_app
 
             response = code_engine_service.get_app(
@@ -240,6 +271,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nupdate_app() result:')
+
             # begin-update_app
 
             app_patch_model = {}
@@ -266,6 +298,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nlist_app_revisions() result:')
+
             # begin-list_app_revisions
 
             all_results = []
@@ -293,6 +326,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nget_app_revision() result:')
+
             # begin-get_app_revision
 
             response = code_engine_service.get_app_revision(
@@ -310,12 +344,41 @@ class TestCodeEngineV2Examples:
             pytest.fail(str(e))
 
     @needscredentials
+    def test_list_app_instances_example(self):
+        """
+        list_app_instances request example
+        """
+        try:
+            print('\nlist_app_instances() result:')
+
+            # begin-list_app_instances
+
+            all_results = []
+            pager = AppInstancesPager(
+                client=code_engine_service,
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                app_name='my-app',
+                limit=100,
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+            print(json.dumps(all_results, indent=2))
+
+            # end-list_app_instances
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
     def test_list_jobs_example(self):
         """
         list_jobs request example
         """
         try:
             print('\nlist_jobs() result:')
+
             # begin-list_jobs
 
             all_results = []
@@ -342,6 +405,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\ncreate_job() result:')
+
             # begin-create_job
 
             response = code_engine_service.create_job(
@@ -365,6 +429,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nget_job() result:')
+
             # begin-get_job
 
             response = code_engine_service.get_job(
@@ -387,6 +452,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nupdate_job() result:')
+
             # begin-update_job
 
             job_patch_model = {}
@@ -413,6 +479,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nlist_job_runs() result:')
+
             # begin-list_job_runs
 
             all_results = []
@@ -440,6 +507,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\ncreate_job_run() result:')
+
             # begin-create_job_run
 
             response = code_engine_service.create_job_run(
@@ -461,6 +529,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nget_job_run() result:')
+
             # begin-get_job_run
 
             response = code_engine_service.get_job_run(
@@ -477,12 +546,215 @@ class TestCodeEngineV2Examples:
             pytest.fail(str(e))
 
     @needscredentials
+    def test_list_function_runtimes_example(self):
+        """
+        list_function_runtimes request example
+        """
+        try:
+            print('\nlist_function_runtimes() result:')
+
+            # begin-list_function_runtimes
+
+            response = code_engine_service.list_function_runtimes()
+            function_runtime_list = response.get_result()
+
+            print(json.dumps(function_runtime_list, indent=2))
+
+            # end-list_function_runtimes
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_list_functions_example(self):
+        """
+        list_functions request example
+        """
+        try:
+            print('\nlist_functions() result:')
+
+            # begin-list_functions
+
+            all_results = []
+            pager = FunctionsPager(
+                client=code_engine_service,
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                limit=100,
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+            print(json.dumps(all_results, indent=2))
+
+            # end-list_functions
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_function_example(self):
+        """
+        create_function request example
+        """
+        try:
+            print('\ncreate_function() result:')
+
+            # begin-create_function
+
+            response = code_engine_service.create_function(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                code_reference='data:text/plain;base64,<base64encoded-source-code>',
+                name='my-function',
+                runtime='nodejs-18',
+            )
+            function = response.get_result()
+
+            print(json.dumps(function, indent=2))
+
+            # end-create_function
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_function_example(self):
+        """
+        get_function request example
+        """
+        try:
+            print('\nget_function() result:')
+
+            # begin-get_function
+
+            response = code_engine_service.get_function(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='my-function',
+            )
+            function = response.get_result()
+
+            print(json.dumps(function, indent=2))
+
+            # end-get_function
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_update_function_example(self):
+        """
+        update_function request example
+        """
+        try:
+            print('\nupdate_function() result:')
+
+            # begin-update_function
+
+            function_patch_model = {}
+
+            response = code_engine_service.update_function(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='my-function',
+                if_match='testString',
+                function=function_patch_model,
+            )
+            function = response.get_result()
+
+            print(json.dumps(function, indent=2))
+
+            # end-update_function
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_list_bindings_example(self):
+        """
+        list_bindings request example
+        """
+        try:
+            print('\nlist_bindings() result:')
+
+            # begin-list_bindings
+
+            all_results = []
+            pager = BindingsPager(
+                client=code_engine_service,
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                limit=100,
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+            print(json.dumps(all_results, indent=2))
+
+            # end-list_bindings
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_binding_example(self):
+        """
+        create_binding request example
+        """
+        try:
+            print('\ncreate_binding() result:')
+
+            # begin-create_binding
+
+            component_ref_model = {
+                'name': 'my-app-1',
+                'resource_type': 'app_v2',
+            }
+
+            response = code_engine_service.create_binding(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                component=component_ref_model,
+                prefix='MY_COS',
+                secret_name='my-service-access',
+            )
+            binding = response.get_result()
+
+            print(json.dumps(binding, indent=2))
+
+            # end-create_binding
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_binding_example(self):
+        """
+        get_binding request example
+        """
+        try:
+            print('\nget_binding() result:')
+
+            # begin-get_binding
+
+            response = code_engine_service.get_binding(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                id='a172ced-b5f21bc-71ba50c-1638604',
+            )
+            binding = response.get_result()
+
+            print(json.dumps(binding, indent=2))
+
+            # end-get_binding
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
     def test_list_builds_example(self):
         """
         list_builds request example
         """
         try:
             print('\nlist_builds() result:')
+
             # begin-list_builds
 
             all_results = []
@@ -509,6 +781,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\ncreate_build() result:')
+
             # begin-create_build
 
             response = code_engine_service.create_build(
@@ -516,7 +789,6 @@ class TestCodeEngineV2Examples:
                 name='my-build',
                 output_image='private.de.icr.io/icr_namespace/image-name',
                 output_secret='ce-auto-icr-private-eu-de',
-                source_url='https://github.com/IBM/CodeEngine',
                 strategy_type='dockerfile',
             )
             build = response.get_result()
@@ -535,6 +807,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nget_build() result:')
+
             # begin-get_build
 
             response = code_engine_service.get_build(
@@ -557,6 +830,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nupdate_build() result:')
+
             # begin-update_build
 
             build_patch_model = {}
@@ -583,6 +857,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nlist_build_runs() result:')
+
             # begin-list_build_runs
 
             all_results = []
@@ -610,6 +885,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\ncreate_build_run() result:')
+
             # begin-create_build_run
 
             response = code_engine_service.create_build_run(
@@ -631,6 +907,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nget_build_run() result:')
+
             # begin-get_build_run
 
             response = code_engine_service.get_build_run(
@@ -647,12 +924,120 @@ class TestCodeEngineV2Examples:
             pytest.fail(str(e))
 
     @needscredentials
+    def test_list_domain_mappings_example(self):
+        """
+        list_domain_mappings request example
+        """
+        try:
+            print('\nlist_domain_mappings() result:')
+
+            # begin-list_domain_mappings
+
+            all_results = []
+            pager = DomainMappingsPager(
+                client=code_engine_service,
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                limit=100,
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+            print(json.dumps(all_results, indent=2))
+
+            # end-list_domain_mappings
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_domain_mapping_example(self):
+        """
+        create_domain_mapping request example
+        """
+        try:
+            print('\ncreate_domain_mapping() result:')
+
+            # begin-create_domain_mapping
+
+            component_ref_model = {
+                'name': 'my-app-1',
+                'resource_type': 'app_v2',
+            }
+
+            response = code_engine_service.create_domain_mapping(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                component=component_ref_model,
+                name='www.example.com',
+                tls_secret='my-tls-secret',
+            )
+            domain_mapping = response.get_result()
+
+            print(json.dumps(domain_mapping, indent=2))
+
+            # end-create_domain_mapping
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_domain_mapping_example(self):
+        """
+        get_domain_mapping request example
+        """
+        try:
+            print('\nget_domain_mapping() result:')
+
+            # begin-get_domain_mapping
+
+            response = code_engine_service.get_domain_mapping(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='www.example.com',
+            )
+            domain_mapping = response.get_result()
+
+            print(json.dumps(domain_mapping, indent=2))
+
+            # end-get_domain_mapping
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_update_domain_mapping_example(self):
+        """
+        update_domain_mapping request example
+        """
+        try:
+            print('\nupdate_domain_mapping() result:')
+
+            # begin-update_domain_mapping
+
+            domain_mapping_patch_model = {}
+
+            response = code_engine_service.update_domain_mapping(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='www.example.com',
+                if_match='testString',
+                domain_mapping=domain_mapping_patch_model,
+            )
+            domain_mapping = response.get_result()
+
+            print(json.dumps(domain_mapping, indent=2))
+
+            # end-update_domain_mapping
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
     def test_list_config_maps_example(self):
         """
         list_config_maps request example
         """
         try:
             print('\nlist_config_maps() result:')
+
             # begin-list_config_maps
 
             all_results = []
@@ -679,6 +1064,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\ncreate_config_map() result:')
+
             # begin-create_config_map
 
             response = code_engine_service.create_config_map(
@@ -701,6 +1087,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nget_config_map() result:')
+
             # begin-get_config_map
 
             response = code_engine_service.get_config_map(
@@ -723,6 +1110,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nreplace_config_map() result:')
+
             # begin-replace_config_map
 
             response = code_engine_service.replace_config_map(
@@ -746,6 +1134,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nlist_secrets() result:')
+
             # begin-list_secrets
 
             all_results = []
@@ -772,6 +1161,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\ncreate_secret() result:')
+
             # begin-create_secret
 
             response = code_engine_service.create_secret(
@@ -795,6 +1185,7 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nget_secret() result:')
+
             # begin-get_secret
 
             response = code_engine_service.get_secret(
@@ -817,12 +1208,14 @@ class TestCodeEngineV2Examples:
         """
         try:
             print('\nreplace_secret() result:')
+
             # begin-replace_secret
 
             response = code_engine_service.replace_secret(
                 project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
                 name='my-secret',
                 if_match='testString',
+                format='generic',
             )
             secret = response.get_result()
 
@@ -929,6 +1322,44 @@ class TestCodeEngineV2Examples:
             pytest.fail(str(e))
 
     @needscredentials
+    def test_delete_function_example(self):
+        """
+        delete_function request example
+        """
+        try:
+            # begin-delete_function
+
+            response = code_engine_service.delete_function(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='my-function',
+            )
+
+            # end-delete_function
+            print('\ndelete_function() response status code: ', response.get_status_code())
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_delete_binding_example(self):
+        """
+        delete_binding request example
+        """
+        try:
+            # begin-delete_binding
+
+            response = code_engine_service.delete_binding(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                id='a172ced-b5f21bc-71ba50c-1638604',
+            )
+
+            # end-delete_binding
+            print('\ndelete_binding() response status code: ', response.get_status_code())
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
     def test_delete_build_example(self):
         """
         delete_build request example
@@ -962,6 +1393,25 @@ class TestCodeEngineV2Examples:
 
             # end-delete_build_run
             print('\ndelete_build_run() response status code: ', response.get_status_code())
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_delete_domain_mapping_example(self):
+        """
+        delete_domain_mapping request example
+        """
+        try:
+            # begin-delete_domain_mapping
+
+            response = code_engine_service.delete_domain_mapping(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='www.example.com',
+            )
+
+            # end-delete_domain_mapping
+            print('\ndelete_domain_mapping() response status code: ', response.get_status_code())
 
         except ApiException as e:
             pytest.fail(str(e))

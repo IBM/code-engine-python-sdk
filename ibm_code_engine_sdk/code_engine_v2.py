@@ -56,7 +56,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2024-09-24`.
+               `2024-09-27`.
         """
         authenticator = get_authenticator_from_environment(service_name)
         service = cls(
@@ -80,7 +80,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2024-09-24`.
+               `2024-09-27`.
         """
         BaseService.__init__(self, service_url=self.DEFAULT_SERVICE_URL, authenticator=authenticator)
         self.version = version
@@ -7391,9 +7391,14 @@ class BuildRunStatus:
     Current status condition of a build run.
 
     :param str completion_time: (optional) Time the build run completed.
+    :param str git_branch_name: (optional) The default branch name of the git
+          source.
+    :param str git_commit_author: (optional) The commit author of a git source.
+    :param str git_commit_sha: (optional) The commit sha of the git source.
     :param str output_digest: (optional) Describes the time the build run completed.
     :param str reason: (optional) Optional information to provide more context in
           case of a 'failed' or 'warning' status.
+    :param str source_timestamp: (optional) The timestamp of the source.
     :param str start_time: (optional) Time the build run started.
     """
 
@@ -7401,8 +7406,12 @@ class BuildRunStatus:
         self,
         *,
         completion_time: Optional[str] = None,
+        git_branch_name: Optional[str] = None,
+        git_commit_author: Optional[str] = None,
+        git_commit_sha: Optional[str] = None,
         output_digest: Optional[str] = None,
         reason: Optional[str] = None,
+        source_timestamp: Optional[str] = None,
         start_time: Optional[str] = None,
     ) -> None:
         """
@@ -7410,8 +7419,12 @@ class BuildRunStatus:
 
         """
         self.completion_time = completion_time
+        self.git_branch_name = git_branch_name
+        self.git_commit_author = git_commit_author
+        self.git_commit_sha = git_commit_sha
         self.output_digest = output_digest
         self.reason = reason
+        self.source_timestamp = source_timestamp
         self.start_time = start_time
 
     @classmethod
@@ -7420,10 +7433,18 @@ class BuildRunStatus:
         args = {}
         if (completion_time := _dict.get('completion_time')) is not None:
             args['completion_time'] = completion_time
+        if (git_branch_name := _dict.get('git_branch_name')) is not None:
+            args['git_branch_name'] = git_branch_name
+        if (git_commit_author := _dict.get('git_commit_author')) is not None:
+            args['git_commit_author'] = git_commit_author
+        if (git_commit_sha := _dict.get('git_commit_sha')) is not None:
+            args['git_commit_sha'] = git_commit_sha
         if (output_digest := _dict.get('output_digest')) is not None:
             args['output_digest'] = output_digest
         if (reason := _dict.get('reason')) is not None:
             args['reason'] = reason
+        if (source_timestamp := _dict.get('source_timestamp')) is not None:
+            args['source_timestamp'] = source_timestamp
         if (start_time := _dict.get('start_time')) is not None:
             args['start_time'] = start_time
         return cls(**args)
@@ -7438,10 +7459,18 @@ class BuildRunStatus:
         _dict = {}
         if hasattr(self, 'completion_time') and getattr(self, 'completion_time') is not None:
             _dict['completion_time'] = getattr(self, 'completion_time')
+        if hasattr(self, 'git_branch_name') and getattr(self, 'git_branch_name') is not None:
+            _dict['git_branch_name'] = getattr(self, 'git_branch_name')
+        if hasattr(self, 'git_commit_author') and getattr(self, 'git_commit_author') is not None:
+            _dict['git_commit_author'] = getattr(self, 'git_commit_author')
+        if hasattr(self, 'git_commit_sha') and getattr(self, 'git_commit_sha') is not None:
+            _dict['git_commit_sha'] = getattr(self, 'git_commit_sha')
         if hasattr(self, 'output_digest') and getattr(self, 'output_digest') is not None:
             _dict['output_digest'] = getattr(self, 'output_digest')
         if hasattr(self, 'reason') and getattr(self, 'reason') is not None:
             _dict['reason'] = getattr(self, 'reason')
+        if hasattr(self, 'source_timestamp') and getattr(self, 'source_timestamp') is not None:
+            _dict['source_timestamp'] = getattr(self, 'source_timestamp')
         if hasattr(self, 'start_time') and getattr(self, 'start_time') is not None:
             _dict['start_time'] = getattr(self, 'start_time')
         return _dict

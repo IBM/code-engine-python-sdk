@@ -29,14 +29,3 @@ install:
 
 script:
 - make ci
-
-deploy:
-- provider: pypi
-  user: __token__
-  password:
-    secure: rY5xzjHyKA/F8VQWr5+7bi3JlxFSgbf26jSXlB1KGRhfVFK+pnk6o/SiRnrbMzkKBa3ApfLXTaNLq50rkVGgMHfYg5+bDxGcNt19YcLVqi2geEOOdOFBoBLQmg/mkYJEfvKZJPNjBcX8RntR0Z94N7sEXgoDU3ilbO0P72WZ5AQSL6VqZGKgoltuiultkRdox34r1cCMVDS9Rtg8DkJP81mNGn4orYavmQBJy8SWsy+4oOXJACIGtN2MA59ZmcIhHCqwmcBno40rDo1ANxt+8cAqPJkLosuF+64R8L/Hc3Vo3DVFd2DuREt5PfuSj8ZzfsA1xIrArsXnYCbc54agdUW/fMsOEK5YejfAV4M0Dp7X5xWHfAm2n/9pPYxRLsRKlUxgXbCK9quG2JjPsulbW6P99OgusqQVe0z/q9Y39Q0bcUvtjo04oFIWPqrRWt4ejgFm10R/+kymoZbfkRGXVJNFnUkxJuXGTnRDOjUlOh/qUwpXmevLPMllPKcV1qig69GWaPfPgQF0h0d7Yd38AgKN4+yBfkK4Tb7Dh7n53n/rvINh3l9s3ctcyluqUta+TO34BAzwwSM52F5VMQYKzrXTfMTjxmhRCPpeUHf+tTKVi344BMo8sjddsUxrhZBgYRnH9RmvK7q27vrf2yqsg+T7QUjEGRETid/+dZHSWtQ=
-  repository: https://upload.pypi.org/legacy
-  skip_cleanup: true
-  on:
-    python: '3.11'
-    tags: true

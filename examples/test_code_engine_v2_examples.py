@@ -22,7 +22,7 @@ import os
 import pytest
 from ibm_code_engine_sdk.code_engine_v2 import *
 
-version = '2024-09-27'
+version = '2024-11-18'
 
 #
 # This file provides an example of how to use the Code Engine service.
@@ -142,6 +142,112 @@ class TestCodeEngineV2Examples:
             print(json.dumps(project, indent=2))
 
             # end-get_project
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_list_allowed_outbound_destination_example(self):
+        """
+        list_allowed_outbound_destination request example
+        """
+        try:
+            print('\nlist_allowed_outbound_destination() result:')
+
+            # begin-list_allowed_outbound_destination
+
+            all_results = []
+            pager = AllowedOutboundDestinationPager(
+                client=code_engine_service,
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                limit=100,
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+            print(json.dumps(all_results, indent=2))
+
+            # end-list_allowed_outbound_destination
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_allowed_outbound_destination_example(self):
+        """
+        create_allowed_outbound_destination request example
+        """
+        try:
+            print('\ncreate_allowed_outbound_destination() result:')
+
+            # begin-create_allowed_outbound_destination
+
+            allowed_outbound_destination_prototype_model = {
+                'type': 'cidr_block',
+                'cidr_block': 'testString',
+                'name': 'testString',
+            }
+
+            response = code_engine_service.create_allowed_outbound_destination(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                allowed_outbound_destination=allowed_outbound_destination_prototype_model,
+            )
+            allowed_outbound_destination = response.get_result()
+
+            print(json.dumps(allowed_outbound_destination, indent=2))
+
+            # end-create_allowed_outbound_destination
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_allowed_outbound_destination_example(self):
+        """
+        get_allowed_outbound_destination request example
+        """
+        try:
+            print('\nget_allowed_outbound_destination() result:')
+
+            # begin-get_allowed_outbound_destination
+
+            response = code_engine_service.get_allowed_outbound_destination(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='my-allowed-outbound-destination',
+            )
+            allowed_outbound_destination = response.get_result()
+
+            print(json.dumps(allowed_outbound_destination, indent=2))
+
+            # end-get_allowed_outbound_destination
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_update_allowed_outbound_destination_example(self):
+        """
+        update_allowed_outbound_destination request example
+        """
+        try:
+            print('\nupdate_allowed_outbound_destination() result:')
+
+            # begin-update_allowed_outbound_destination
+
+            allowed_outbound_destination_patch_model = {}
+
+            response = code_engine_service.update_allowed_outbound_destination(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='my-allowed-outbound-destination',
+                if_match='testString',
+                allowed_outbound_destination=allowed_outbound_destination_patch_model,
+            )
+            allowed_outbound_destination = response.get_result()
+
+            print(json.dumps(allowed_outbound_destination, indent=2))
+
+            # end-update_allowed_outbound_destination
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -1240,6 +1346,25 @@ class TestCodeEngineV2Examples:
 
             # end-delete_project
             print('\ndelete_project() response status code: ', response.get_status_code())
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_delete_allowed_outbound_destination_example(self):
+        """
+        delete_allowed_outbound_destination request example
+        """
+        try:
+            # begin-delete_allowed_outbound_destination
+
+            response = code_engine_service.delete_allowed_outbound_destination(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='my-allowed-outbound-destination',
+            )
+
+            # end-delete_allowed_outbound_destination
+            print('\ndelete_allowed_outbound_destination() response status code: ', response.get_status_code())
 
         except ApiException as e:
             pytest.fail(str(e))

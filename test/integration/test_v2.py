@@ -1220,6 +1220,71 @@ class TestCodeEngineV2:
         assert function_runtime_list is not None
 
     @needscredentials
+    def test_list_allowed_outbound_destination(self):
+        response = self.code_engine_service.list_allowed_outbound_destination(
+            project_id=pytest.e2e_test_project_id,
+            limit=100,
+        )
+
+        assert response.get_status_code() == 200
+        allowed_outbound_destination = response.get_result()
+        assert allowed_outbound_destination is not None
+
+    @needscredentials
+    def test_create_allowed_outbound_destination(self):
+        allowed_outbound_destination_prototype_model = {
+            'type': 'cidr_block',
+            'cidr_block': '192.68.3.0/24',
+            'name': 'test-cidr',
+        }
+
+        response = self.code_engine_service.create_allowed_outbound_destination(
+            project_id=pytest.e2e_test_project_id,
+            allowed_outbound_destination=allowed_outbound_destination_prototype_model,
+        )
+
+        assert 200 <= response.get_status_code() <= 299
+        allowed_outbound_destination = response.get_result()
+        assert allowed_outbound_destination is not None
+
+    @needscredentials
+    def test_get_allowed_outbound_destination(self):
+        response = self.code_engine_service.get_allowed_outbound_destination(
+            project_id=pytest.e2e_test_project_id,
+            name='test-cidr',
+        )
+
+        assert response.get_status_code() == 200
+        allowed_outbound_destination = response.get_result()
+        assert allowed_outbound_destination is not None
+
+    @needscredentials
+    def test_update_allowed_outbound_destination(self):
+        allowed_outbound_destination_patch_model = {
+            'type': 'cidr_block',
+            'cidr_block': '192.68.2.0/24',
+        }
+        response = self.code_engine_service.update_allowed_outbound_destination(
+            project_id=pytest.e2e_test_project_id,
+            name='test-cidr',
+            if_match='*',
+            allowed_outbound_destination=allowed_outbound_destination_patch_model,
+        )
+
+        assert response.get_status_code() == 200
+        allowed_outbound_destination = response.get_result()
+        assert allowed_outbound_destination is not None
+
+    @needscredentials
+    def test_delete_allowed_outbound_destination(self):
+        response = self.code_engine_service.delete_allowed_outbound_destination(
+            project_id=pytest.e2e_test_project_id,
+            name='test-cidr',
+        )
+
+        assert response.get_status_code() == 202
+
+    @needscredentials
     def test_delete_function(self):
         response = self.code_engine_service.delete_function(
             project_id=pytest.e2e_test_project_id,

@@ -28,7 +28,7 @@ import responses
 import urllib
 from ibm_code_engine_sdk.code_engine_v2 import *
 
-version = '2024-09-27'
+version = '2024-11-18'
 
 _service = CodeEngineV2(authenticator=NoAuthAuthenticator())
 
@@ -486,6 +486,771 @@ class TestDeleteProject:
         # Disable retries and run test_delete_project_value_error.
         _service.disable_retries()
         self.test_delete_project_value_error()
+
+
+class TestListAllowedOutboundDestination:
+    """
+    Test Class for list_allowed_outbound_destination
+    """
+
+    @responses.activate
+    def test_list_allowed_outbound_destination_all_params(self):
+        """
+        list_allowed_outbound_destination()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations')
+        mock_response = '{"allowed_outbound_destinations": [{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        limit = 100
+        start = 'testString'
+
+        # Invoke method
+        response = _service.list_allowed_outbound_destination(
+            project_id,
+            limit=limit,
+            start=start,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate query params
+        query_string = responses.calls[0].request.url.split('?', 1)[1]
+        query_string = urllib.parse.unquote_plus(query_string)
+        assert 'limit={}'.format(limit) in query_string
+        assert 'start={}'.format(start) in query_string
+
+    def test_list_allowed_outbound_destination_all_params_with_retries(self):
+        # Enable retries and run test_list_allowed_outbound_destination_all_params.
+        _service.enable_retries()
+        self.test_list_allowed_outbound_destination_all_params()
+
+        # Disable retries and run test_list_allowed_outbound_destination_all_params.
+        _service.disable_retries()
+        self.test_list_allowed_outbound_destination_all_params()
+
+    @responses.activate
+    def test_list_allowed_outbound_destination_required_params(self):
+        """
+        test_list_allowed_outbound_destination_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations')
+        mock_response = '{"allowed_outbound_destinations": [{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+
+        # Invoke method
+        response = _service.list_allowed_outbound_destination(
+            project_id,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_list_allowed_outbound_destination_required_params_with_retries(self):
+        # Enable retries and run test_list_allowed_outbound_destination_required_params.
+        _service.enable_retries()
+        self.test_list_allowed_outbound_destination_required_params()
+
+        # Disable retries and run test_list_allowed_outbound_destination_required_params.
+        _service.disable_retries()
+        self.test_list_allowed_outbound_destination_required_params()
+
+    @responses.activate
+    def test_list_allowed_outbound_destination_value_error(self):
+        """
+        test_list_allowed_outbound_destination_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations')
+        mock_response = '{"allowed_outbound_destinations": [{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.list_allowed_outbound_destination(**req_copy)
+
+    def test_list_allowed_outbound_destination_value_error_with_retries(self):
+        # Enable retries and run test_list_allowed_outbound_destination_value_error.
+        _service.enable_retries()
+        self.test_list_allowed_outbound_destination_value_error()
+
+        # Disable retries and run test_list_allowed_outbound_destination_value_error.
+        _service.disable_retries()
+        self.test_list_allowed_outbound_destination_value_error()
+
+    @responses.activate
+    def test_list_allowed_outbound_destination_with_pager_get_next(self):
+        """
+        test_list_allowed_outbound_destination_with_pager_get_next()
+        """
+        # Set up a two-page mock response
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations')
+        mock_response1 = '{"next":{"start":"1"},"allowed_outbound_destinations":[{"entity_tag":"2385407409","type":"cidr_block","cidr_block":"cidr_block","name":"name"}],"total_count":2,"limit":1}'
+        mock_response2 = '{"allowed_outbound_destinations":[{"entity_tag":"2385407409","type":"cidr_block","cidr_block":"cidr_block","name":"name"}],"total_count":2,"limit":1}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Exercise the pager class for this operation
+        all_results = []
+        pager = AllowedOutboundDestinationPager(
+            client=_service,
+            project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+            limit=100,
+        )
+        while pager.has_next():
+            next_page = pager.get_next()
+            assert next_page is not None
+            all_results.extend(next_page)
+        assert len(all_results) == 2
+
+    @responses.activate
+    def test_list_allowed_outbound_destination_with_pager_get_all(self):
+        """
+        test_list_allowed_outbound_destination_with_pager_get_all()
+        """
+        # Set up a two-page mock response
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations')
+        mock_response1 = '{"next":{"start":"1"},"allowed_outbound_destinations":[{"entity_tag":"2385407409","type":"cidr_block","cidr_block":"cidr_block","name":"name"}],"total_count":2,"limit":1}'
+        mock_response2 = '{"allowed_outbound_destinations":[{"entity_tag":"2385407409","type":"cidr_block","cidr_block":"cidr_block","name":"name"}],"total_count":2,"limit":1}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response1,
+            content_type='application/json',
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response2,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Exercise the pager class for this operation
+        pager = AllowedOutboundDestinationPager(
+            client=_service,
+            project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+            limit=100,
+        )
+        all_results = pager.get_all()
+        assert all_results is not None
+        assert len(all_results) == 2
+
+
+class TestCreateAllowedOutboundDestination:
+    """
+    Test Class for create_allowed_outbound_destination
+    """
+
+    @responses.activate
+    def test_create_allowed_outbound_destination_all_params(self):
+        """
+        create_allowed_outbound_destination()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations')
+        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
+
+        # Construct a dict representation of a AllowedOutboundDestinationPrototypeCidrBlockDataPrototype model
+        allowed_outbound_destination_prototype_model = {}
+        allowed_outbound_destination_prototype_model['type'] = 'cidr_block'
+        allowed_outbound_destination_prototype_model['cidr_block'] = 'testString'
+        allowed_outbound_destination_prototype_model['name'] = 'testString'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        allowed_outbound_destination = allowed_outbound_destination_prototype_model
+
+        # Invoke method
+        response = _service.create_allowed_outbound_destination(
+            project_id,
+            allowed_outbound_destination,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 201
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == allowed_outbound_destination
+
+    def test_create_allowed_outbound_destination_all_params_with_retries(self):
+        # Enable retries and run test_create_allowed_outbound_destination_all_params.
+        _service.enable_retries()
+        self.test_create_allowed_outbound_destination_all_params()
+
+        # Disable retries and run test_create_allowed_outbound_destination_all_params.
+        _service.disable_retries()
+        self.test_create_allowed_outbound_destination_all_params()
+
+    @responses.activate
+    def test_create_allowed_outbound_destination_required_params(self):
+        """
+        test_create_allowed_outbound_destination_required_params()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations')
+        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
+
+        # Construct a dict representation of a AllowedOutboundDestinationPrototypeCidrBlockDataPrototype model
+        allowed_outbound_destination_prototype_model = {}
+        allowed_outbound_destination_prototype_model['type'] = 'cidr_block'
+        allowed_outbound_destination_prototype_model['cidr_block'] = 'testString'
+        allowed_outbound_destination_prototype_model['name'] = 'testString'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        allowed_outbound_destination = allowed_outbound_destination_prototype_model
+
+        # Invoke method
+        response = _service.create_allowed_outbound_destination(
+            project_id,
+            allowed_outbound_destination,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 201
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == allowed_outbound_destination
+
+    def test_create_allowed_outbound_destination_required_params_with_retries(self):
+        # Enable retries and run test_create_allowed_outbound_destination_required_params.
+        _service.enable_retries()
+        self.test_create_allowed_outbound_destination_required_params()
+
+        # Disable retries and run test_create_allowed_outbound_destination_required_params.
+        _service.disable_retries()
+        self.test_create_allowed_outbound_destination_required_params()
+
+    @responses.activate
+    def test_create_allowed_outbound_destination_value_error(self):
+        """
+        test_create_allowed_outbound_destination_value_error()
+        """
+        # Set up mock
+        url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations')
+        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        responses.add(
+            responses.POST,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=201,
+        )
+
+        # Construct a dict representation of a AllowedOutboundDestinationPrototypeCidrBlockDataPrototype model
+        allowed_outbound_destination_prototype_model = {}
+        allowed_outbound_destination_prototype_model['type'] = 'cidr_block'
+        allowed_outbound_destination_prototype_model['cidr_block'] = 'testString'
+        allowed_outbound_destination_prototype_model['name'] = 'testString'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        allowed_outbound_destination = allowed_outbound_destination_prototype_model
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+            "allowed_outbound_destination": allowed_outbound_destination,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.create_allowed_outbound_destination(**req_copy)
+
+    def test_create_allowed_outbound_destination_value_error_with_retries(self):
+        # Enable retries and run test_create_allowed_outbound_destination_value_error.
+        _service.enable_retries()
+        self.test_create_allowed_outbound_destination_value_error()
+
+        # Disable retries and run test_create_allowed_outbound_destination_value_error.
+        _service.disable_retries()
+        self.test_create_allowed_outbound_destination_value_error()
+
+
+class TestGetAllowedOutboundDestination:
+    """
+    Test Class for get_allowed_outbound_destination
+    """
+
+    @responses.activate
+    def test_get_allowed_outbound_destination_all_params(self):
+        """
+        get_allowed_outbound_destination()
+        """
+        # Set up mock
+        url = preprocess_url(
+            '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations/my-allowed-outbound-destination'
+        )
+        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-allowed-outbound-destination'
+
+        # Invoke method
+        response = _service.get_allowed_outbound_destination(
+            project_id,
+            name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_allowed_outbound_destination_all_params_with_retries(self):
+        # Enable retries and run test_get_allowed_outbound_destination_all_params.
+        _service.enable_retries()
+        self.test_get_allowed_outbound_destination_all_params()
+
+        # Disable retries and run test_get_allowed_outbound_destination_all_params.
+        _service.disable_retries()
+        self.test_get_allowed_outbound_destination_all_params()
+
+    @responses.activate
+    def test_get_allowed_outbound_destination_required_params(self):
+        """
+        test_get_allowed_outbound_destination_required_params()
+        """
+        # Set up mock
+        url = preprocess_url(
+            '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations/my-allowed-outbound-destination'
+        )
+        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-allowed-outbound-destination'
+
+        # Invoke method
+        response = _service.get_allowed_outbound_destination(
+            project_id,
+            name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+
+    def test_get_allowed_outbound_destination_required_params_with_retries(self):
+        # Enable retries and run test_get_allowed_outbound_destination_required_params.
+        _service.enable_retries()
+        self.test_get_allowed_outbound_destination_required_params()
+
+        # Disable retries and run test_get_allowed_outbound_destination_required_params.
+        _service.disable_retries()
+        self.test_get_allowed_outbound_destination_required_params()
+
+    @responses.activate
+    def test_get_allowed_outbound_destination_value_error(self):
+        """
+        test_get_allowed_outbound_destination_value_error()
+        """
+        # Set up mock
+        url = preprocess_url(
+            '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations/my-allowed-outbound-destination'
+        )
+        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        responses.add(
+            responses.GET,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-allowed-outbound-destination'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+            "name": name,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.get_allowed_outbound_destination(**req_copy)
+
+    def test_get_allowed_outbound_destination_value_error_with_retries(self):
+        # Enable retries and run test_get_allowed_outbound_destination_value_error.
+        _service.enable_retries()
+        self.test_get_allowed_outbound_destination_value_error()
+
+        # Disable retries and run test_get_allowed_outbound_destination_value_error.
+        _service.disable_retries()
+        self.test_get_allowed_outbound_destination_value_error()
+
+
+class TestDeleteAllowedOutboundDestination:
+    """
+    Test Class for delete_allowed_outbound_destination
+    """
+
+    @responses.activate
+    def test_delete_allowed_outbound_destination_all_params(self):
+        """
+        delete_allowed_outbound_destination()
+        """
+        # Set up mock
+        url = preprocess_url(
+            '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations/my-allowed-outbound-destination'
+        )
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-allowed-outbound-destination'
+
+        # Invoke method
+        response = _service.delete_allowed_outbound_destination(
+            project_id,
+            name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_delete_allowed_outbound_destination_all_params_with_retries(self):
+        # Enable retries and run test_delete_allowed_outbound_destination_all_params.
+        _service.enable_retries()
+        self.test_delete_allowed_outbound_destination_all_params()
+
+        # Disable retries and run test_delete_allowed_outbound_destination_all_params.
+        _service.disable_retries()
+        self.test_delete_allowed_outbound_destination_all_params()
+
+    @responses.activate
+    def test_delete_allowed_outbound_destination_required_params(self):
+        """
+        test_delete_allowed_outbound_destination_required_params()
+        """
+        # Set up mock
+        url = preprocess_url(
+            '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations/my-allowed-outbound-destination'
+        )
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-allowed-outbound-destination'
+
+        # Invoke method
+        response = _service.delete_allowed_outbound_destination(
+            project_id,
+            name,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 202
+
+    def test_delete_allowed_outbound_destination_required_params_with_retries(self):
+        # Enable retries and run test_delete_allowed_outbound_destination_required_params.
+        _service.enable_retries()
+        self.test_delete_allowed_outbound_destination_required_params()
+
+        # Disable retries and run test_delete_allowed_outbound_destination_required_params.
+        _service.disable_retries()
+        self.test_delete_allowed_outbound_destination_required_params()
+
+    @responses.activate
+    def test_delete_allowed_outbound_destination_value_error(self):
+        """
+        test_delete_allowed_outbound_destination_value_error()
+        """
+        # Set up mock
+        url = preprocess_url(
+            '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations/my-allowed-outbound-destination'
+        )
+        responses.add(
+            responses.DELETE,
+            url,
+            status=202,
+        )
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-allowed-outbound-destination'
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+            "name": name,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.delete_allowed_outbound_destination(**req_copy)
+
+    def test_delete_allowed_outbound_destination_value_error_with_retries(self):
+        # Enable retries and run test_delete_allowed_outbound_destination_value_error.
+        _service.enable_retries()
+        self.test_delete_allowed_outbound_destination_value_error()
+
+        # Disable retries and run test_delete_allowed_outbound_destination_value_error.
+        _service.disable_retries()
+        self.test_delete_allowed_outbound_destination_value_error()
+
+
+class TestUpdateAllowedOutboundDestination:
+    """
+    Test Class for update_allowed_outbound_destination
+    """
+
+    @responses.activate
+    def test_update_allowed_outbound_destination_all_params(self):
+        """
+        update_allowed_outbound_destination()
+        """
+        # Set up mock
+        url = preprocess_url(
+            '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations/my-allowed-outbound-destination'
+        )
+        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        responses.add(
+            responses.PATCH,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Construct a dict representation of a AllowedOutboundDestinationPatchCidrBlockDataPatch model
+        allowed_outbound_destination_patch_model = {}
+        allowed_outbound_destination_patch_model['type'] = 'cidr_block'
+        allowed_outbound_destination_patch_model['cidr_block'] = 'testString'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-allowed-outbound-destination'
+        if_match = 'testString'
+        allowed_outbound_destination = allowed_outbound_destination_patch_model
+
+        # Invoke method
+        response = _service.update_allowed_outbound_destination(
+            project_id,
+            name,
+            if_match,
+            allowed_outbound_destination,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == allowed_outbound_destination
+
+    def test_update_allowed_outbound_destination_all_params_with_retries(self):
+        # Enable retries and run test_update_allowed_outbound_destination_all_params.
+        _service.enable_retries()
+        self.test_update_allowed_outbound_destination_all_params()
+
+        # Disable retries and run test_update_allowed_outbound_destination_all_params.
+        _service.disable_retries()
+        self.test_update_allowed_outbound_destination_all_params()
+
+    @responses.activate
+    def test_update_allowed_outbound_destination_required_params(self):
+        """
+        test_update_allowed_outbound_destination_required_params()
+        """
+        # Set up mock
+        url = preprocess_url(
+            '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations/my-allowed-outbound-destination'
+        )
+        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        responses.add(
+            responses.PATCH,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Construct a dict representation of a AllowedOutboundDestinationPatchCidrBlockDataPatch model
+        allowed_outbound_destination_patch_model = {}
+        allowed_outbound_destination_patch_model['type'] = 'cidr_block'
+        allowed_outbound_destination_patch_model['cidr_block'] = 'testString'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-allowed-outbound-destination'
+        if_match = 'testString'
+        allowed_outbound_destination = allowed_outbound_destination_patch_model
+
+        # Invoke method
+        response = _service.update_allowed_outbound_destination(
+            project_id,
+            name,
+            if_match,
+            allowed_outbound_destination,
+            headers={},
+        )
+
+        # Check for correct operation
+        assert len(responses.calls) == 1
+        assert response.status_code == 200
+        # Validate body params
+        req_body = json.loads(str(responses.calls[0].request.body, 'utf-8'))
+        assert req_body == allowed_outbound_destination
+
+    def test_update_allowed_outbound_destination_required_params_with_retries(self):
+        # Enable retries and run test_update_allowed_outbound_destination_required_params.
+        _service.enable_retries()
+        self.test_update_allowed_outbound_destination_required_params()
+
+        # Disable retries and run test_update_allowed_outbound_destination_required_params.
+        _service.disable_retries()
+        self.test_update_allowed_outbound_destination_required_params()
+
+    @responses.activate
+    def test_update_allowed_outbound_destination_value_error(self):
+        """
+        test_update_allowed_outbound_destination_value_error()
+        """
+        # Set up mock
+        url = preprocess_url(
+            '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations/my-allowed-outbound-destination'
+        )
+        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        responses.add(
+            responses.PATCH,
+            url,
+            body=mock_response,
+            content_type='application/json',
+            status=200,
+        )
+
+        # Construct a dict representation of a AllowedOutboundDestinationPatchCidrBlockDataPatch model
+        allowed_outbound_destination_patch_model = {}
+        allowed_outbound_destination_patch_model['type'] = 'cidr_block'
+        allowed_outbound_destination_patch_model['cidr_block'] = 'testString'
+
+        # Set up parameter values
+        project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
+        name = 'my-allowed-outbound-destination'
+        if_match = 'testString'
+        allowed_outbound_destination = allowed_outbound_destination_patch_model
+
+        # Pass in all but one required param and check for a ValueError
+        req_param_dict = {
+            "project_id": project_id,
+            "name": name,
+            "if_match": if_match,
+            "allowed_outbound_destination": allowed_outbound_destination,
+        }
+        for param in req_param_dict.keys():
+            req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
+            with pytest.raises(ValueError):
+                _service.update_allowed_outbound_destination(**req_copy)
+
+    def test_update_allowed_outbound_destination_value_error_with_retries(self):
+        # Enable retries and run test_update_allowed_outbound_destination_value_error.
+        _service.enable_retries()
+        self.test_update_allowed_outbound_destination_value_error()
+
+        # Disable retries and run test_update_allowed_outbound_destination_value_error.
+        _service.disable_retries()
+        self.test_update_allowed_outbound_destination_value_error()
 
 
 class TestGetProjectEgressIps:
@@ -8662,6 +9427,62 @@ class TestDeleteSecret:
 # region
 
 
+class TestModel_AllowedOutboundDestinationList:
+    """
+    Test Class for AllowedOutboundDestinationList
+    """
+
+    def test_allowed_outbound_destination_list_serialization(self):
+        """
+        Test serialization/deserialization for AllowedOutboundDestinationList
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        allowed_outbound_destination_model = {}  # AllowedOutboundDestinationCidrBlockData
+        allowed_outbound_destination_model['entity_tag'] = '2385407409'
+        allowed_outbound_destination_model['type'] = 'cidr_block'
+        allowed_outbound_destination_model['cidr_block'] = '192.68.3.0/24'
+        allowed_outbound_destination_model['name'] = 'my-cidr-block'
+
+        list_first_metadata_model = {}  # ListFirstMetadata
+        list_first_metadata_model['href'] = 'testString'
+
+        list_next_metadata_model = {}  # ListNextMetadata
+        list_next_metadata_model['href'] = 'testString'
+        list_next_metadata_model['start'] = 'testString'
+
+        # Construct a json representation of a AllowedOutboundDestinationList model
+        allowed_outbound_destination_list_model_json = {}
+        allowed_outbound_destination_list_model_json['allowed_outbound_destinations'] = [
+            allowed_outbound_destination_model
+        ]
+        allowed_outbound_destination_list_model_json['first'] = list_first_metadata_model
+        allowed_outbound_destination_list_model_json['limit'] = 100
+        allowed_outbound_destination_list_model_json['next'] = list_next_metadata_model
+
+        # Construct a model instance of AllowedOutboundDestinationList by calling from_dict on the json representation
+        allowed_outbound_destination_list_model = AllowedOutboundDestinationList.from_dict(
+            allowed_outbound_destination_list_model_json
+        )
+        assert allowed_outbound_destination_list_model != False
+
+        # Construct a model instance of AllowedOutboundDestinationList by calling from_dict on the json representation
+        allowed_outbound_destination_list_model_dict = AllowedOutboundDestinationList.from_dict(
+            allowed_outbound_destination_list_model_json
+        ).__dict__
+        allowed_outbound_destination_list_model2 = AllowedOutboundDestinationList(
+            **allowed_outbound_destination_list_model_dict
+        )
+
+        # Verify the model instances are equivalent
+        assert allowed_outbound_destination_list_model == allowed_outbound_destination_list_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        allowed_outbound_destination_list_model_json2 = allowed_outbound_destination_list_model.to_dict()
+        assert allowed_outbound_destination_list_model_json2 == allowed_outbound_destination_list_model_json
+
+
 class TestModel_App:
     """
     Test Class for App
@@ -11628,6 +12449,153 @@ class TestModel_VolumeMountPrototype:
         # Convert model instance back to dict and verify no loss of data
         volume_mount_prototype_model_json2 = volume_mount_prototype_model.to_dict()
         assert volume_mount_prototype_model_json2 == volume_mount_prototype_model_json
+
+
+class TestModel_AllowedOutboundDestinationPatchCidrBlockDataPatch:
+    """
+    Test Class for AllowedOutboundDestinationPatchCidrBlockDataPatch
+    """
+
+    def test_allowed_outbound_destination_patch_cidr_block_data_patch_serialization(self):
+        """
+        Test serialization/deserialization for AllowedOutboundDestinationPatchCidrBlockDataPatch
+        """
+
+        # Construct a json representation of a AllowedOutboundDestinationPatchCidrBlockDataPatch model
+        allowed_outbound_destination_patch_cidr_block_data_patch_model_json = {}
+        allowed_outbound_destination_patch_cidr_block_data_patch_model_json['type'] = 'cidr_block'
+        allowed_outbound_destination_patch_cidr_block_data_patch_model_json['cidr_block'] = 'testString'
+
+        # Construct a model instance of AllowedOutboundDestinationPatchCidrBlockDataPatch by calling from_dict on the json representation
+        allowed_outbound_destination_patch_cidr_block_data_patch_model = (
+            AllowedOutboundDestinationPatchCidrBlockDataPatch.from_dict(
+                allowed_outbound_destination_patch_cidr_block_data_patch_model_json
+            )
+        )
+        assert allowed_outbound_destination_patch_cidr_block_data_patch_model != False
+
+        # Construct a model instance of AllowedOutboundDestinationPatchCidrBlockDataPatch by calling from_dict on the json representation
+        allowed_outbound_destination_patch_cidr_block_data_patch_model_dict = (
+            AllowedOutboundDestinationPatchCidrBlockDataPatch.from_dict(
+                allowed_outbound_destination_patch_cidr_block_data_patch_model_json
+            ).__dict__
+        )
+        allowed_outbound_destination_patch_cidr_block_data_patch_model2 = (
+            AllowedOutboundDestinationPatchCidrBlockDataPatch(
+                **allowed_outbound_destination_patch_cidr_block_data_patch_model_dict
+            )
+        )
+
+        # Verify the model instances are equivalent
+        assert (
+            allowed_outbound_destination_patch_cidr_block_data_patch_model
+            == allowed_outbound_destination_patch_cidr_block_data_patch_model2
+        )
+
+        # Convert model instance back to dict and verify no loss of data
+        allowed_outbound_destination_patch_cidr_block_data_patch_model_json2 = (
+            allowed_outbound_destination_patch_cidr_block_data_patch_model.to_dict()
+        )
+        assert (
+            allowed_outbound_destination_patch_cidr_block_data_patch_model_json2
+            == allowed_outbound_destination_patch_cidr_block_data_patch_model_json
+        )
+
+
+class TestModel_AllowedOutboundDestinationPrototypeCidrBlockDataPrototype:
+    """
+    Test Class for AllowedOutboundDestinationPrototypeCidrBlockDataPrototype
+    """
+
+    def test_allowed_outbound_destination_prototype_cidr_block_data_prototype_serialization(self):
+        """
+        Test serialization/deserialization for AllowedOutboundDestinationPrototypeCidrBlockDataPrototype
+        """
+
+        # Construct a json representation of a AllowedOutboundDestinationPrototypeCidrBlockDataPrototype model
+        allowed_outbound_destination_prototype_cidr_block_data_prototype_model_json = {}
+        allowed_outbound_destination_prototype_cidr_block_data_prototype_model_json['type'] = 'cidr_block'
+        allowed_outbound_destination_prototype_cidr_block_data_prototype_model_json['cidr_block'] = 'testString'
+        allowed_outbound_destination_prototype_cidr_block_data_prototype_model_json['name'] = 'testString'
+
+        # Construct a model instance of AllowedOutboundDestinationPrototypeCidrBlockDataPrototype by calling from_dict on the json representation
+        allowed_outbound_destination_prototype_cidr_block_data_prototype_model = (
+            AllowedOutboundDestinationPrototypeCidrBlockDataPrototype.from_dict(
+                allowed_outbound_destination_prototype_cidr_block_data_prototype_model_json
+            )
+        )
+        assert allowed_outbound_destination_prototype_cidr_block_data_prototype_model != False
+
+        # Construct a model instance of AllowedOutboundDestinationPrototypeCidrBlockDataPrototype by calling from_dict on the json representation
+        allowed_outbound_destination_prototype_cidr_block_data_prototype_model_dict = (
+            AllowedOutboundDestinationPrototypeCidrBlockDataPrototype.from_dict(
+                allowed_outbound_destination_prototype_cidr_block_data_prototype_model_json
+            ).__dict__
+        )
+        allowed_outbound_destination_prototype_cidr_block_data_prototype_model2 = (
+            AllowedOutboundDestinationPrototypeCidrBlockDataPrototype(
+                **allowed_outbound_destination_prototype_cidr_block_data_prototype_model_dict
+            )
+        )
+
+        # Verify the model instances are equivalent
+        assert (
+            allowed_outbound_destination_prototype_cidr_block_data_prototype_model
+            == allowed_outbound_destination_prototype_cidr_block_data_prototype_model2
+        )
+
+        # Convert model instance back to dict and verify no loss of data
+        allowed_outbound_destination_prototype_cidr_block_data_prototype_model_json2 = (
+            allowed_outbound_destination_prototype_cidr_block_data_prototype_model.to_dict()
+        )
+        assert (
+            allowed_outbound_destination_prototype_cidr_block_data_prototype_model_json2
+            == allowed_outbound_destination_prototype_cidr_block_data_prototype_model_json
+        )
+
+
+class TestModel_AllowedOutboundDestinationCidrBlockData:
+    """
+    Test Class for AllowedOutboundDestinationCidrBlockData
+    """
+
+    def test_allowed_outbound_destination_cidr_block_data_serialization(self):
+        """
+        Test serialization/deserialization for AllowedOutboundDestinationCidrBlockData
+        """
+
+        # Construct a json representation of a AllowedOutboundDestinationCidrBlockData model
+        allowed_outbound_destination_cidr_block_data_model_json = {}
+        allowed_outbound_destination_cidr_block_data_model_json['entity_tag'] = '2385407409'
+        allowed_outbound_destination_cidr_block_data_model_json['type'] = 'cidr_block'
+        allowed_outbound_destination_cidr_block_data_model_json['cidr_block'] = 'testString'
+        allowed_outbound_destination_cidr_block_data_model_json['name'] = 'testString'
+
+        # Construct a model instance of AllowedOutboundDestinationCidrBlockData by calling from_dict on the json representation
+        allowed_outbound_destination_cidr_block_data_model = AllowedOutboundDestinationCidrBlockData.from_dict(
+            allowed_outbound_destination_cidr_block_data_model_json
+        )
+        assert allowed_outbound_destination_cidr_block_data_model != False
+
+        # Construct a model instance of AllowedOutboundDestinationCidrBlockData by calling from_dict on the json representation
+        allowed_outbound_destination_cidr_block_data_model_dict = AllowedOutboundDestinationCidrBlockData.from_dict(
+            allowed_outbound_destination_cidr_block_data_model_json
+        ).__dict__
+        allowed_outbound_destination_cidr_block_data_model2 = AllowedOutboundDestinationCidrBlockData(
+            **allowed_outbound_destination_cidr_block_data_model_dict
+        )
+
+        # Verify the model instances are equivalent
+        assert allowed_outbound_destination_cidr_block_data_model == allowed_outbound_destination_cidr_block_data_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        allowed_outbound_destination_cidr_block_data_model_json2 = (
+            allowed_outbound_destination_cidr_block_data_model.to_dict()
+        )
+        assert (
+            allowed_outbound_destination_cidr_block_data_model_json2
+            == allowed_outbound_destination_cidr_block_data_model_json
+        )
 
 
 class TestModel_SecretDataBasicAuthSecretData:

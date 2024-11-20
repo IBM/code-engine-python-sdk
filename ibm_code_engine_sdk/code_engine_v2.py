@@ -56,7 +56,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2024-09-27`.
+               `2024-11-18`.
         """
         authenticator = get_authenticator_from_environment(service_name)
         service = cls(
@@ -80,7 +80,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2024-09-27`.
+               `2024-11-18`.
         """
         BaseService.__init__(self, service_url=self.DEFAULT_SERVICE_URL, authenticator=authenticator)
         self.version = version
@@ -286,6 +286,304 @@ class CodeEngineV2(BaseService):
             method='DELETE',
             url=url,
             headers=headers,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def list_allowed_outbound_destination(
+        self,
+        project_id: str,
+        *,
+        limit: Optional[int] = None,
+        start: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        List allowed outbound destinations.
+
+        List all allowed outbound destinations in a project.
+
+        :param str project_id: The ID of the project.
+        :param int limit: (optional) Optional maximum number of allowed outbound
+               destinations per page.
+        :param str start: (optional) An optional token that indicates the beginning
+               of the page of results to be returned. If omitted, the first page of
+               results is returned. This value is obtained from the 'start' query
+               parameter in the `next` object of the operation response.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `AllowedOutboundDestinationList` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='list_allowed_outbound_destination',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'limit': limit,
+            'start': start,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id']
+        path_param_values = self.encode_path_vars(project_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/allowed_outbound_destinations'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def create_allowed_outbound_destination(
+        self,
+        project_id: str,
+        allowed_outbound_destination: 'AllowedOutboundDestinationPrototype',
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Create an allowed outbound destination.
+
+        Create an allowed outbound destination.
+
+        :param str project_id: The ID of the project.
+        :param AllowedOutboundDestinationPrototype allowed_outbound_destination:
+               AllowedOutboundDestination prototype.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `AllowedOutboundDestination` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if allowed_outbound_destination is None:
+            raise ValueError('allowed_outbound_destination must be provided')
+        if isinstance(allowed_outbound_destination, AllowedOutboundDestinationPrototype):
+            allowed_outbound_destination = convert_model(allowed_outbound_destination)
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='create_allowed_outbound_destination',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        data = json.dumps(allowed_outbound_destination)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id']
+        path_param_values = self.encode_path_vars(project_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/allowed_outbound_destinations'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            params=params,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_allowed_outbound_destination(
+        self,
+        project_id: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Get an allowed outbound destination.
+
+        Display the details of an allowed outbound destination.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of your allowed outbound destination.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `AllowedOutboundDestination` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='get_allowed_outbound_destination',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/allowed_outbound_destinations/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_allowed_outbound_destination(
+        self,
+        project_id: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete an allowed outbound destination.
+
+        Delete an allowed outbound destination.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of your allowed outbound destination.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='delete_allowed_outbound_destination',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/allowed_outbound_destinations/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def update_allowed_outbound_destination(
+        self,
+        project_id: str,
+        name: str,
+        if_match: str,
+        allowed_outbound_destination: 'AllowedOutboundDestinationPatch',
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Update an allowed outbound destination.
+
+        Update an allowed outbound destination.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of your allowed outbound destination.
+        :param str if_match: Version of the allowed outbound destination to be
+               updated. Specify the version that you retrieved as entity_tag (ETag header)
+               when reading the allowed outbound destination. This value helps identifying
+               parallel usage of this API. Pass * to indicate to update any version
+               available. This might result in stale updates.
+        :param AllowedOutboundDestinationPatch allowed_outbound_destination:
+               AllowedOutboundDestination patch.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `AllowedOutboundDestination` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        if not if_match:
+            raise ValueError('if_match must be provided')
+        if allowed_outbound_destination is None:
+            raise ValueError('allowed_outbound_destination must be provided')
+        if isinstance(allowed_outbound_destination, AllowedOutboundDestinationPatch):
+            allowed_outbound_destination = convert_model(allowed_outbound_destination)
+        headers = {
+            'If-Match': if_match,
+        }
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='update_allowed_outbound_destination',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        data = json.dumps(allowed_outbound_destination)
+        headers['content-type'] = 'application/merge-patch+json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/allowed_outbound_destinations/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='PATCH',
+            url=url,
+            headers=headers,
+            params=params,
+            data=data,
         )
 
         response = self.send(request, **kwargs)
@@ -3971,6 +4269,216 @@ class CodeEngineV2(BaseService):
 ##############################################################################
 # Models
 ##############################################################################
+
+
+class AllowedOutboundDestination:
+    """
+    AllowedOutboundDestination Describes the model of an allowed outbound destination.
+
+    :param str entity_tag: The version of the allowed outbound destination, which is
+          used to achieve optimistic locking.
+    :param str type: Specify the type of the allowed outbound destination. Allowed
+          types are: 'cidr_block'.
+    """
+
+    def __init__(
+        self,
+        entity_tag: str,
+        type: str,
+    ) -> None:
+        """
+        Initialize a AllowedOutboundDestination object.
+
+        :param str entity_tag: The version of the allowed outbound destination,
+               which is used to achieve optimistic locking.
+        :param str type: Specify the type of the allowed outbound destination.
+               Allowed types are: 'cidr_block'.
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['AllowedOutboundDestinationCidrBlockData'])
+        )
+        raise Exception(msg)
+
+    class TypeEnum(str, Enum):
+        """
+        Specify the type of the allowed outbound destination. Allowed types are:
+        'cidr_block'.
+        """
+
+        CIDR_BLOCK = 'cidr_block'
+
+
+class AllowedOutboundDestinationList:
+    """
+    Contains a list of allowed outbound destinations and pagination information.
+
+    :param List[AllowedOutboundDestination] allowed_outbound_destinations: List of
+          all allowed outbound destinations.
+    :param ListFirstMetadata first: (optional) Describes properties needed to
+          retrieve the first page of a result list.
+    :param int limit: Maximum number of resources per page.
+    :param ListNextMetadata next: (optional) Describes properties needed to retrieve
+          the next page of a result list.
+    """
+
+    def __init__(
+        self,
+        allowed_outbound_destinations: List['AllowedOutboundDestination'],
+        limit: int,
+        *,
+        first: Optional['ListFirstMetadata'] = None,
+        next: Optional['ListNextMetadata'] = None,
+    ) -> None:
+        """
+        Initialize a AllowedOutboundDestinationList object.
+
+        :param List[AllowedOutboundDestination] allowed_outbound_destinations: List
+               of all allowed outbound destinations.
+        :param int limit: Maximum number of resources per page.
+        :param ListFirstMetadata first: (optional) Describes properties needed to
+               retrieve the first page of a result list.
+        :param ListNextMetadata next: (optional) Describes properties needed to
+               retrieve the next page of a result list.
+        """
+        self.allowed_outbound_destinations = allowed_outbound_destinations
+        self.first = first
+        self.limit = limit
+        self.next = next
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'AllowedOutboundDestinationList':
+        """Initialize a AllowedOutboundDestinationList object from a json dictionary."""
+        args = {}
+        if (allowed_outbound_destinations := _dict.get('allowed_outbound_destinations')) is not None:
+            args['allowed_outbound_destinations'] = allowed_outbound_destinations
+        else:
+            raise ValueError(
+                'Required property \'allowed_outbound_destinations\' not present in AllowedOutboundDestinationList JSON'
+            )
+        if (first := _dict.get('first')) is not None:
+            args['first'] = ListFirstMetadata.from_dict(first)
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        else:
+            raise ValueError('Required property \'limit\' not present in AllowedOutboundDestinationList JSON')
+        if (next := _dict.get('next')) is not None:
+            args['next'] = ListNextMetadata.from_dict(next)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a AllowedOutboundDestinationList object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'allowed_outbound_destinations') and self.allowed_outbound_destinations is not None:
+            allowed_outbound_destinations_list = []
+            for v in self.allowed_outbound_destinations:
+                if isinstance(v, dict):
+                    allowed_outbound_destinations_list.append(v)
+                else:
+                    allowed_outbound_destinations_list.append(v.to_dict())
+            _dict['allowed_outbound_destinations'] = allowed_outbound_destinations_list
+        if hasattr(self, 'first') and self.first is not None:
+            if isinstance(self.first, dict):
+                _dict['first'] = self.first
+            else:
+                _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'next') and self.next is not None:
+            if isinstance(self.next, dict):
+                _dict['next'] = self.next
+            else:
+                _dict['next'] = self.next.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this AllowedOutboundDestinationList object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'AllowedOutboundDestinationList') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'AllowedOutboundDestinationList') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class AllowedOutboundDestinationPatch:
+    """
+    AllowedOutboundDestinationPatch is the request model for allowed outbound destination
+    update operations.
+
+    :param str type: (optional) Specify the type of the allowed outbound
+          destination. Allowed types are: 'cidr_block'.
+    """
+
+    def __init__(
+        self,
+        *,
+        type: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a AllowedOutboundDestinationPatch object.
+
+        :param str type: (optional) Specify the type of the allowed outbound
+               destination. Allowed types are: 'cidr_block'.
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['AllowedOutboundDestinationPatchCidrBlockDataPatch'])
+        )
+        raise Exception(msg)
+
+    class TypeEnum(str, Enum):
+        """
+        Specify the type of the allowed outbound destination. Allowed types are:
+        'cidr_block'.
+        """
+
+        CIDR_BLOCK = 'cidr_block'
+
+
+class AllowedOutboundDestinationPrototype:
+    """
+    AllowedOutboundDestinationPrototype is the request model for allowed outbound
+    destination create operations.
+
+    :param str type: Specify the type of the allowed outbound destination. Allowed
+          types are: 'cidr_block'.
+    """
+
+    def __init__(
+        self,
+        type: str,
+    ) -> None:
+        """
+        Initialize a AllowedOutboundDestinationPrototype object.
+
+        :param str type: Specify the type of the allowed outbound destination.
+               Allowed types are: 'cidr_block'.
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['AllowedOutboundDestinationPrototypeCidrBlockDataPrototype'])
+        )
+        raise Exception(msg)
+
+    class TypeEnum(str, Enum):
+        """
+        Specify the type of the allowed outbound destination. Allowed types are:
+        'cidr_block'.
+        """
+
+        CIDR_BLOCK = 'cidr_block'
 
 
 class App:
@@ -13415,6 +13923,285 @@ class VolumeMountPrototype:
         SECRET = 'secret'
 
 
+class AllowedOutboundDestinationPatchCidrBlockDataPatch(AllowedOutboundDestinationPatch):
+    """
+    Update an allowed outbound destination by using a CIDR block.
+
+    :param str type: (optional) Specify the type of the allowed outbound
+          destination. Allowed types are: 'cidr_block'.
+    :param str cidr_block: (optional) The IP address range.
+    """
+
+    def __init__(
+        self,
+        *,
+        type: Optional[str] = None,
+        cidr_block: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a AllowedOutboundDestinationPatchCidrBlockDataPatch object.
+
+        :param str type: (optional) Specify the type of the allowed outbound
+               destination. Allowed types are: 'cidr_block'.
+        :param str cidr_block: (optional) The IP address range.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.cidr_block = cidr_block
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'AllowedOutboundDestinationPatchCidrBlockDataPatch':
+        """Initialize a AllowedOutboundDestinationPatchCidrBlockDataPatch object from a json dictionary."""
+        args = {}
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        if (cidr_block := _dict.get('cidr_block')) is not None:
+            args['cidr_block'] = cidr_block
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a AllowedOutboundDestinationPatchCidrBlockDataPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'cidr_block') and self.cidr_block is not None:
+            _dict['cidr_block'] = self.cidr_block
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this AllowedOutboundDestinationPatchCidrBlockDataPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'AllowedOutboundDestinationPatchCidrBlockDataPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'AllowedOutboundDestinationPatchCidrBlockDataPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        Specify the type of the allowed outbound destination. Allowed types are:
+        'cidr_block'.
+        """
+
+        CIDR_BLOCK = 'cidr_block'
+
+
+class AllowedOutboundDestinationPrototypeCidrBlockDataPrototype(AllowedOutboundDestinationPrototype):
+    """
+    Create an allowed outbound destination by using a CIDR block.
+
+    :param str type: Specify the type of the allowed outbound destination. Allowed
+          types are: 'cidr_block'.
+    :param str cidr_block: The IP address range.
+    :param str name: The name of the CIDR block.
+    """
+
+    def __init__(
+        self,
+        type: str,
+        cidr_block: str,
+        name: str,
+    ) -> None:
+        """
+        Initialize a AllowedOutboundDestinationPrototypeCidrBlockDataPrototype object.
+
+        :param str type: Specify the type of the allowed outbound destination.
+               Allowed types are: 'cidr_block'.
+        :param str cidr_block: The IP address range.
+        :param str name: The name of the CIDR block.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.cidr_block = cidr_block
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'AllowedOutboundDestinationPrototypeCidrBlockDataPrototype':
+        """Initialize a AllowedOutboundDestinationPrototypeCidrBlockDataPrototype object from a json dictionary."""
+        args = {}
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in AllowedOutboundDestinationPrototypeCidrBlockDataPrototype JSON'
+            )
+        if (cidr_block := _dict.get('cidr_block')) is not None:
+            args['cidr_block'] = cidr_block
+        else:
+            raise ValueError(
+                'Required property \'cidr_block\' not present in AllowedOutboundDestinationPrototypeCidrBlockDataPrototype JSON'
+            )
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in AllowedOutboundDestinationPrototypeCidrBlockDataPrototype JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a AllowedOutboundDestinationPrototypeCidrBlockDataPrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'cidr_block') and self.cidr_block is not None:
+            _dict['cidr_block'] = self.cidr_block
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this AllowedOutboundDestinationPrototypeCidrBlockDataPrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'AllowedOutboundDestinationPrototypeCidrBlockDataPrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'AllowedOutboundDestinationPrototypeCidrBlockDataPrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        Specify the type of the allowed outbound destination. Allowed types are:
+        'cidr_block'.
+        """
+
+        CIDR_BLOCK = 'cidr_block'
+
+
+class AllowedOutboundDestinationCidrBlockData(AllowedOutboundDestination):
+    """
+    Allowed outbound destination CIDR block.
+
+    :param str entity_tag: The version of the allowed outbound destination, which is
+          used to achieve optimistic locking.
+    :param str type: Specify the type of the allowed outbound destination. Allowed
+          types are: 'cidr_block'.
+    :param str cidr_block: The IP address range.
+    :param str name: The name of the CIDR block.
+    """
+
+    def __init__(
+        self,
+        entity_tag: str,
+        type: str,
+        cidr_block: str,
+        name: str,
+    ) -> None:
+        """
+        Initialize a AllowedOutboundDestinationCidrBlockData object.
+
+        :param str entity_tag: The version of the allowed outbound destination,
+               which is used to achieve optimistic locking.
+        :param str type: Specify the type of the allowed outbound destination.
+               Allowed types are: 'cidr_block'.
+        :param str cidr_block: The IP address range.
+        :param str name: The name of the CIDR block.
+        """
+        # pylint: disable=super-init-not-called
+        self.entity_tag = entity_tag
+        self.type = type
+        self.cidr_block = cidr_block
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'AllowedOutboundDestinationCidrBlockData':
+        """Initialize a AllowedOutboundDestinationCidrBlockData object from a json dictionary."""
+        args = {}
+        if (entity_tag := _dict.get('entity_tag')) is not None:
+            args['entity_tag'] = entity_tag
+        else:
+            raise ValueError(
+                'Required property \'entity_tag\' not present in AllowedOutboundDestinationCidrBlockData JSON'
+            )
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        else:
+            raise ValueError('Required property \'type\' not present in AllowedOutboundDestinationCidrBlockData JSON')
+        if (cidr_block := _dict.get('cidr_block')) is not None:
+            args['cidr_block'] = cidr_block
+        else:
+            raise ValueError(
+                'Required property \'cidr_block\' not present in AllowedOutboundDestinationCidrBlockData JSON'
+            )
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in AllowedOutboundDestinationCidrBlockData JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a AllowedOutboundDestinationCidrBlockData object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'entity_tag') and self.entity_tag is not None:
+            _dict['entity_tag'] = self.entity_tag
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'cidr_block') and self.cidr_block is not None:
+            _dict['cidr_block'] = self.cidr_block
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this AllowedOutboundDestinationCidrBlockData object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'AllowedOutboundDestinationCidrBlockData') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'AllowedOutboundDestinationCidrBlockData') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        Specify the type of the allowed outbound destination. Allowed types are:
+        'cidr_block'.
+        """
+
+        CIDR_BLOCK = 'cidr_block'
+
+
 class SecretDataBasicAuthSecretData(SecretData):
     """
     SecretDataBasicAuthSecretData.
@@ -13508,7 +14295,7 @@ class SecretDataBasicAuthSecretData(SecretData):
                     raise ValueError('Value for additional property {} must be of type str'.format(k))
                 setattr(self, k, v)
             else:
-                raise ValueError('Property {} cannot be specified as an additional property'.format(k))
+                raise ValueError('Property {} cannot be specified as an additional property'.format(_key))
 
     def __str__(self) -> str:
         """Return a `str` version of this SecretDataBasicAuthSecretData object."""
@@ -13720,7 +14507,7 @@ class SecretDataRegistrySecretData(SecretData):
                     raise ValueError('Value for additional property {} must be of type str'.format(k))
                 setattr(self, k, v)
             else:
-                raise ValueError('Property {} cannot be specified as an additional property'.format(k))
+                raise ValueError('Property {} cannot be specified as an additional property'.format(_key))
 
     def __str__(self) -> str:
         """Return a `str` version of this SecretDataRegistrySecretData object."""
@@ -13829,7 +14616,7 @@ class SecretDataSSHSecretData(SecretData):
                     raise ValueError('Value for additional property {} must be of type str'.format(k))
                 setattr(self, k, v)
             else:
-                raise ValueError('Property {} cannot be specified as an additional property'.format(k))
+                raise ValueError('Property {} cannot be specified as an additional property'.format(_key))
 
     def __str__(self) -> str:
         """Return a `str` version of this SecretDataSSHSecretData object."""
@@ -13939,7 +14726,7 @@ class SecretDataTLSSecretData(SecretData):
                     raise ValueError('Value for additional property {} must be of type str'.format(k))
                 setattr(self, k, v)
             else:
-                raise ValueError('Property {} cannot be specified as an additional property'.format(k))
+                raise ValueError('Property {} cannot be specified as an additional property'.format(_key))
 
     def __str__(self) -> str:
         """Return a `str` version of this SecretDataTLSSecretData object."""
@@ -14016,6 +14803,75 @@ class ProjectsPager:
         Returns all results by invoking get_next() repeatedly
         until all pages of results have been retrieved.
         :return: A List[dict], where each element is a dict that represents an instance of Project.
+        :rtype: List[dict]
+        """
+        results = []
+        while self.has_next():
+            next_page = self.get_next()
+            results.extend(next_page)
+        return results
+
+
+class AllowedOutboundDestinationPager:
+    """
+    AllowedOutboundDestinationPager can be used to simplify the use of the "list_allowed_outbound_destination" method.
+    """
+
+    def __init__(
+        self,
+        *,
+        client: CodeEngineV2,
+        project_id: str,
+        limit: int = None,
+    ) -> None:
+        """
+        Initialize a AllowedOutboundDestinationPager object.
+        :param str project_id: The ID of the project.
+        :param int limit: (optional) Optional maximum number of allowed outbound
+               destinations per page.
+        """
+        self._has_next = True
+        self._client = client
+        self._page_context = {'next': None}
+        self._project_id = project_id
+        self._limit = limit
+
+    def has_next(self) -> bool:
+        """
+        Returns true if there are potentially more results to be retrieved.
+        """
+        return self._has_next
+
+    def get_next(self) -> List[dict]:
+        """
+        Returns the next page of results.
+        :return: A List[dict], where each element is a dict that represents an instance of AllowedOutboundDestination.
+        :rtype: List[dict]
+        """
+        if not self.has_next():
+            raise StopIteration(message='No more results available')
+
+        result = self._client.list_allowed_outbound_destination(
+            project_id=self._project_id,
+            limit=self._limit,
+            start=self._page_context.get('next'),
+        ).get_result()
+
+        next = None
+        next_page_link = result.get('next')
+        if next_page_link is not None:
+            next = next_page_link.get('start')
+        self._page_context['next'] = next
+        if next is None:
+            self._has_next = False
+
+        return result.get('allowed_outbound_destinations')
+
+    def get_all(self) -> List[dict]:
+        """
+        Returns all results by invoking get_next() repeatedly
+        until all pages of results have been retrieved.
+        :return: A List[dict], where each element is a dict that represents an instance of AllowedOutboundDestination.
         :rtype: List[dict]
         """
         results = []

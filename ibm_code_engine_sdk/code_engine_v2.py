@@ -1,6 +1,6 @@
 # coding: utf-8
 
-# (C) Copyright IBM Corp. 2024.
+# (C) Copyright IBM Corp. 2025.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2024-11-18`.
+               `2025-01-10`.
         """
         authenticator = get_authenticator_from_environment(service_name)
         service = cls(
@@ -80,7 +80,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2024-11-18`.
+               `2025-01-10`.
         """
         BaseService.__init__(self, service_url=self.DEFAULT_SERVICE_URL, authenticator=authenticator)
         self.version = version
@@ -7154,6 +7154,26 @@ class Build:
         READY = 'ready'
         FAILED = 'failed'
 
+    class StrategySizeEnum(str, Enum):
+        """
+        Optional size for the build, which determines the amount of resources used. Build
+        sizes are `small`, `medium`, `large`, `xlarge`, `xxlarge`.
+        """
+
+        SMALL = 'small'
+        MEDIUM = 'medium'
+        LARGE = 'large'
+        XLARGE = 'xlarge'
+        XXLARGE = 'xxlarge'
+
+    class StrategyTypeEnum(str, Enum):
+        """
+        The strategy to use for building the image.
+        """
+
+        DOCKERFILE = 'dockerfile'
+        BUILDPACKS = 'buildpacks'
+
 
 class BuildList:
     """
@@ -7455,6 +7475,26 @@ class BuildPatch:
 
         LOCAL = 'local'
         GIT = 'git'
+
+    class StrategySizeEnum(str, Enum):
+        """
+        Optional size for the build, which determines the amount of resources used. Build
+        sizes are `small`, `medium`, `large`, `xlarge`, `xxlarge`.
+        """
+
+        SMALL = 'small'
+        MEDIUM = 'medium'
+        LARGE = 'large'
+        XLARGE = 'xlarge'
+        XXLARGE = 'xxlarge'
+
+    class StrategyTypeEnum(str, Enum):
+        """
+        The strategy to use for building the image.
+        """
+
+        DOCKERFILE = 'dockerfile'
+        BUILDPACKS = 'buildpacks'
 
 
 class BuildRun:
@@ -7790,6 +7830,26 @@ class BuildRun:
         RUNNING = 'running'
         PENDING = 'pending'
         FAILED = 'failed'
+
+    class StrategySizeEnum(str, Enum):
+        """
+        Optional size for the build, which determines the amount of resources used. Build
+        sizes are `small`, `medium`, `large`, `xlarge`, `xxlarge`.
+        """
+
+        SMALL = 'small'
+        MEDIUM = 'medium'
+        LARGE = 'large'
+        XLARGE = 'xlarge'
+        XXLARGE = 'xxlarge'
+
+    class StrategyTypeEnum(str, Enum):
+        """
+        The strategy to use for building the image.
+        """
+
+        DOCKERFILE = 'dockerfile'
+        BUILDPACKS = 'buildpacks'
 
 
 class BuildRunList:
@@ -10198,6 +10258,106 @@ class FunctionStatus:
         NO_CODE_BUNDLE = 'no_code_bundle'
 
 
+class IndexDetails:
+    """
+    IndexDetails.
+
+    :param str finished_at: (optional) The timestamp when the job run index finished
+          processing.
+    :param str last_failure_reason: (optional) Reason why latest retry of the job
+          run index failed. Possible values include but are not limited to `OOMKilled`,
+          `ContainerExitedCode1` or `ExceededEphemeralStorage`.
+    :param int retries: (optional) Number of retries of this job run index.
+    :param str started_at: (optional) The timestamp when the job run index started
+          processing.
+    :param str status: (optional) Current status of the job run index.
+    """
+
+    def __init__(
+        self,
+        *,
+        finished_at: Optional[str] = None,
+        last_failure_reason: Optional[str] = None,
+        retries: Optional[int] = None,
+        started_at: Optional[str] = None,
+        status: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a IndexDetails object.
+
+        """
+        self.finished_at = finished_at
+        self.last_failure_reason = last_failure_reason
+        self.retries = retries
+        self.started_at = started_at
+        self.status = status
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'IndexDetails':
+        """Initialize a IndexDetails object from a json dictionary."""
+        args = {}
+        if (finished_at := _dict.get('finished_at')) is not None:
+            args['finished_at'] = finished_at
+        if (last_failure_reason := _dict.get('last_failure_reason')) is not None:
+            args['last_failure_reason'] = last_failure_reason
+        if (retries := _dict.get('retries')) is not None:
+            args['retries'] = retries
+        if (started_at := _dict.get('started_at')) is not None:
+            args['started_at'] = started_at
+        if (status := _dict.get('status')) is not None:
+            args['status'] = status
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a IndexDetails object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'finished_at') and getattr(self, 'finished_at') is not None:
+            _dict['finished_at'] = getattr(self, 'finished_at')
+        if hasattr(self, 'last_failure_reason') and getattr(self, 'last_failure_reason') is not None:
+            _dict['last_failure_reason'] = getattr(self, 'last_failure_reason')
+        if hasattr(self, 'retries') and getattr(self, 'retries') is not None:
+            _dict['retries'] = getattr(self, 'retries')
+        if hasattr(self, 'started_at') and getattr(self, 'started_at') is not None:
+            _dict['started_at'] = getattr(self, 'started_at')
+        if hasattr(self, 'status') and getattr(self, 'status') is not None:
+            _dict['status'] = getattr(self, 'status')
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this IndexDetails object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'IndexDetails') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'IndexDetails') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class StatusEnum(str, Enum):
+        """
+        Current status of the job run index.
+        """
+
+        PENDING = 'pending'
+        RUNNING = 'running'
+        SUCCEEDED = 'succeeded'
+        FAILED = 'failed'
+        UNKNOWN = 'unknown'
+
+
 class Job:
     """
     Job is the response model for job resources.
@@ -11587,6 +11747,7 @@ class JobRunStatus:
     :param str completion_time: (optional) Time the job run completed.
     :param int failed: (optional) Number of failed job run instances.
     :param str failed_indices: (optional) List of job run indices that failed.
+    :param dict indices_details: (optional) Detailed process information per index.
     :param int pending: (optional) Number of pending job run instances.
     :param str pending_indices: (optional) List of job run indices that are pending.
     :param int requested: (optional) Number of requested job run instances.
@@ -11604,6 +11765,7 @@ class JobRunStatus:
         completion_time: Optional[str] = None,
         failed: Optional[int] = None,
         failed_indices: Optional[str] = None,
+        indices_details: Optional[dict] = None,
         pending: Optional[int] = None,
         pending_indices: Optional[str] = None,
         requested: Optional[int] = None,
@@ -11617,10 +11779,13 @@ class JobRunStatus:
         """
         Initialize a JobRunStatus object.
 
+        :param dict indices_details: (optional) Detailed process information per
+               index.
         """
         self.completion_time = completion_time
         self.failed = failed
         self.failed_indices = failed_indices
+        self.indices_details = indices_details
         self.pending = pending
         self.pending_indices = pending_indices
         self.requested = requested
@@ -11641,6 +11806,8 @@ class JobRunStatus:
             args['failed'] = failed
         if (failed_indices := _dict.get('failed_indices')) is not None:
             args['failed_indices'] = failed_indices
+        if (indices_details := _dict.get('indices_details')) is not None:
+            args['indices_details'] = {k: IndexDetails.from_dict(v) for k, v in indices_details.items()}
         if (pending := _dict.get('pending')) is not None:
             args['pending'] = pending
         if (pending_indices := _dict.get('pending_indices')) is not None:
@@ -11675,6 +11842,14 @@ class JobRunStatus:
             _dict['failed'] = getattr(self, 'failed')
         if hasattr(self, 'failed_indices') and getattr(self, 'failed_indices') is not None:
             _dict['failed_indices'] = getattr(self, 'failed_indices')
+        if hasattr(self, 'indices_details') and self.indices_details is not None:
+            indices_details_map = {}
+            for k, v in self.indices_details.items():
+                if isinstance(v, dict):
+                    indices_details_map[k] = v
+                else:
+                    indices_details_map[k] = v.to_dict()
+            _dict['indices_details'] = indices_details_map
         if hasattr(self, 'pending') and getattr(self, 'pending') is not None:
             _dict['pending'] = getattr(self, 'pending')
         if hasattr(self, 'pending_indices') and getattr(self, 'pending_indices') is not None:
@@ -13121,6 +13296,21 @@ class Secret:
         SERVICE_OPERATOR = 'service_operator'
         OTHER = 'other'
 
+    class ResourceTypeEnum(str, Enum):
+        """
+        The type of the secret.
+        """
+
+        SECRET_V2 = 'secret_v2'
+        SECRET_AUTH_SSH_V2 = 'secret_auth_ssh_v2'
+        SECRET_BASIC_AUTH_V2 = 'secret_basic_auth_v2'
+        SECRET_GENERIC_V2 = 'secret_generic_v2'
+        SECRET_OPERATOR_V2 = 'secret_operator_v2'
+        SECRET_OTHER_V2 = 'secret_other_v2'
+        SECRET_REGISTRY_V2 = 'secret_registry_v2'
+        SECRET_SERVICE_ACCESS_V2 = 'secret_service_access_v2'
+        SECRET_TLS_V2 = 'secret_tls_v2'
+
 
 class SecretData:
     """
@@ -13929,7 +14119,7 @@ class AllowedOutboundDestinationPatchCidrBlockDataPatch(AllowedOutboundDestinati
 
     :param str type: (optional) Specify the type of the allowed outbound
           destination. Allowed types are: 'cidr_block'.
-    :param str cidr_block: (optional) The IP address range.
+    :param str cidr_block: (optional) The IPv4 address range.
     """
 
     def __init__(
@@ -13943,7 +14133,7 @@ class AllowedOutboundDestinationPatchCidrBlockDataPatch(AllowedOutboundDestinati
 
         :param str type: (optional) Specify the type of the allowed outbound
                destination. Allowed types are: 'cidr_block'.
-        :param str cidr_block: (optional) The IP address range.
+        :param str cidr_block: (optional) The IPv4 address range.
         """
         # pylint: disable=super-init-not-called
         self.type = type
@@ -14006,7 +14196,7 @@ class AllowedOutboundDestinationPrototypeCidrBlockDataPrototype(AllowedOutboundD
 
     :param str type: Specify the type of the allowed outbound destination. Allowed
           types are: 'cidr_block'.
-    :param str cidr_block: The IP address range.
+    :param str cidr_block: The IPv4 address range.
     :param str name: The name of the CIDR block.
     """
 
@@ -14021,7 +14211,7 @@ class AllowedOutboundDestinationPrototypeCidrBlockDataPrototype(AllowedOutboundD
 
         :param str type: Specify the type of the allowed outbound destination.
                Allowed types are: 'cidr_block'.
-        :param str cidr_block: The IP address range.
+        :param str cidr_block: The IPv4 address range.
         :param str name: The name of the CIDR block.
         """
         # pylint: disable=super-init-not-called
@@ -14104,7 +14294,7 @@ class AllowedOutboundDestinationCidrBlockData(AllowedOutboundDestination):
           used to achieve optimistic locking.
     :param str type: Specify the type of the allowed outbound destination. Allowed
           types are: 'cidr_block'.
-    :param str cidr_block: The IP address range.
+    :param str cidr_block: The IPv4 address range.
     :param str name: The name of the CIDR block.
     """
 
@@ -14122,7 +14312,7 @@ class AllowedOutboundDestinationCidrBlockData(AllowedOutboundDestination):
                which is used to achieve optimistic locking.
         :param str type: Specify the type of the allowed outbound destination.
                Allowed types are: 'cidr_block'.
-        :param str cidr_block: The IP address range.
+        :param str cidr_block: The IPv4 address range.
         :param str name: The name of the CIDR block.
         """
         # pylint: disable=super-init-not-called

@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# IBM OpenAPI SDK Code Generator Version: 3.94.1-71478489-20240820-161623
+# IBM OpenAPI SDK Code Generator Version: 3.99.0-d27cee72-20250129-204831
 
 """
 REST API for Code Engine
@@ -56,7 +56,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2025-01-10`.
+               `2025-02-20`.
         """
         authenticator = get_authenticator_from_environment(service_name)
         service = cls(
@@ -80,7 +80,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2025-01-10`.
+               `2025-02-20`.
         """
         BaseService.__init__(self, service_url=self.DEFAULT_SERVICE_URL, authenticator=authenticator)
         self.version = version
@@ -2792,6 +2792,7 @@ class CodeEngineV2(BaseService):
         output_secret: str,
         strategy_type: str,
         *,
+        run_build_params: Optional[List['BuildParamPrototype']] = None,
         source_context_dir: Optional[str] = None,
         source_revision: Optional[str] = None,
         source_secret: Optional[str] = None,
@@ -2815,6 +2816,9 @@ class CodeEngineV2(BaseService):
                registry. Make sure that the secret is granted with push permissions
                towards the specified container registry namespace.
         :param str strategy_type: The strategy to use for building the image.
+        :param List[BuildParamPrototype] run_build_params: (optional) Optional
+               references to config maps and secret keys, or literal values that are
+               exposed as build arguments within the Docker file.
         :param str source_context_dir: (optional) Optional directory in the
                repository that contains the buildpacks file or the Dockerfile.
         :param str source_revision: (optional) Commit, tag, or branch in the source
@@ -2862,6 +2866,8 @@ class CodeEngineV2(BaseService):
             raise ValueError('output_secret must be provided')
         if strategy_type is None:
             raise ValueError('strategy_type must be provided')
+        if run_build_params is not None:
+            run_build_params = [convert_model(x) for x in run_build_params]
         headers = {}
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
@@ -2875,6 +2881,7 @@ class CodeEngineV2(BaseService):
             'output_image': output_image,
             'output_secret': output_secret,
             'strategy_type': strategy_type,
+            'run_build_params': run_build_params,
             'source_context_dir': source_context_dir,
             'source_revision': source_revision,
             'source_secret': source_secret,
@@ -3141,6 +3148,7 @@ class CodeEngineV2(BaseService):
         name: Optional[str] = None,
         output_image: Optional[str] = None,
         output_secret: Optional[str] = None,
+        run_build_params: Optional[List['BuildParamPrototype']] = None,
         service_account: Optional[str] = None,
         source_context_dir: Optional[str] = None,
         source_revision: Optional[str] = None,
@@ -3171,6 +3179,9 @@ class CodeEngineV2(BaseService):
         :param str output_secret: (optional) The secret that is required to access
                the image registry. Make sure that the secret is granted with push
                permissions towards the specified container registry namespace.
+        :param List[BuildParamPrototype] run_build_params: (optional) Optional
+               references to config maps and secret keys, or literal values that are
+               exposed as build arguments within the Docker file.
         :param str service_account: (optional) Optional service account, which is
                used for resource control.” or “Optional service account that is used for
                resource control.
@@ -3215,6 +3226,8 @@ class CodeEngineV2(BaseService):
 
         if not project_id:
             raise ValueError('project_id must be provided')
+        if run_build_params is not None:
+            run_build_params = [convert_model(x) for x in run_build_params]
         headers = {}
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
@@ -3228,6 +3241,7 @@ class CodeEngineV2(BaseService):
             'name': name,
             'output_image': output_image,
             'output_secret': output_secret,
+            'run_build_params': run_build_params,
             'service_account': service_account,
             'source_context_dir': source_context_dir,
             'source_revision': source_revision,
@@ -3951,6 +3965,7 @@ class CodeEngineV2(BaseService):
         self,
         project_id: str,
         *,
+        format: Optional[str] = None,
         limit: Optional[int] = None,
         start: Optional[str] = None,
         **kwargs,
@@ -3961,6 +3976,7 @@ class CodeEngineV2(BaseService):
         List all secrets in a project.
 
         :param str project_id: The ID of the project.
+        :param str format: (optional) Secret format to filter results by.
         :param int limit: (optional) Optional maximum number of secrets per page.
         :param str start: (optional) An optional token that indicates the beginning
                of the page of results to be returned. If omitted, the first page of
@@ -3982,6 +3998,7 @@ class CodeEngineV2(BaseService):
         headers.update(sdk_headers)
 
         params = {
+            'format': format,
             'limit': limit,
             'start': start,
         }
@@ -4264,6 +4281,25 @@ class CodeEngineV2(BaseService):
 
         response = self.send(request, **kwargs)
         return response
+
+
+class ListSecretsEnums:
+    """
+    Enums for list_secrets parameters.
+    """
+
+    class Format(str, Enum):
+        """
+        Secret format to filter results by.
+        """
+
+        GENERIC = 'generic'
+        SSH_AUTH = 'ssh_auth'
+        REGISTRY = 'registry'
+        BASIC_AUTH = 'basic_auth'
+        TLS = 'tls'
+        SERVICE_ACCESS = 'service_access'
+        SERVICE_OPERATOR = 'service_operator'
 
 
 ##############################################################################
@@ -5051,7 +5087,6 @@ class AppInstance:
           in. Possible values: 'au-syd', 'br-sao', 'ca-tor', 'eu-de', 'eu-gb', 'jp-osa',
           'jp-tok', 'us-east', 'us-south'.
     :param str resource_type: (optional) The type of the app instance.
-    :param int restarts: (optional) The number of restarts of the app instance.
     :param str revision_name: The name of the revision that is associated with this
           instance.
     :param str scale_cpu_limit: The number of CPU set for the instance. For valid
@@ -5071,8 +5106,8 @@ class AppInstance:
           of
           measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
     :param str status: (optional) The current status of the instance.
-    :param ContainerStatus system_container: (optional) The status of a container.
-    :param ContainerStatus user_container: (optional) The status of a container.
+    :param AppInstanceStatusDetails status_details: (optional) The status of the pod
+          and it's containers.
     """
 
     def __init__(
@@ -5090,10 +5125,8 @@ class AppInstance:
         project_id: Optional[str] = None,
         region: Optional[str] = None,
         resource_type: Optional[str] = None,
-        restarts: Optional[int] = None,
         status: Optional[str] = None,
-        system_container: Optional['ContainerStatus'] = None,
-        user_container: Optional['ContainerStatus'] = None,
+        status_details: Optional['AppInstanceStatusDetails'] = None,
     ) -> None:
         """
         Initialize a AppInstance object.
@@ -5118,10 +5151,8 @@ class AppInstance:
                and M are the shorthand expressions for GB and MB. For more information see
                [Units of
                measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
-        :param ContainerStatus system_container: (optional) The status of a
-               container.
-        :param ContainerStatus user_container: (optional) The status of a
-               container.
+        :param AppInstanceStatusDetails status_details: (optional) The status of
+               the pod and it's containers.
         """
         self.app_name = app_name
         self.created_at = created_at
@@ -5131,14 +5162,12 @@ class AppInstance:
         self.project_id = project_id
         self.region = region
         self.resource_type = resource_type
-        self.restarts = restarts
         self.revision_name = revision_name
         self.scale_cpu_limit = scale_cpu_limit
         self.scale_ephemeral_storage_limit = scale_ephemeral_storage_limit
         self.scale_memory_limit = scale_memory_limit
         self.status = status
-        self.system_container = system_container
-        self.user_container = user_container
+        self.status_details = status_details
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'AppInstance':
@@ -5162,8 +5191,6 @@ class AppInstance:
             args['region'] = region
         if (resource_type := _dict.get('resource_type')) is not None:
             args['resource_type'] = resource_type
-        if (restarts := _dict.get('restarts')) is not None:
-            args['restarts'] = restarts
         if (revision_name := _dict.get('revision_name')) is not None:
             args['revision_name'] = revision_name
         else:
@@ -5182,10 +5209,8 @@ class AppInstance:
             raise ValueError('Required property \'scale_memory_limit\' not present in AppInstance JSON')
         if (status := _dict.get('status')) is not None:
             args['status'] = status
-        if (system_container := _dict.get('system_container')) is not None:
-            args['system_container'] = ContainerStatus.from_dict(system_container)
-        if (user_container := _dict.get('user_container')) is not None:
-            args['user_container'] = ContainerStatus.from_dict(user_container)
+        if (status_details := _dict.get('status_details')) is not None:
+            args['status_details'] = AppInstanceStatusDetails.from_dict(status_details)
         return cls(**args)
 
     @classmethod
@@ -5212,8 +5237,6 @@ class AppInstance:
             _dict['region'] = getattr(self, 'region')
         if hasattr(self, 'resource_type') and getattr(self, 'resource_type') is not None:
             _dict['resource_type'] = getattr(self, 'resource_type')
-        if hasattr(self, 'restarts') and getattr(self, 'restarts') is not None:
-            _dict['restarts'] = getattr(self, 'restarts')
         if hasattr(self, 'revision_name') and self.revision_name is not None:
             _dict['revision_name'] = self.revision_name
         if hasattr(self, 'scale_cpu_limit') and self.scale_cpu_limit is not None:
@@ -5224,16 +5247,11 @@ class AppInstance:
             _dict['scale_memory_limit'] = self.scale_memory_limit
         if hasattr(self, 'status') and getattr(self, 'status') is not None:
             _dict['status'] = getattr(self, 'status')
-        if hasattr(self, 'system_container') and self.system_container is not None:
-            if isinstance(self.system_container, dict):
-                _dict['system_container'] = self.system_container
+        if hasattr(self, 'status_details') and self.status_details is not None:
+            if isinstance(self.status_details, dict):
+                _dict['status_details'] = self.status_details
             else:
-                _dict['system_container'] = self.system_container.to_dict()
-        if hasattr(self, 'user_container') and self.user_container is not None:
-            if isinstance(self.user_container, dict):
-                _dict['user_container'] = self.user_container
-            else:
-                _dict['user_container'] = self.user_container.to_dict()
+                _dict['status_details'] = self.status_details.to_dict()
         return _dict
 
     def _to_dict(self):
@@ -5370,6 +5388,87 @@ class AppInstanceList:
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'AppInstanceList') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class AppInstanceStatusDetails:
+    """
+    The status of the pod and it's containers.
+
+    :param int restarts: (optional) The number of restarts of the app instance.
+    :param ContainerStatus system_container: (optional) The status of a container.
+    :param ContainerStatus user_container: (optional) The status of a container.
+    """
+
+    def __init__(
+        self,
+        *,
+        restarts: Optional[int] = None,
+        system_container: Optional['ContainerStatus'] = None,
+        user_container: Optional['ContainerStatus'] = None,
+    ) -> None:
+        """
+        Initialize a AppInstanceStatusDetails object.
+
+        :param ContainerStatus system_container: (optional) The status of a
+               container.
+        :param ContainerStatus user_container: (optional) The status of a
+               container.
+        """
+        self.restarts = restarts
+        self.system_container = system_container
+        self.user_container = user_container
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'AppInstanceStatusDetails':
+        """Initialize a AppInstanceStatusDetails object from a json dictionary."""
+        args = {}
+        if (restarts := _dict.get('restarts')) is not None:
+            args['restarts'] = restarts
+        if (system_container := _dict.get('system_container')) is not None:
+            args['system_container'] = ContainerStatus.from_dict(system_container)
+        if (user_container := _dict.get('user_container')) is not None:
+            args['user_container'] = ContainerStatus.from_dict(user_container)
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a AppInstanceStatusDetails object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'restarts') and getattr(self, 'restarts') is not None:
+            _dict['restarts'] = getattr(self, 'restarts')
+        if hasattr(self, 'system_container') and self.system_container is not None:
+            if isinstance(self.system_container, dict):
+                _dict['system_container'] = self.system_container
+            else:
+                _dict['system_container'] = self.system_container.to_dict()
+        if hasattr(self, 'user_container') and self.user_container is not None:
+            if isinstance(self.user_container, dict):
+                _dict['user_container'] = self.user_container
+            else:
+                _dict['user_container'] = self.user_container.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this AppInstanceStatusDetails object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'AppInstanceStatusDetails') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'AppInstanceStatusDetails') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -6868,6 +6967,9 @@ class Build:
           in. Possible values: 'au-syd', 'br-sao', 'ca-tor', 'eu-de', 'eu-gb', 'jp-osa',
           'jp-tok', 'us-east', 'us-south'.
     :param str resource_type: (optional) The type of the build.
+    :param List[BuildParam] run_build_params: (optional) References to config maps
+          and secret keys, or literal values, which are defined by the build owner and are
+          exposed as build arguments in Docker files.
     :param str source_context_dir: (optional) Optional directory in the repository
           that contains the buildpacks file or the Dockerfile.
     :param str source_revision: (optional) Commit, tag, or branch in the source
@@ -6919,6 +7021,7 @@ class Build:
         project_id: Optional[str] = None,
         region: Optional[str] = None,
         resource_type: Optional[str] = None,
+        run_build_params: Optional[List['BuildParam']] = None,
         source_context_dir: Optional[str] = None,
         source_revision: Optional[str] = None,
         source_secret: Optional[str] = None,
@@ -6946,6 +7049,9 @@ class Build:
                `xlarge`, `xxlarge`.
         :param str strategy_type: The strategy to use for building the image.
         :param str name: (optional) The name of the build.
+        :param List[BuildParam] run_build_params: (optional) References to config
+               maps and secret keys, or literal values, which are defined by the build
+               owner and are exposed as build arguments in Docker files.
         :param str source_context_dir: (optional) Optional directory in the
                repository that contains the buildpacks file or the Dockerfile.
         :param str source_revision: (optional) Commit, tag, or branch in the source
@@ -6983,6 +7089,7 @@ class Build:
         self.project_id = project_id
         self.region = region
         self.resource_type = resource_type
+        self.run_build_params = run_build_params
         self.source_context_dir = source_context_dir
         self.source_revision = source_revision
         self.source_secret = source_secret
@@ -7025,6 +7132,8 @@ class Build:
             args['region'] = region
         if (resource_type := _dict.get('resource_type')) is not None:
             args['resource_type'] = resource_type
+        if (run_build_params := _dict.get('run_build_params')) is not None:
+            args['run_build_params'] = [BuildParam.from_dict(v) for v in run_build_params]
         if (source_context_dir := _dict.get('source_context_dir')) is not None:
             args['source_context_dir'] = source_context_dir
         if (source_revision := _dict.get('source_revision')) is not None:
@@ -7083,6 +7192,14 @@ class Build:
             _dict['region'] = getattr(self, 'region')
         if hasattr(self, 'resource_type') and getattr(self, 'resource_type') is not None:
             _dict['resource_type'] = getattr(self, 'resource_type')
+        if hasattr(self, 'run_build_params') and self.run_build_params is not None:
+            run_build_params_list = []
+            for v in self.run_build_params:
+                if isinstance(v, dict):
+                    run_build_params_list.append(v)
+                else:
+                    run_build_params_list.append(v.to_dict())
+            _dict['run_build_params'] = run_build_params_list
         if hasattr(self, 'source_context_dir') and self.source_context_dir is not None:
             _dict['source_context_dir'] = self.source_context_dir
         if hasattr(self, 'source_revision') and self.source_revision is not None:
@@ -7277,6 +7394,208 @@ class BuildList:
         return not self == other
 
 
+class BuildParam:
+    """
+    Response model for build params.
+
+    :param str key: (optional) The key to reference as build param.
+    :param str name: (optional) The name of the build param.
+    :param str reference: (optional) The name of the secret or config map.
+    :param str type: Specify the type of the build param.
+    :param str value: (optional) The literal value of the build param.
+    """
+
+    def __init__(
+        self,
+        type: str,
+        *,
+        key: Optional[str] = None,
+        name: Optional[str] = None,
+        reference: Optional[str] = None,
+        value: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a BuildParam object.
+
+        :param str type: Specify the type of the build param.
+        :param str key: (optional) The key to reference as build param.
+        :param str name: (optional) The name of the build param.
+        :param str reference: (optional) The name of the secret or config map.
+        :param str value: (optional) The literal value of the build param.
+        """
+        self.key = key
+        self.name = name
+        self.reference = reference
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BuildParam':
+        """Initialize a BuildParam object from a json dictionary."""
+        args = {}
+        if (key := _dict.get('key')) is not None:
+            args['key'] = key
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        if (reference := _dict.get('reference')) is not None:
+            args['reference'] = reference
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        else:
+            raise ValueError('Required property \'type\' not present in BuildParam JSON')
+        if (value := _dict.get('value')) is not None:
+            args['value'] = value
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BuildParam object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'key') and self.key is not None:
+            _dict['key'] = self.key
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'reference') and self.reference is not None:
+            _dict['reference'] = self.reference
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BuildParam object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BuildParam') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BuildParam') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        Specify the type of the build param.
+        """
+
+        LITERAL = 'literal'
+        CONFIG_MAP_KEY_REFERENCE = 'config_map_key_reference'
+        SECRET_KEY_REFERENCE = 'secret_key_reference'
+
+
+class BuildParamPrototype:
+    """
+    Prototype model for build params.
+
+    :param str key: (optional) The key to reference as build param.
+    :param str name: (optional) The name of the build param.
+    :param str reference: (optional) The name of the secret or config map.
+    :param str type: Specify the type of the build param.
+    :param str value: (optional) The literal value of the build param.
+    """
+
+    def __init__(
+        self,
+        type: str,
+        *,
+        key: Optional[str] = None,
+        name: Optional[str] = None,
+        reference: Optional[str] = None,
+        value: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a BuildParamPrototype object.
+
+        :param str type: Specify the type of the build param.
+        :param str key: (optional) The key to reference as build param.
+        :param str name: (optional) The name of the build param.
+        :param str reference: (optional) The name of the secret or config map.
+        :param str value: (optional) The literal value of the build param.
+        """
+        self.key = key
+        self.name = name
+        self.reference = reference
+        self.type = type
+        self.value = value
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'BuildParamPrototype':
+        """Initialize a BuildParamPrototype object from a json dictionary."""
+        args = {}
+        if (key := _dict.get('key')) is not None:
+            args['key'] = key
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        if (reference := _dict.get('reference')) is not None:
+            args['reference'] = reference
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        else:
+            raise ValueError('Required property \'type\' not present in BuildParamPrototype JSON')
+        if (value := _dict.get('value')) is not None:
+            args['value'] = value
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a BuildParamPrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'key') and self.key is not None:
+            _dict['key'] = self.key
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'reference') and self.reference is not None:
+            _dict['reference'] = self.reference
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'value') and self.value is not None:
+            _dict['value'] = self.value
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this BuildParamPrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'BuildParamPrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'BuildParamPrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        Specify the type of the build param.
+        """
+
+        LITERAL = 'literal'
+        CONFIG_MAP_KEY_REFERENCE = 'config_map_key_reference'
+        SECRET_KEY_REFERENCE = 'secret_key_reference'
+
+
 class BuildPatch:
     """
     Patch a build object.
@@ -7285,6 +7604,9 @@ class BuildPatch:
     :param str output_secret: (optional) The secret that is required to access the
           image registry. Make sure that the secret is granted with push permissions
           towards the specified container registry namespace.
+    :param List[BuildParamPrototype] run_build_params: (optional) Optional
+          references to config maps and secret keys, or literal values that are exposed as
+          build arguments within the Docker file.
     :param str source_context_dir: (optional) Optional directory in the repository
           that contains the buildpacks file or the Dockerfile.
     :param str source_revision: (optional) Commit, tag, or branch in the source
@@ -7323,6 +7645,7 @@ class BuildPatch:
         *,
         output_image: Optional[str] = None,
         output_secret: Optional[str] = None,
+        run_build_params: Optional[List['BuildParamPrototype']] = None,
         source_context_dir: Optional[str] = None,
         source_revision: Optional[str] = None,
         source_secret: Optional[str] = None,
@@ -7340,6 +7663,9 @@ class BuildPatch:
         :param str output_secret: (optional) The secret that is required to access
                the image registry. Make sure that the secret is granted with push
                permissions towards the specified container registry namespace.
+        :param List[BuildParamPrototype] run_build_params: (optional) Optional
+               references to config maps and secret keys, or literal values that are
+               exposed as build arguments within the Docker file.
         :param str source_context_dir: (optional) Optional directory in the
                repository that contains the buildpacks file or the Dockerfile.
         :param str source_revision: (optional) Commit, tag, or branch in the source
@@ -7377,6 +7703,7 @@ class BuildPatch:
         """
         self.output_image = output_image
         self.output_secret = output_secret
+        self.run_build_params = run_build_params
         self.source_context_dir = source_context_dir
         self.source_revision = source_revision
         self.source_secret = source_secret
@@ -7395,6 +7722,8 @@ class BuildPatch:
             args['output_image'] = output_image
         if (output_secret := _dict.get('output_secret')) is not None:
             args['output_secret'] = output_secret
+        if (run_build_params := _dict.get('run_build_params')) is not None:
+            args['run_build_params'] = [BuildParamPrototype.from_dict(v) for v in run_build_params]
         if (source_context_dir := _dict.get('source_context_dir')) is not None:
             args['source_context_dir'] = source_context_dir
         if (source_revision := _dict.get('source_revision')) is not None:
@@ -7427,6 +7756,14 @@ class BuildPatch:
             _dict['output_image'] = self.output_image
         if hasattr(self, 'output_secret') and self.output_secret is not None:
             _dict['output_secret'] = self.output_secret
+        if hasattr(self, 'run_build_params') and self.run_build_params is not None:
+            run_build_params_list = []
+            for v in self.run_build_params:
+                if isinstance(v, dict):
+                    run_build_params_list.append(v)
+                else:
+                    run_build_params_list.append(v.to_dict())
+            _dict['run_build_params'] = run_build_params_list
         if hasattr(self, 'source_context_dir') and self.source_context_dir is not None:
             _dict['source_context_dir'] = self.source_context_dir
         if hasattr(self, 'source_revision') and self.source_revision is not None:
@@ -7521,6 +7858,9 @@ class BuildRun:
           in. Possible values: 'au-syd', 'br-sao', 'ca-tor', 'eu-de', 'eu-gb', 'jp-osa',
           'jp-tok', 'us-east', 'us-south'.
     :param str resource_type: (optional) The type of the build run.
+    :param List[BuildParam] run_build_params: (optional) References to config maps
+          and secret keys, or literal values, which are defined by the build owner and are
+          exposed as build arguments in Docker files.
     :param str service_account: (optional) Optional service account, which is used
           for resource control.” or “Optional service account that is used for resource
           control.
@@ -7573,6 +7913,7 @@ class BuildRun:
         project_id: Optional[str] = None,
         region: Optional[str] = None,
         resource_type: Optional[str] = None,
+        run_build_params: Optional[List['BuildParam']] = None,
         service_account: Optional[str] = None,
         source_context_dir: Optional[str] = None,
         source_revision: Optional[str] = None,
@@ -7599,6 +7940,9 @@ class BuildRun:
         :param str output_secret: (optional) The secret that is required to access
                the image registry. Make sure that the secret is granted with push
                permissions towards the specified container registry namespace.
+        :param List[BuildParam] run_build_params: (optional) References to config
+               maps and secret keys, or literal values, which are defined by the build
+               owner and are exposed as build arguments in Docker files.
         :param str service_account: (optional) Optional service account, which is
                used for resource control.” or “Optional service account that is used for
                resource control.
@@ -7649,6 +7993,7 @@ class BuildRun:
         self.project_id = project_id
         self.region = region
         self.resource_type = resource_type
+        self.run_build_params = run_build_params
         self.service_account = service_account
         self.source_context_dir = source_context_dir
         self.source_revision = source_revision
@@ -7690,6 +8035,8 @@ class BuildRun:
             args['region'] = region
         if (resource_type := _dict.get('resource_type')) is not None:
             args['resource_type'] = resource_type
+        if (run_build_params := _dict.get('run_build_params')) is not None:
+            args['run_build_params'] = [BuildParam.from_dict(v) for v in run_build_params]
         if (service_account := _dict.get('service_account')) is not None:
             args['service_account'] = service_account
         if (source_context_dir := _dict.get('source_context_dir')) is not None:
@@ -7744,6 +8091,14 @@ class BuildRun:
             _dict['region'] = getattr(self, 'region')
         if hasattr(self, 'resource_type') and getattr(self, 'resource_type') is not None:
             _dict['resource_type'] = getattr(self, 'resource_type')
+        if hasattr(self, 'run_build_params') and self.run_build_params is not None:
+            run_build_params_list = []
+            for v in self.run_build_params:
+                if isinstance(v, dict):
+                    run_build_params_list.append(v)
+                else:
+                    run_build_params_list.append(v.to_dict())
+            _dict['run_build_params'] = run_build_params_list
         if hasattr(self, 'service_account') and self.service_account is not None:
             _dict['service_account'] = self.service_account
         if hasattr(self, 'source_context_dir') and self.source_context_dir is not None:
@@ -8631,29 +8986,14 @@ class ContainerStatusDetails:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-    class ReasonEnum(str, Enum):
+    class ContainerStatusEnum(str, Enum):
         """
-        The reason the container is not yet running or has failed. Only populated in
-        non-running states.
+        The status of the container.
         """
 
-        READY = 'ready'
-        WAITING = 'waiting'
-        DEPLOYING = 'deploying'
-        DEPLOYING_WAITING_FOR_RESOURCES = 'deploying_waiting_for_resources'
-        INITIAL_SCALE_NEVER_ACHIEVED = 'initial_scale_never_achieved'
-        FETCH_IMAGE_FAILED_UNKNOWN_MANIFEST = 'fetch_image_failed_unknown_manifest'
-        FETCH_IMAGE_FAILED_UNKNOWN_REPOSITORY = 'fetch_image_failed_unknown_repository'
-        FETCH_IMAGE_FAILED_REGISTRY_NOT_FOUND = 'fetch_image_failed_registry_not_found'
-        FETCH_IMAGE_FAILED_MISSING_PULL_SECRET = 'fetch_image_failed_missing_pull_secret'
-        FETCH_IMAGE_FAILED_WRONG_PULL_CREDENTIALS = 'fetch_image_failed_wrong_pull_credentials'
-        FETCH_IMAGE_FAILED_MISSING_PULL_CREDENTIALS = 'fetch_image_failed_missing_pull_credentials'
-        CONTAINER_FAILED_EXIT_CODE_0 = 'container_failed_exit_code_0'
-        CONTAINER_FAILED_EXIT_CODE_1 = 'container_failed_exit_code_1'
-        CONTAINER_FAILED_EXIT_CODE_139 = 'container_failed_exit_code_139'
-        CONTAINER_FAILED_EXIT_CODE_24 = 'container_failed_exit_code_24'
-        IMAGE_PULL_BACK_OFF = 'image_pull_back_off'
-        INVALID_TAR_HEADER_IMAGE_PULL_ERR = 'invalid_tar_header_image_pull_err'
+        RUNNING = 'running'
+        PENDING = 'pending'
+        TERMINATED = 'terminated'
 
 
 class DomainMapping:
@@ -14485,7 +14825,7 @@ class SecretDataBasicAuthSecretData(SecretData):
                     raise ValueError('Value for additional property {} must be of type str'.format(k))
                 setattr(self, k, v)
             else:
-                raise ValueError('Property {} cannot be specified as an additional property'.format(_key))
+                raise ValueError('Property {} cannot be specified as an additional property'.format(k))
 
     def __str__(self) -> str:
         """Return a `str` version of this SecretDataBasicAuthSecretData object."""
@@ -14697,7 +15037,7 @@ class SecretDataRegistrySecretData(SecretData):
                     raise ValueError('Value for additional property {} must be of type str'.format(k))
                 setattr(self, k, v)
             else:
-                raise ValueError('Property {} cannot be specified as an additional property'.format(_key))
+                raise ValueError('Property {} cannot be specified as an additional property'.format(k))
 
     def __str__(self) -> str:
         """Return a `str` version of this SecretDataRegistrySecretData object."""
@@ -14806,7 +15146,7 @@ class SecretDataSSHSecretData(SecretData):
                     raise ValueError('Value for additional property {} must be of type str'.format(k))
                 setattr(self, k, v)
             else:
-                raise ValueError('Property {} cannot be specified as an additional property'.format(_key))
+                raise ValueError('Property {} cannot be specified as an additional property'.format(k))
 
     def __str__(self) -> str:
         """Return a `str` version of this SecretDataSSHSecretData object."""
@@ -14916,7 +15256,7 @@ class SecretDataTLSSecretData(SecretData):
                     raise ValueError('Value for additional property {} must be of type str'.format(k))
                 setattr(self, k, v)
             else:
-                raise ValueError('Property {} cannot be specified as an additional property'.format(_key))
+                raise ValueError('Property {} cannot be specified as an additional property'.format(k))
 
     def __str__(self) -> str:
         """Return a `str` version of this SecretDataTLSSecretData object."""
@@ -15850,17 +16190,20 @@ class SecretsPager:
         *,
         client: CodeEngineV2,
         project_id: str,
+        format: str = None,
         limit: int = None,
     ) -> None:
         """
         Initialize a SecretsPager object.
         :param str project_id: The ID of the project.
+        :param str format: (optional) Secret format to filter results by.
         :param int limit: (optional) Optional maximum number of secrets per page.
         """
         self._has_next = True
         self._client = client
         self._page_context = {'next': None}
         self._project_id = project_id
+        self._format = format
         self._limit = limit
 
     def has_next(self) -> bool:
@@ -15880,6 +16223,7 @@ class SecretsPager:
 
         result = self._client.list_secrets(
             project_id=self._project_id,
+            format=self._format,
             limit=self._limit,
             start=self._page_context.get('next'),
         ).get_result()

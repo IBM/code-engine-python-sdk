@@ -19,7 +19,7 @@ import os
 import sys
 import pkg_resources
 
-__version__ = '4.9.0'
+__version__ = '4.14.1'
 PACKAGE_NAME = 'ibm_code_engine_sdk'
 PACKAGE_DESC = 'Python SDK for IBM Cloud Code Engine'
 
@@ -63,6 +63,7 @@ setup(
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',

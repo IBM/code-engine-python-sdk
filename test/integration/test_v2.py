@@ -624,9 +624,16 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_create_build(self):
+        build_param_prototype_model = {
+            'name': 'SOME',
+            'type': 'literal',
+            'value': 'VALUE',
+        }
+
         response = self.code_engine_service.create_build(
             project_id=pytest.e2e_test_project_id,
             name='my-build',
+            run_build_params=[build_param_prototype_model],
             output_image='private.de.icr.io/icr_namespace/image-name',
             output_secret='ce-auto-icr-private-eu-de',
             source_url='https://github.com/IBM/CodeEngine',
@@ -657,8 +664,15 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_update_build(self):
+        build_param_prototype_model = {
+            'name': 'ANOTHER',
+            'type': 'literal',
+            'value': 'ANOTHER_VALUE',
+        }
+
         # Construct a dict representation of a BuildPatch model
         build_patch_model = {
+            'run_build_params': [build_param_prototype_model],
             'output_image': 'private.de.icr.io/icr_namespace/image-name',
             'output_secret': 'ce-auto-icr-private-eu-de',
             'source_context_dir': 'some/subfolder',
@@ -726,10 +740,17 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_create_build_run(self):
+        build_param_prototype_model = {
+            'name': 'SOME',
+            'type': 'literal',
+            'value': 'VALUE',
+        }
+
         response = self.code_engine_service.create_build_run(
             project_id=pytest.e2e_test_project_id,
             build_name='my-build',
             name='my-build-run',
+            run_build_params=[build_param_prototype_model],
             output_image='private.de.icr.io/icr_namespace/image-name',
             output_secret='ce-auto-icr-private-eu-de',
             service_account='default',

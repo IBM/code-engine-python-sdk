@@ -22,7 +22,7 @@ import os
 import pytest
 from ibm_code_engine_sdk.code_engine_v2 import *
 
-version = '2025-01-10'
+version = '2025-02-20'
 
 #
 # This file provides an example of how to use the Code Engine service.
@@ -1247,6 +1247,7 @@ class TestCodeEngineV2Examples:
             pager = SecretsPager(
                 client=code_engine_service,
                 project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                format='ssh_auth',
                 limit=100,
             )
             while pager.has_next():

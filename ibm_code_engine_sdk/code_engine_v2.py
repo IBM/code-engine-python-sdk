@@ -56,7 +56,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2025-02-20`.
+               `2025-03-29`.
         """
         authenticator = get_authenticator_from_environment(service_name)
         service = cls(
@@ -80,7 +80,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2025-02-20`.
+               `2025-03-29`.
         """
         BaseService.__init__(self, service_url=self.DEFAULT_SERVICE_URL, authenticator=authenticator)
         self.version = version
@@ -121,6 +121,7 @@ class CodeEngineV2(BaseService):
         headers.update(sdk_headers)
 
         params = {
+            'version': self.version,
             'limit': limit,
             'start': start,
         }
@@ -179,6 +180,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         data = {
             'name': name,
             'resource_group_id': resource_group_id,
@@ -198,6 +203,7 @@ class CodeEngineV2(BaseService):
             method='POST',
             url=url,
             headers=headers,
+            params=params,
             data=data,
         )
 
@@ -230,6 +236,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -243,6 +253,7 @@ class CodeEngineV2(BaseService):
             method='GET',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -274,6 +285,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -286,6 +301,7 @@ class CodeEngineV2(BaseService):
             method='DELETE',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -618,6 +634,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -631,6 +651,7 @@ class CodeEngineV2(BaseService):
             method='GET',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -662,6 +683,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -675,6 +700,7 @@ class CodeEngineV2(BaseService):
             method='GET',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -757,6 +783,7 @@ class CodeEngineV2(BaseService):
         run_arguments: Optional[List[str]] = None,
         run_as_user: Optional[int] = None,
         run_commands: Optional[List[str]] = None,
+        run_compute_resource_token_enabled: Optional[bool] = None,
         run_env_variables: Optional[List['EnvVarPrototype']] = None,
         run_service_account: Optional[str] = None,
         run_volume_mounts: Optional[List['VolumeMountPrototype']] = None,
@@ -811,6 +838,9 @@ class CodeEngineV2(BaseService):
                that are passed to start the container. If not specified an empty string
                array will be applied and the command specified by the container image,
                will be used to start the container.
+        :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+               enable the use of a compute resource token mounted to the container file
+               system.
         :param List[EnvVarPrototype] run_env_variables: (optional) Optional
                references to config maps, secrets or literal values that are exposed as
                environment variables within the running application.
@@ -899,6 +929,7 @@ class CodeEngineV2(BaseService):
             'run_arguments': run_arguments,
             'run_as_user': run_as_user,
             'run_commands': run_commands,
+            'run_compute_resource_token_enabled': run_compute_resource_token_enabled,
             'run_env_variables': run_env_variables,
             'run_service_account': run_service_account,
             'run_volume_mounts': run_volume_mounts,
@@ -994,6 +1025,8 @@ class CodeEngineV2(BaseService):
         self,
         project_id: str,
         name: str,
+        *,
+        keep_service_access: Optional[bool] = None,
         **kwargs,
     ) -> DetailedResponse:
         """
@@ -1003,6 +1036,8 @@ class CodeEngineV2(BaseService):
 
         :param str project_id: The ID of the project.
         :param str name: The name of your application.
+        :param bool keep_service_access: (optional) Determines if connected service
+               access secrets remain intact after app deletion.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse
@@ -1022,6 +1057,7 @@ class CodeEngineV2(BaseService):
 
         params = {
             'version': self.version,
+            'keep_service_access': keep_service_access,
         }
 
         if 'headers' in kwargs:
@@ -1272,6 +1308,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -1284,6 +1324,7 @@ class CodeEngineV2(BaseService):
             method='DELETE',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -1330,6 +1371,7 @@ class CodeEngineV2(BaseService):
         params = {
             'limit': limit,
             'start': start,
+            'version': self.version,
         }
 
         if 'headers' in kwargs:
@@ -1424,6 +1466,7 @@ class CodeEngineV2(BaseService):
         run_arguments: Optional[List[str]] = None,
         run_as_user: Optional[int] = None,
         run_commands: Optional[List[str]] = None,
+        run_compute_resource_token_enabled: Optional[bool] = None,
         run_env_variables: Optional[List['EnvVarPrototype']] = None,
         run_mode: Optional[str] = None,
         run_service_account: Optional[str] = None,
@@ -1466,6 +1509,9 @@ class CodeEngineV2(BaseService):
                passed to start job run containers. If not specified an empty string array
                will be applied and the command specified by the container image, will be
                used to start the container.
+        :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+               enable the use of a compute resource token mounted to the container file
+               system.
         :param List[EnvVarPrototype] run_env_variables: (optional) Optional
                references to config maps, secrets or literal values.
         :param str run_mode: (optional) The mode for runs of the job. Valid values
@@ -1542,6 +1588,7 @@ class CodeEngineV2(BaseService):
             'run_arguments': run_arguments,
             'run_as_user': run_as_user,
             'run_commands': run_commands,
+            'run_compute_resource_token_enabled': run_compute_resource_token_enabled,
             'run_env_variables': run_env_variables,
             'run_mode': run_mode,
             'run_service_account': run_service_account,
@@ -1634,6 +1681,8 @@ class CodeEngineV2(BaseService):
         self,
         project_id: str,
         name: str,
+        *,
+        keep_service_access: Optional[bool] = None,
         **kwargs,
     ) -> DetailedResponse:
         """
@@ -1643,6 +1692,8 @@ class CodeEngineV2(BaseService):
 
         :param str project_id: The ID of the project.
         :param str name: The name of your job.
+        :param bool keep_service_access: (optional) Determines if connected service
+               access secrets remain intact after job deletion.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse
@@ -1662,6 +1713,7 @@ class CodeEngineV2(BaseService):
 
         params = {
             'version': self.version,
+            'keep_service_access': keep_service_access,
         }
 
         if 'headers' in kwargs:
@@ -1829,6 +1881,7 @@ class CodeEngineV2(BaseService):
         run_arguments: Optional[List[str]] = None,
         run_as_user: Optional[int] = None,
         run_commands: Optional[List[str]] = None,
+        run_compute_resource_token_enabled: Optional[bool] = None,
         run_env_variables: Optional[List['EnvVarPrototype']] = None,
         run_mode: Optional[str] = None,
         run_service_account: Optional[str] = None,
@@ -1875,6 +1928,9 @@ class CodeEngineV2(BaseService):
                passed to start job run containers. If not specified an empty string array
                will be applied and the command specified by the container image, will be
                used to start the container.
+        :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+               enable the use of a compute resource token mounted to the container file
+               system.
         :param List[EnvVarPrototype] run_env_variables: (optional) Optional
                references to config maps, secrets or literal values.
         :param str run_mode: (optional) The mode for runs of the job. Valid values
@@ -1950,6 +2006,7 @@ class CodeEngineV2(BaseService):
             'run_arguments': run_arguments,
             'run_as_user': run_as_user,
             'run_commands': run_commands,
+            'run_compute_resource_token_enabled': run_compute_resource_token_enabled,
             'run_env_variables': run_env_variables,
             'run_mode': run_mode,
             'run_service_account': run_service_account,
@@ -2069,6 +2126,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -2081,6 +2142,7 @@ class CodeEngineV2(BaseService):
             method='DELETE',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -2197,6 +2259,7 @@ class CodeEngineV2(BaseService):
         code_main: Optional[str] = None,
         code_secret: Optional[str] = None,
         managed_domain_mappings: Optional[str] = None,
+        run_compute_resource_token_enabled: Optional[bool] = None,
         run_env_variables: Optional[List['EnvVarPrototype']] = None,
         scale_concurrency: Optional[int] = None,
         scale_cpu_limit: Optional[str] = None,
@@ -2231,6 +2294,9 @@ class CodeEngineV2(BaseService):
                Valid values are 'local_public', 'local_private' and 'local'. Visibility
                can only be 'local_private' if the project supports function private
                visibility.
+        :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+               enable the use of a compute resource token mounted to the container file
+               system.
         :param List[EnvVarPrototype] run_env_variables: (optional) Optional
                references to config maps, secrets or literal values.
         :param int scale_concurrency: (optional) Number of parallel requests
@@ -2285,6 +2351,7 @@ class CodeEngineV2(BaseService):
             'code_main': code_main,
             'code_secret': code_secret,
             'managed_domain_mappings': managed_domain_mappings,
+            'run_compute_resource_token_enabled': run_compute_resource_token_enabled,
             'run_env_variables': run_env_variables,
             'scale_concurrency': scale_concurrency,
             'scale_cpu_limit': scale_cpu_limit,
@@ -2373,6 +2440,8 @@ class CodeEngineV2(BaseService):
         self,
         project_id: str,
         name: str,
+        *,
+        keep_service_access: Optional[bool] = None,
         **kwargs,
     ) -> DetailedResponse:
         """
@@ -2382,6 +2451,8 @@ class CodeEngineV2(BaseService):
 
         :param str project_id: The ID of the project.
         :param str name: The name of your function.
+        :param bool keep_service_access: (optional) Determines if connected service
+               access secrets remain intact after function deletion.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse
@@ -2401,6 +2472,7 @@ class CodeEngineV2(BaseService):
 
         params = {
             'version': self.version,
+            'keep_service_access': keep_service_access,
         }
 
         if 'headers' in kwargs:
@@ -2533,6 +2605,7 @@ class CodeEngineV2(BaseService):
         headers.update(sdk_headers)
 
         params = {
+            'version': self.version,
             'limit': limit,
             'start': start,
         }
@@ -2599,6 +2672,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         data = {
             'component': component,
             'prefix': prefix,
@@ -2621,6 +2698,7 @@ class CodeEngineV2(BaseService):
             method='POST',
             url=url,
             headers=headers,
+            params=params,
             data=data,
         )
 
@@ -2657,6 +2735,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -2670,6 +2752,7 @@ class CodeEngineV2(BaseService):
             method='GET',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -2705,6 +2788,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -2717,6 +2804,7 @@ class CodeEngineV2(BaseService):
             method='DELETE',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -2761,6 +2849,7 @@ class CodeEngineV2(BaseService):
         headers.update(sdk_headers)
 
         params = {
+            'version': self.version,
             'limit': limit,
             'start': start,
         }
@@ -2876,6 +2965,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         data = {
             'name': name,
             'output_image': output_image,
@@ -2908,6 +3001,7 @@ class CodeEngineV2(BaseService):
             method='POST',
             url=url,
             headers=headers,
+            params=params,
             data=data,
         )
 
@@ -2944,6 +3038,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -2957,6 +3055,7 @@ class CodeEngineV2(BaseService):
             method='GET',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -2992,6 +3091,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -3004,6 +3107,7 @@ class CodeEngineV2(BaseService):
             method='DELETE',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -3055,6 +3159,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         data = json.dumps(build)
         headers['content-type'] = 'application/merge-patch+json'
 
@@ -3071,6 +3179,7 @@ class CodeEngineV2(BaseService):
             method='PATCH',
             url=url,
             headers=headers,
+            params=params,
             data=data,
         )
 
@@ -3116,6 +3225,7 @@ class CodeEngineV2(BaseService):
         headers.update(sdk_headers)
 
         params = {
+            'version': self.version,
             'build_name': build_name,
             'limit': limit,
             'start': start,
@@ -3236,6 +3346,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         data = {
             'build_name': build_name,
             'name': name,
@@ -3270,6 +3384,7 @@ class CodeEngineV2(BaseService):
             method='POST',
             url=url,
             headers=headers,
+            params=params,
             data=data,
         )
 
@@ -3306,6 +3421,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -3319,6 +3438,7 @@ class CodeEngineV2(BaseService):
             method='GET',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -3354,6 +3474,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -3366,6 +3490,7 @@ class CodeEngineV2(BaseService):
             method='DELETE',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -3411,6 +3536,7 @@ class CodeEngineV2(BaseService):
         headers.update(sdk_headers)
 
         params = {
+            'version': self.version,
             'limit': limit,
             'start': start,
         }
@@ -3474,6 +3600,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         data = {
             'component': component,
             'name': name,
@@ -3496,6 +3626,7 @@ class CodeEngineV2(BaseService):
             method='POST',
             url=url,
             headers=headers,
+            params=params,
             data=data,
         )
 
@@ -3532,6 +3663,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -3545,6 +3680,7 @@ class CodeEngineV2(BaseService):
             method='GET',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -3580,6 +3716,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -3592,6 +3732,7 @@ class CodeEngineV2(BaseService):
             method='DELETE',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -3643,6 +3784,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         data = json.dumps(domain_mapping)
         headers['content-type'] = 'application/merge-patch+json'
 
@@ -3659,6 +3804,7 @@ class CodeEngineV2(BaseService):
             method='PATCH',
             url=url,
             headers=headers,
+            params=params,
             data=data,
         )
 
@@ -3705,6 +3851,7 @@ class CodeEngineV2(BaseService):
         headers.update(sdk_headers)
 
         params = {
+            'version': self.version,
             'limit': limit,
             'start': start,
         }
@@ -3766,6 +3913,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         data = {
             'name': name,
             'data': data,
@@ -3787,6 +3938,7 @@ class CodeEngineV2(BaseService):
             method='POST',
             url=url,
             headers=headers,
+            params=params,
             data=data,
         )
 
@@ -3823,6 +3975,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -3836,6 +3992,7 @@ class CodeEngineV2(BaseService):
             method='GET',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -3888,6 +4045,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         data = {
             'data': data,
         }
@@ -3908,6 +4069,7 @@ class CodeEngineV2(BaseService):
             method='PUT',
             url=url,
             headers=headers,
+            params=params,
             data=data,
         )
 
@@ -3944,6 +4106,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -3956,6 +4122,7 @@ class CodeEngineV2(BaseService):
             method='DELETE',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -3998,6 +4165,7 @@ class CodeEngineV2(BaseService):
         headers.update(sdk_headers)
 
         params = {
+            'version': self.version,
             'format': format,
             'limit': limit,
             'start': start,
@@ -4076,6 +4244,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         data = {
             'format': format,
             'name': name,
@@ -4100,6 +4272,7 @@ class CodeEngineV2(BaseService):
             method='POST',
             url=url,
             headers=headers,
+            params=params,
             data=data,
         )
 
@@ -4136,6 +4309,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -4149,6 +4326,7 @@ class CodeEngineV2(BaseService):
             method='GET',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -4208,6 +4386,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         data = {
             'format': format,
             'data': data,
@@ -4229,6 +4411,7 @@ class CodeEngineV2(BaseService):
             method='PUT',
             url=url,
             headers=headers,
+            params=params,
             data=data,
         )
 
@@ -4265,6 +4448,10 @@ class CodeEngineV2(BaseService):
         )
         headers.update(sdk_headers)
 
+        params = {
+            'version': self.version,
+        }
+
         if 'headers' in kwargs:
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
@@ -4277,6 +4464,7 @@ class CodeEngineV2(BaseService):
             method='DELETE',
             url=url,
             headers=headers,
+            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -4297,6 +4485,7 @@ class ListSecretsEnums:
         SSH_AUTH = 'ssh_auth'
         REGISTRY = 'registry'
         BASIC_AUTH = 'basic_auth'
+        HMAC_AUTH = 'hmac_auth'
         TLS = 'tls'
         SERVICE_ACCESS = 'service_access'
         SERVICE_OPERATOR = 'service_operator'
@@ -4575,6 +4764,8 @@ class App:
           start the container. If not specified an empty string array will be applied and
           the command specified by the container image, will be used to start the
           container.
+    :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+          enable the use of a compute resource token mounted to the container file system.
     :param List[EnvVar] run_env_variables: References to config maps, secrets or
           literal values, which are defined by the app owner and are exposed as
           environment variables in the application.
@@ -4657,6 +4848,7 @@ class App:
         region: Optional[str] = None,
         resource_type: Optional[str] = None,
         run_as_user: Optional[int] = None,
+        run_compute_resource_token_enabled: Optional[bool] = None,
         run_service_account: Optional[str] = None,
         scale_concurrency: Optional[int] = None,
         scale_concurrency_target: Optional[int] = None,
@@ -4736,6 +4928,9 @@ class App:
         :param Probe probe_liveness: (optional) Response model for probes.
         :param Probe probe_readiness: (optional) Response model for probes.
         :param int run_as_user: (optional) Optional user ID (UID) to run the app.
+        :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+               enable the use of a compute resource token mounted to the container file
+               system.
         :param str run_service_account: (optional) Optional name of the service
                account. For built-in service accounts, you can use the shortened names
                `manager` , `none`, `reader`, and `writer`.
@@ -4775,6 +4970,7 @@ class App:
         self.run_arguments = run_arguments
         self.run_as_user = run_as_user
         self.run_commands = run_commands
+        self.run_compute_resource_token_enabled = run_compute_resource_token_enabled
         self.run_env_variables = run_env_variables
         self.run_service_account = run_service_account
         self.run_volume_mounts = run_volume_mounts
@@ -4851,6 +5047,8 @@ class App:
             args['run_commands'] = run_commands
         else:
             raise ValueError('Required property \'run_commands\' not present in App JSON')
+        if (run_compute_resource_token_enabled := _dict.get('run_compute_resource_token_enabled')) is not None:
+            args['run_compute_resource_token_enabled'] = run_compute_resource_token_enabled
         if (run_env_variables := _dict.get('run_env_variables')) is not None:
             args['run_env_variables'] = [EnvVar.from_dict(v) for v in run_env_variables]
         else:
@@ -4963,6 +5161,8 @@ class App:
             _dict['run_as_user'] = self.run_as_user
         if hasattr(self, 'run_commands') and self.run_commands is not None:
             _dict['run_commands'] = self.run_commands
+        if hasattr(self, 'run_compute_resource_token_enabled') and self.run_compute_resource_token_enabled is not None:
+            _dict['run_compute_resource_token_enabled'] = self.run_compute_resource_token_enabled
         if hasattr(self, 'run_env_variables') and self.run_env_variables is not None:
             run_env_variables_list = []
             for v in self.run_env_variables:
@@ -5608,6 +5808,8 @@ class AppPatch:
           passed to start the container. If not specified an empty string array will be
           applied and the command specified by the container image, will be used to start
           the container.
+    :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+          enable the use of a compute resource token mounted to the container file system.
     :param List[EnvVarPrototype] run_env_variables: (optional) Optional references
           to config maps, secrets or literal values.
     :param str run_service_account: (optional) Optional name of the service account.
@@ -5668,6 +5870,7 @@ class AppPatch:
         run_arguments: Optional[List[str]] = None,
         run_as_user: Optional[int] = None,
         run_commands: Optional[List[str]] = None,
+        run_compute_resource_token_enabled: Optional[bool] = None,
         run_env_variables: Optional[List['EnvVarPrototype']] = None,
         run_service_account: Optional[str] = None,
         run_volume_mounts: Optional[List['VolumeMountPrototype']] = None,
@@ -5716,6 +5919,9 @@ class AppPatch:
                that are passed to start the container. If not specified an empty string
                array will be applied and the command specified by the container image,
                will be used to start the container.
+        :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+               enable the use of a compute resource token mounted to the container file
+               system.
         :param List[EnvVarPrototype] run_env_variables: (optional) Optional
                references to config maps, secrets or literal values.
         :param str run_service_account: (optional) Optional name of the service
@@ -5772,6 +5978,7 @@ class AppPatch:
         self.run_arguments = run_arguments
         self.run_as_user = run_as_user
         self.run_commands = run_commands
+        self.run_compute_resource_token_enabled = run_compute_resource_token_enabled
         self.run_env_variables = run_env_variables
         self.run_service_account = run_service_account
         self.run_volume_mounts = run_volume_mounts
@@ -5808,6 +6015,8 @@ class AppPatch:
             args['run_as_user'] = run_as_user
         if (run_commands := _dict.get('run_commands')) is not None:
             args['run_commands'] = run_commands
+        if (run_compute_resource_token_enabled := _dict.get('run_compute_resource_token_enabled')) is not None:
+            args['run_compute_resource_token_enabled'] = run_compute_resource_token_enabled
         if (run_env_variables := _dict.get('run_env_variables')) is not None:
             args['run_env_variables'] = [EnvVarPrototype.from_dict(v) for v in run_env_variables]
         if (run_service_account := _dict.get('run_service_account')) is not None:
@@ -5868,6 +6077,8 @@ class AppPatch:
             _dict['run_as_user'] = self.run_as_user
         if hasattr(self, 'run_commands') and self.run_commands is not None:
             _dict['run_commands'] = self.run_commands
+        if hasattr(self, 'run_compute_resource_token_enabled') and self.run_compute_resource_token_enabled is not None:
+            _dict['run_compute_resource_token_enabled'] = self.run_compute_resource_token_enabled
         if hasattr(self, 'run_env_variables') and self.run_env_variables is not None:
             run_env_variables_list = []
             for v in self.run_env_variables:
@@ -5995,6 +6206,8 @@ class AppRevision:
           start the container. If not specified an empty string array will be applied and
           the command specified by the container image, will be used to start the
           container.
+    :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+          enable the use of a compute resource token mounted to the container file system.
     :param List[EnvVar] run_env_variables: References to config maps, secrets or
           literal values, which are defined by the app owner and are exposed as
           environment variables in the application.
@@ -6072,6 +6285,7 @@ class AppRevision:
         region: Optional[str] = None,
         resource_type: Optional[str] = None,
         run_as_user: Optional[int] = None,
+        run_compute_resource_token_enabled: Optional[bool] = None,
         run_service_account: Optional[str] = None,
         scale_concurrency: Optional[int] = None,
         scale_concurrency_target: Optional[int] = None,
@@ -6145,6 +6359,9 @@ class AppRevision:
         :param Probe probe_liveness: (optional) Response model for probes.
         :param Probe probe_readiness: (optional) Response model for probes.
         :param int run_as_user: (optional) Optional user ID (UID) to run the app.
+        :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+               enable the use of a compute resource token mounted to the container file
+               system.
         :param str run_service_account: (optional) Optional name of the service
                account. For built-in service accounts, you can use the shortened names
                `manager` , `none`, `reader`, and `writer`.
@@ -6179,6 +6396,7 @@ class AppRevision:
         self.run_arguments = run_arguments
         self.run_as_user = run_as_user
         self.run_commands = run_commands
+        self.run_compute_resource_token_enabled = run_compute_resource_token_enabled
         self.run_env_variables = run_env_variables
         self.run_service_account = run_service_account
         self.run_volume_mounts = run_volume_mounts
@@ -6239,6 +6457,8 @@ class AppRevision:
             args['run_commands'] = run_commands
         else:
             raise ValueError('Required property \'run_commands\' not present in AppRevision JSON')
+        if (run_compute_resource_token_enabled := _dict.get('run_compute_resource_token_enabled')) is not None:
+            args['run_compute_resource_token_enabled'] = run_compute_resource_token_enabled
         if (run_env_variables := _dict.get('run_env_variables')) is not None:
             args['run_env_variables'] = [EnvVar.from_dict(v) for v in run_env_variables]
         else:
@@ -6341,6 +6561,8 @@ class AppRevision:
             _dict['run_as_user'] = self.run_as_user
         if hasattr(self, 'run_commands') and self.run_commands is not None:
             _dict['run_commands'] = self.run_commands
+        if hasattr(self, 'run_compute_resource_token_enabled') and self.run_compute_resource_token_enabled is not None:
+            _dict['run_compute_resource_token_enabled'] = self.run_compute_resource_token_enabled
         if hasattr(self, 'run_env_variables') and self.run_env_variables is not None:
             run_env_variables_list = []
             for v in self.run_env_variables:
@@ -9720,6 +9942,8 @@ class Function:
           in. Possible values: 'au-syd', 'br-sao', 'ca-tor', 'eu-de', 'eu-gb', 'jp-osa',
           'jp-tok', 'us-east', 'us-south'.
     :param str resource_type: (optional) The type of the function.
+    :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+          enable the use of a compute resource token mounted to the container file system.
     :param List[EnvVar] run_env_variables: References to config maps, secrets or
           literal values, which are defined by the function owner and are exposed as
           environment variables in the function.
@@ -9771,6 +9995,7 @@ class Function:
         project_id: Optional[str] = None,
         region: Optional[str] = None,
         resource_type: Optional[str] = None,
+        run_compute_resource_token_enabled: Optional[bool] = None,
         status: Optional[str] = None,
     ) -> None:
         """
@@ -9819,6 +10044,9 @@ class Function:
         :param List[EnvVar] computed_env_variables: (optional) References to config
                maps, secrets or literal values, which are defined and set by Code Engine
                and are exposed as environment variables in the function.
+        :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+               enable the use of a compute resource token mounted to the container file
+               system.
         """
         self.code_binary = code_binary
         self.code_main = code_main
@@ -9836,6 +10064,7 @@ class Function:
         self.project_id = project_id
         self.region = region
         self.resource_type = resource_type
+        self.run_compute_resource_token_enabled = run_compute_resource_token_enabled
         self.run_env_variables = run_env_variables
         self.runtime = runtime
         self.scale_concurrency = scale_concurrency
@@ -9892,6 +10121,8 @@ class Function:
             args['region'] = region
         if (resource_type := _dict.get('resource_type')) is not None:
             args['resource_type'] = resource_type
+        if (run_compute_resource_token_enabled := _dict.get('run_compute_resource_token_enabled')) is not None:
+            args['run_compute_resource_token_enabled'] = run_compute_resource_token_enabled
         if (run_env_variables := _dict.get('run_env_variables')) is not None:
             args['run_env_variables'] = [EnvVar.from_dict(v) for v in run_env_variables]
         else:
@@ -9974,6 +10205,8 @@ class Function:
             _dict['region'] = getattr(self, 'region')
         if hasattr(self, 'resource_type') and getattr(self, 'resource_type') is not None:
             _dict['resource_type'] = getattr(self, 'resource_type')
+        if hasattr(self, 'run_compute_resource_token_enabled') and self.run_compute_resource_token_enabled is not None:
+            _dict['run_compute_resource_token_enabled'] = self.run_compute_resource_token_enabled
         if hasattr(self, 'run_env_variables') and self.run_env_variables is not None:
             run_env_variables_list = []
             for v in self.run_env_variables:
@@ -10173,6 +10406,8 @@ class FunctionPatch:
           of the system managed domain mappings will be setup for the function. Valid
           values are 'local_public', 'local_private' and 'local'. Visibility can only be
           'local_private' if the project supports function private visibility.
+    :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+          enable the use of a compute resource token mounted to the container file system.
     :param List[EnvVarPrototype] run_env_variables: (optional) Optional references
           to config maps, secrets or literal values.
     :param str runtime: (optional) The managed runtime used to execute the injected
@@ -10203,6 +10438,7 @@ class FunctionPatch:
         code_reference: Optional[str] = None,
         code_secret: Optional[str] = None,
         managed_domain_mappings: Optional[str] = None,
+        run_compute_resource_token_enabled: Optional[bool] = None,
         run_env_variables: Optional[List['EnvVarPrototype']] = None,
         runtime: Optional[str] = None,
         scale_concurrency: Optional[int] = None,
@@ -10231,6 +10467,9 @@ class FunctionPatch:
                Valid values are 'local_public', 'local_private' and 'local'. Visibility
                can only be 'local_private' if the project supports function private
                visibility.
+        :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+               enable the use of a compute resource token mounted to the container file
+               system.
         :param List[EnvVarPrototype] run_env_variables: (optional) Optional
                references to config maps, secrets or literal values.
         :param str runtime: (optional) The managed runtime used to execute the
@@ -10258,6 +10497,7 @@ class FunctionPatch:
         self.code_reference = code_reference
         self.code_secret = code_secret
         self.managed_domain_mappings = managed_domain_mappings
+        self.run_compute_resource_token_enabled = run_compute_resource_token_enabled
         self.run_env_variables = run_env_variables
         self.runtime = runtime
         self.scale_concurrency = scale_concurrency
@@ -10280,6 +10520,8 @@ class FunctionPatch:
             args['code_secret'] = code_secret
         if (managed_domain_mappings := _dict.get('managed_domain_mappings')) is not None:
             args['managed_domain_mappings'] = managed_domain_mappings
+        if (run_compute_resource_token_enabled := _dict.get('run_compute_resource_token_enabled')) is not None:
+            args['run_compute_resource_token_enabled'] = run_compute_resource_token_enabled
         if (run_env_variables := _dict.get('run_env_variables')) is not None:
             args['run_env_variables'] = [EnvVarPrototype.from_dict(v) for v in run_env_variables]
         if (runtime := _dict.get('runtime')) is not None:
@@ -10314,6 +10556,8 @@ class FunctionPatch:
             _dict['code_secret'] = self.code_secret
         if hasattr(self, 'managed_domain_mappings') and self.managed_domain_mappings is not None:
             _dict['managed_domain_mappings'] = self.managed_domain_mappings
+        if hasattr(self, 'run_compute_resource_token_enabled') and self.run_compute_resource_token_enabled is not None:
+            _dict['run_compute_resource_token_enabled'] = self.run_compute_resource_token_enabled
         if hasattr(self, 'run_env_variables') and self.run_env_variables is not None:
             run_env_variables_list = []
             for v in self.run_env_variables:
@@ -10743,6 +10987,8 @@ class Job:
           job run containers. If not specified an empty string array will be applied and
           the command specified by the container image, will be used to start the
           container.
+    :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+          enable the use of a compute resource token mounted to the container file system.
     :param List[EnvVar] run_env_variables: References to config maps, secrets or
           literal values, which are defined by the function owner and are exposed as
           environment variables in the job run.
@@ -10812,6 +11058,7 @@ class Job:
         region: Optional[str] = None,
         resource_type: Optional[str] = None,
         run_as_user: Optional[int] = None,
+        run_compute_resource_token_enabled: Optional[bool] = None,
         run_service_account: Optional[str] = None,
         scale_max_execution_time: Optional[int] = None,
         scale_retry_limit: Optional[int] = None,
@@ -10879,6 +11126,9 @@ class Job:
                is provided, too. This property must not be set on a job run, which
                references a job template.
         :param int run_as_user: (optional) The user ID (UID) to run the job.
+        :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+               enable the use of a compute resource token mounted to the container file
+               system.
         :param str run_service_account: (optional) The name of the service account.
                For built-in service accounts, you can use the shortened names `manager`,
                `none`, `reader`, and `writer`. This property must not be set on a job run,
@@ -10906,6 +11156,7 @@ class Job:
         self.run_arguments = run_arguments
         self.run_as_user = run_as_user
         self.run_commands = run_commands
+        self.run_compute_resource_token_enabled = run_compute_resource_token_enabled
         self.run_env_variables = run_env_variables
         self.run_mode = run_mode
         self.run_service_account = run_service_account
@@ -10963,6 +11214,8 @@ class Job:
             args['run_commands'] = run_commands
         else:
             raise ValueError('Required property \'run_commands\' not present in Job JSON')
+        if (run_compute_resource_token_enabled := _dict.get('run_compute_resource_token_enabled')) is not None:
+            args['run_compute_resource_token_enabled'] = run_compute_resource_token_enabled
         if (run_env_variables := _dict.get('run_env_variables')) is not None:
             args['run_env_variables'] = [EnvVar.from_dict(v) for v in run_env_variables]
         else:
@@ -11045,6 +11298,8 @@ class Job:
             _dict['run_as_user'] = self.run_as_user
         if hasattr(self, 'run_commands') and self.run_commands is not None:
             _dict['run_commands'] = self.run_commands
+        if hasattr(self, 'run_compute_resource_token_enabled') and self.run_compute_resource_token_enabled is not None:
+            _dict['run_compute_resource_token_enabled'] = self.run_compute_resource_token_enabled
         if hasattr(self, 'run_env_variables') and self.run_env_variables is not None:
             run_env_variables_list = []
             for v in self.run_env_variables:
@@ -11256,6 +11511,8 @@ class JobPatch:
           passed to start job run containers. If not specified an empty string array will
           be applied and the command specified by the container image, will be used to
           start the container.
+    :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+          enable the use of a compute resource token mounted to the container file system.
     :param List[EnvVarPrototype] run_env_variables: (optional) Optional references
           to config maps, secrets or literal values.
     :param str run_mode: (optional) The mode for runs of the job. Valid values are
@@ -11308,6 +11565,7 @@ class JobPatch:
         run_arguments: Optional[List[str]] = None,
         run_as_user: Optional[int] = None,
         run_commands: Optional[List[str]] = None,
+        run_compute_resource_token_enabled: Optional[bool] = None,
         run_env_variables: Optional[List['EnvVarPrototype']] = None,
         run_mode: Optional[str] = None,
         run_service_account: Optional[str] = None,
@@ -11344,6 +11602,9 @@ class JobPatch:
                passed to start job run containers. If not specified an empty string array
                will be applied and the command specified by the container image, will be
                used to start the container.
+        :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+               enable the use of a compute resource token mounted to the container file
+               system.
         :param List[EnvVarPrototype] run_env_variables: (optional) Optional
                references to config maps, secrets or literal values.
         :param str run_mode: (optional) The mode for runs of the job. Valid values
@@ -11393,6 +11654,7 @@ class JobPatch:
         self.run_arguments = run_arguments
         self.run_as_user = run_as_user
         self.run_commands = run_commands
+        self.run_compute_resource_token_enabled = run_compute_resource_token_enabled
         self.run_env_variables = run_env_variables
         self.run_mode = run_mode
         self.run_service_account = run_service_account
@@ -11418,6 +11680,8 @@ class JobPatch:
             args['run_as_user'] = run_as_user
         if (run_commands := _dict.get('run_commands')) is not None:
             args['run_commands'] = run_commands
+        if (run_compute_resource_token_enabled := _dict.get('run_compute_resource_token_enabled')) is not None:
+            args['run_compute_resource_token_enabled'] = run_compute_resource_token_enabled
         if (run_env_variables := _dict.get('run_env_variables')) is not None:
             args['run_env_variables'] = [EnvVarPrototype.from_dict(v) for v in run_env_variables]
         if (run_mode := _dict.get('run_mode')) is not None:
@@ -11458,6 +11722,8 @@ class JobPatch:
             _dict['run_as_user'] = self.run_as_user
         if hasattr(self, 'run_commands') and self.run_commands is not None:
             _dict['run_commands'] = self.run_commands
+        if hasattr(self, 'run_compute_resource_token_enabled') and self.run_compute_resource_token_enabled is not None:
+            _dict['run_compute_resource_token_enabled'] = self.run_compute_resource_token_enabled
         if hasattr(self, 'run_env_variables') and self.run_env_variables is not None:
             run_env_variables_list = []
             for v in self.run_env_variables:
@@ -11577,6 +11843,8 @@ class JobRun:
           job run containers. If not specified an empty string array will be applied and
           the command specified by the container image, will be used to start the
           container.
+    :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+          enable the use of a compute resource token mounted to the container file system.
     :param List[EnvVar] run_env_variables: References to config maps, secrets or
           literal values, which are defined by the function owner and are exposed as
           environment variables in the job run.
@@ -11645,6 +11913,7 @@ class JobRun:
         region: Optional[str] = None,
         resource_type: Optional[str] = None,
         run_as_user: Optional[int] = None,
+        run_compute_resource_token_enabled: Optional[bool] = None,
         run_mode: Optional[str] = None,
         run_service_account: Optional[str] = None,
         scale_array_size_variable_override: Optional[int] = None,
@@ -11694,6 +11963,9 @@ class JobRun:
                referenced job.
         :param str name: (optional) The name of the job run.
         :param int run_as_user: (optional) The user ID (UID) to run the job.
+        :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+               enable the use of a compute resource token mounted to the container file
+               system.
         :param str run_mode: (optional) The mode for runs of the job. Valid values
                are `task` and `daemon`. In `task` mode, the `max_execution_time` and
                `retry_limit` properties apply. In `daemon` mode, since there is no timeout
@@ -11751,6 +12023,7 @@ class JobRun:
         self.run_arguments = run_arguments
         self.run_as_user = run_as_user
         self.run_commands = run_commands
+        self.run_compute_resource_token_enabled = run_compute_resource_token_enabled
         self.run_env_variables = run_env_variables
         self.run_mode = run_mode
         self.run_service_account = run_service_account
@@ -11801,6 +12074,8 @@ class JobRun:
             args['run_commands'] = run_commands
         else:
             raise ValueError('Required property \'run_commands\' not present in JobRun JSON')
+        if (run_compute_resource_token_enabled := _dict.get('run_compute_resource_token_enabled')) is not None:
+            args['run_compute_resource_token_enabled'] = run_compute_resource_token_enabled
         if (run_env_variables := _dict.get('run_env_variables')) is not None:
             args['run_env_variables'] = [EnvVar.from_dict(v) for v in run_env_variables]
         else:
@@ -11875,6 +12150,8 @@ class JobRun:
             _dict['run_as_user'] = self.run_as_user
         if hasattr(self, 'run_commands') and self.run_commands is not None:
             _dict['run_commands'] = self.run_commands
+        if hasattr(self, 'run_compute_resource_token_enabled') and self.run_compute_resource_token_enabled is not None:
+            _dict['run_compute_resource_token_enabled'] = self.run_compute_resource_token_enabled
         if hasattr(self, 'run_env_variables') and self.run_env_variables is not None:
             run_env_variables_list = []
             for v in self.run_env_variables:
@@ -13468,6 +13745,8 @@ class Secret:
     :param str entity_tag: The version of the secret instance, which is used to
           achieve optimistic locking.
     :param str format: (optional) Specify the format of the secret.
+    :param str generated_by: (optional) Specifies whether the secret is user
+          generated.
     :param str href: (optional) When you provision a new secret,  a URL is created
           identifying the location of the instance.
     :param str id: (optional) The identifier of the resource.
@@ -13492,6 +13771,7 @@ class Secret:
         created_at: Optional[str] = None,
         data: Optional[dict] = None,
         format: Optional[str] = None,
+        generated_by: Optional[str] = None,
         href: Optional[str] = None,
         id: Optional[str] = None,
         project_id: Optional[str] = None,
@@ -13521,6 +13801,7 @@ class Secret:
         self.data = data
         self.entity_tag = entity_tag
         self.format = format
+        self.generated_by = generated_by
         self.href = href
         self.id = id
         self.name = name
@@ -13544,6 +13825,8 @@ class Secret:
             raise ValueError('Required property \'entity_tag\' not present in Secret JSON')
         if (format := _dict.get('format')) is not None:
             args['format'] = format
+        if (generated_by := _dict.get('generated_by')) is not None:
+            args['generated_by'] = generated_by
         if (href := _dict.get('href')) is not None:
             args['href'] = href
         if (id := _dict.get('id')) is not None:
@@ -13580,6 +13863,8 @@ class Secret:
             _dict['entity_tag'] = self.entity_tag
         if hasattr(self, 'format') and self.format is not None:
             _dict['format'] = self.format
+        if hasattr(self, 'generated_by') and getattr(self, 'generated_by') is not None:
+            _dict['generated_by'] = getattr(self, 'generated_by')
         if hasattr(self, 'href') and getattr(self, 'href') is not None:
             _dict['href'] = getattr(self, 'href')
         if hasattr(self, 'id') and getattr(self, 'id') is not None:
@@ -13630,11 +13915,20 @@ class Secret:
         GENERIC = 'generic'
         SSH_AUTH = 'ssh_auth'
         BASIC_AUTH = 'basic_auth'
+        HMAC_AUTH = 'hmac_auth'
         TLS = 'tls'
         SERVICE_ACCESS = 'service_access'
         REGISTRY = 'registry'
         SERVICE_OPERATOR = 'service_operator'
         OTHER = 'other'
+
+    class GeneratedByEnum(str, Enum):
+        """
+        Specifies whether the secret is user generated.
+        """
+
+        USER = 'user'
+        SYSTEM = 'system'
 
     class ResourceTypeEnum(str, Enum):
         """
@@ -13650,6 +13944,7 @@ class Secret:
         SECRET_REGISTRY_V2 = 'secret_registry_v2'
         SECRET_SERVICE_ACCESS_V2 = 'secret_service_access_v2'
         SECRET_TLS_V2 = 'secret_tls_v2'
+        SECRET_HMAC_AUTH_V2 = 'secret_hmac_auth_v2'
 
 
 class SecretData:
@@ -13679,6 +13974,7 @@ class SecretData:
                     'SecretDataBasicAuthSecretData',
                     'SecretDataRegistrySecretData',
                     'SecretDataSSHSecretData',
+                    'SecretDataHMACAuthSecretData',
                     'SecretDataTLSSecretData',
                 ]
             )
@@ -13792,8 +14088,8 @@ class ServiceAccessSecretProps:
     """
     Properties for Service Access Secrets.
 
-    :param ResourceKeyRef resource_key: The service credential associated with the
-          secret.
+    :param ResourceKeyRef resource_key: (optional) The service credential associated
+          with the secret.
     :param RoleRef role: (optional) A reference to the Role and Role CRN for service
           binding.
     :param ServiceInstanceRef service_instance: The IBM Cloud service instance
@@ -13803,18 +14099,18 @@ class ServiceAccessSecretProps:
 
     def __init__(
         self,
-        resource_key: 'ResourceKeyRef',
         service_instance: 'ServiceInstanceRef',
         *,
+        resource_key: Optional['ResourceKeyRef'] = None,
         role: Optional['RoleRef'] = None,
         serviceid: Optional['ServiceIDRef'] = None,
     ) -> None:
         """
         Initialize a ServiceAccessSecretProps object.
 
-        :param ResourceKeyRef resource_key: The service credential associated with
-               the secret.
         :param ServiceInstanceRef service_instance: The IBM Cloud service instance
+               associated with the secret.
+        :param ResourceKeyRef resource_key: (optional) The service credential
                associated with the secret.
         :param RoleRef role: (optional) A reference to the Role and Role CRN for
                service binding.
@@ -13831,8 +14127,6 @@ class ServiceAccessSecretProps:
         args = {}
         if (resource_key := _dict.get('resource_key')) is not None:
             args['resource_key'] = ResourceKeyRef.from_dict(resource_key)
-        else:
-            raise ValueError('Required property \'resource_key\' not present in ServiceAccessSecretProps JSON')
         if (role := _dict.get('role')) is not None:
             args['role'] = RoleRef.from_dict(role)
         if (service_instance := _dict.get('service_instance')) is not None:
@@ -13896,8 +14190,8 @@ class ServiceAccessSecretPrototypeProps:
     """
     Properties for Service Access Secrets.
 
-    :param ResourceKeyRefPrototype resource_key: The service credential associated
-          with the secret.
+    :param ResourceKeyRefPrototype resource_key: (optional) The service credential
+          associated with the secret.
     :param RoleRefPrototype role: (optional) A reference to the Role and Role CRN
           for service binding.
     :param ServiceInstanceRefPrototype service_instance: The IBM Cloud service
@@ -13907,19 +14201,19 @@ class ServiceAccessSecretPrototypeProps:
 
     def __init__(
         self,
-        resource_key: 'ResourceKeyRefPrototype',
         service_instance: 'ServiceInstanceRefPrototype',
         *,
+        resource_key: Optional['ResourceKeyRefPrototype'] = None,
         role: Optional['RoleRefPrototype'] = None,
         serviceid: Optional['ServiceIDRef'] = None,
     ) -> None:
         """
         Initialize a ServiceAccessSecretPrototypeProps object.
 
-        :param ResourceKeyRefPrototype resource_key: The service credential
-               associated with the secret.
         :param ServiceInstanceRefPrototype service_instance: The IBM Cloud service
                instance associated with the secret.
+        :param ResourceKeyRefPrototype resource_key: (optional) The service
+               credential associated with the secret.
         :param RoleRefPrototype role: (optional) A reference to the Role and Role
                CRN for service binding.
         :param ServiceIDRef serviceid: (optional) A reference to a Service ID.
@@ -13935,8 +14229,6 @@ class ServiceAccessSecretPrototypeProps:
         args = {}
         if (resource_key := _dict.get('resource_key')) is not None:
             args['resource_key'] = ResourceKeyRefPrototype.from_dict(resource_key)
-        else:
-            raise ValueError('Required property \'resource_key\' not present in ServiceAccessSecretPrototypeProps JSON')
         if (role := _dict.get('role')) is not None:
             args['role'] = RoleRefPrototype.from_dict(role)
         if (service_instance := _dict.get('service_instance')) is not None:
@@ -14921,6 +15213,116 @@ class SecretDataGenericSecretData(SecretData):
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'SecretDataGenericSecretData') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class SecretDataHMACAuthSecretData(SecretData):
+    """
+    Secret Data field used by HMAC secrets.
+
+    :param str access_key_id: HMAC access key id.
+    :param str secret_access_key: HMAC secret access key.
+
+    This type supports additional properties of type str.
+    """
+
+    # The set of defined properties for the class
+    _properties = frozenset(['access_key_id', 'secret_access_key'])
+
+    def __init__(
+        self,
+        access_key_id: str,
+        secret_access_key: str,
+        **kwargs: Optional[str],
+    ) -> None:
+        """
+        Initialize a SecretDataHMACAuthSecretData object.
+
+        :param str access_key_id: HMAC access key id.
+        :param str secret_access_key: HMAC secret access key.
+        :param str **kwargs: (optional) Additional properties of type str
+        """
+        # pylint: disable=super-init-not-called
+        self.access_key_id = access_key_id
+        self.secret_access_key = secret_access_key
+        for k, v in kwargs.items():
+            if k not in SecretDataHMACAuthSecretData._properties:
+                if not isinstance(v, str):
+                    raise ValueError('Value for additional property {} must be of type str'.format(k))
+                setattr(self, k, v)
+            else:
+                raise ValueError('Property {} cannot be specified as an additional property'.format(k))
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'SecretDataHMACAuthSecretData':
+        """Initialize a SecretDataHMACAuthSecretData object from a json dictionary."""
+        args = {}
+        if (access_key_id := _dict.get('access_key_id')) is not None:
+            args['access_key_id'] = access_key_id
+        else:
+            raise ValueError('Required property \'access_key_id\' not present in SecretDataHMACAuthSecretData JSON')
+        if (secret_access_key := _dict.get('secret_access_key')) is not None:
+            args['secret_access_key'] = secret_access_key
+        else:
+            raise ValueError('Required property \'secret_access_key\' not present in SecretDataHMACAuthSecretData JSON')
+        for k, v in _dict.items():
+            if k not in cls._properties:
+                if not isinstance(v, str):
+                    raise ValueError('Value for additional property {} must be of type str'.format(k))
+                args[k] = v
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a SecretDataHMACAuthSecretData object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'access_key_id') and self.access_key_id is not None:
+            _dict['access_key_id'] = self.access_key_id
+        if hasattr(self, 'secret_access_key') and self.secret_access_key is not None:
+            _dict['secret_access_key'] = self.secret_access_key
+        for k in [_k for _k in vars(self).keys() if _k not in SecretDataHMACAuthSecretData._properties]:
+            _dict[k] = getattr(self, k)
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def get_properties(self) -> Dict:
+        """Return the additional properties from this instance of SecretDataHMACAuthSecretData in the form of a dict."""
+        _dict = {}
+        for k in [_k for _k in vars(self).keys() if _k not in SecretDataHMACAuthSecretData._properties]:
+            _dict[k] = getattr(self, k)
+        return _dict
+
+    def set_properties(self, _dict: dict):
+        """Set a dictionary of additional properties in this instance of SecretDataHMACAuthSecretData"""
+        for k in [_k for _k in vars(self).keys() if _k not in SecretDataHMACAuthSecretData._properties]:
+            delattr(self, k)
+        for k, v in _dict.items():
+            if k not in SecretDataHMACAuthSecretData._properties:
+                if not isinstance(v, str):
+                    raise ValueError('Value for additional property {} must be of type str'.format(k))
+                setattr(self, k, v)
+            else:
+                raise ValueError('Property {} cannot be specified as an additional property'.format(k))
+
+    def __str__(self) -> str:
+        """Return a `str` version of this SecretDataHMACAuthSecretData object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'SecretDataHMACAuthSecretData') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'SecretDataHMACAuthSecretData') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 

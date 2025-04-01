@@ -1032,6 +1032,19 @@ class TestCodeEngineV2:
         assert secret is not None
 
     @needscredentials
+    def test_create_hmac_auth_secret(self):
+        response = self.code_engine_service.create_secret(
+            project_id=pytest.e2e_test_project_id,
+            format='hmac_auth',
+            name='my-hmac-auth-secret',
+            data={'access_key_id': 'access-key-id', 'secret_access_key': 'secret-access-key'},
+        )
+
+        assert response.get_status_code() == 201
+        secret = response.get_result()
+        assert secret is not None
+
+    @needscredentials
     def test_create_registry_secret(self):
         response = self.code_engine_service.create_secret(
             project_id=pytest.e2e_test_project_id,
@@ -1082,6 +1095,17 @@ class TestCodeEngineV2:
         response = self.code_engine_service.get_secret(
             project_id=pytest.e2e_test_project_id,
             name='my-basic-auth-secret',
+        )
+
+        assert response.get_status_code() == 200
+        secret = response.get_result()
+        assert secret is not None
+
+    @needscredentials
+    def test_get_hmac_auth_secret(self):
+        response = self.code_engine_service.get_secret(
+            project_id=pytest.e2e_test_project_id,
+            name='my-hmac-auth-secret',
         )
 
         assert response.get_status_code() == 200
@@ -1161,6 +1185,20 @@ class TestCodeEngineV2:
             if_match='*',
             data={'username': 'user2', 'password': 'pass2'},
             format='basic_auth',
+        )
+
+        assert response.get_status_code() == 200
+        secret = response.get_result()
+        assert secret is not None
+
+    @needscredentials
+    def test_replace_hmac_auth_secret(self):
+        response = self.code_engine_service.replace_secret(
+            project_id=pytest.e2e_test_project_id,
+            name='my-hmac-auth-secret',
+            if_match='*',
+            data={'access_key_id': 'access-key-id-2', 'secret_access_key': 'secret-access-key-2'},
+            format='hmac_auth',
         )
 
         assert response.get_status_code() == 200
@@ -1410,6 +1448,15 @@ class TestCodeEngineV2:
         response = self.code_engine_service.delete_secret(
             project_id=pytest.e2e_test_project_id,
             name='my-basic-auth-secret',
+        )
+
+        assert response.get_status_code() == 202
+
+    @needscredentials
+    def test_delete_hmac_auth_secret(self):
+        response = self.code_engine_service.delete_secret(
+            project_id=pytest.e2e_test_project_id,
+            name='my-hmac-auth-secret',
         )
 
         assert response.get_status_code() == 202

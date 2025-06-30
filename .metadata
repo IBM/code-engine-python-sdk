@@ -1,0 +1,9 @@
+service: codeengine
+production_code: yes
+production_code_end: "2099-02-18"
+production_branches:
+  - main
+public_override:
+  other: No production relevant, not installed in production clusters. This repo contains sample/demo artefacts and libraries shared with external parties.
+security_sensitive: no
+ip_sensitive: no

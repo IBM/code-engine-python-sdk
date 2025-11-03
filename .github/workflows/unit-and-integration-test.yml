@@ -1,0 +1,50 @@
+name: Unit and Integration Tests
+
+on:
+    pull_request:
+        branches:
+            - main
+
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+
+jobs:
+    unit-and-integration-tests:
+        runs-on: ibm-x86-64-medium
+        steps:
+          - uses: actions/checkout@v4
+          - uses: actions/setup-python@v5
+            with:
+                python-version: '3.13'
+                cache: 'pip'
+          - name: Run Unit tests
+            run: make ci
+          - name: Checkout API for latest domain mapping certs
+            uses: actions/checkout@v4
+            with:
+                repository: 'coligo/api'
+                ref: 'main'
+                path: "api"
+                token: ${{ secrets.DEVOPS_GITHUB_TOKEN }}
+          - name: Run Integration tests
+            env:
+                CE_API_HOST: ${{ vars.CE_API_HOST }}
+                CE_API_KEY: ${{ secrets.CE_API_KEY }}
+                CE_DOMAIN_MAPPING_NAME: ${{ vars.CE_DOMAIN_MAPPING_NAME }}
+                COS_ACCESS_KEY_ID: ${{ secrets.COS_ACCESS_KEY_ID }}
+                COS_SECRET_ACCESS_KEY: ${{ secrets.COS_SECRET_ACCESS_KEY }}
+                IAM_ENDPOINT: ${{ vars.IAM_ENDPOINT }}
+            run: |
+                # create an .env file that is pulled in while executing the v2 integration tests
+                echo "CODE_ENGINE_URL=https://$CE_API_HOST/v2" > code_engine_v2.env
+                echo "CODE_ENGINE_AUTH_TYPE=iam" >> code_engine_v2.env
+                echo "CODE_ENGINE_APIKEY=$CE_API_KEY" >> code_engine_v2.env
+                echo "CODE_ENGINE_AUTH_URL=$IAM_ENDPOINT" >> code_engine_v2.env
+                echo "CODE_ENGINE_DOMAIN_MAPPING_NAME=$CE_DOMAIN_MAPPING_NAME" >> code_engine_v2.env
+                echo "CODE_ENGINE_TLS_KEY_FILE_PATH=api/test/integration/tls-files/demohero.key" >> code_engine_v2.env
+                echo "CODE_ENGINE_TLS_CERT_FILE_PATH=api/test/integration/tls-files/demohero.crt" >> code_engine_v2.env 
+                make test-int      
+            
+                
+
+

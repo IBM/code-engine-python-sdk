@@ -56,7 +56,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2025-03-29`.
+               `2025-08-27`.
         """
         authenticator = get_authenticator_from_environment(service_name)
         service = cls(
@@ -80,7 +80,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2025-03-29`.
+               `2025-08-27`.
         """
         BaseService.__init__(self, service_url=self.DEFAULT_SERVICE_URL, authenticator=authenticator)
         self.version = version
@@ -210,6 +210,54 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
+    def delete_project(
+        self,
+        id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete a project.
+
+        Delete a project.
+
+        :param str id: The ID of the project.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not id:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='delete_project',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['id']
+        path_param_values = self.encode_path_vars(id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
     def get_project(
         self,
         id: str,
@@ -251,54 +299,6 @@ class CodeEngineV2(BaseService):
         url = '/projects/{id}'.format(**path_param_dict)
         request = self.prepare_request(
             method='GET',
-            url=url,
-            headers=headers,
-            params=params,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def delete_project(
-        self,
-        id: str,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Delete a project.
-
-        Delete a project.
-
-        :param str id: The ID of the project.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse
-        """
-
-        if not id:
-            raise ValueError('id must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='delete_project',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-
-        path_param_keys = ['id']
-        path_param_values = self.encode_path_vars(id)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{id}'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='DELETE',
             url=url,
             headers=headers,
             params=params,
@@ -426,6 +426,58 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
+    def delete_allowed_outbound_destination(
+        self,
+        project_id: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete an allowed outbound destination.
+
+        Delete an allowed outbound destination.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of your allowed outbound destination.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='delete_allowed_outbound_destination',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/allowed_outbound_destinations/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
     def get_allowed_outbound_destination(
         self,
         project_id: str,
@@ -471,58 +523,6 @@ class CodeEngineV2(BaseService):
         url = '/projects/{project_id}/allowed_outbound_destinations/{name}'.format(**path_param_dict)
         request = self.prepare_request(
             method='GET',
-            url=url,
-            headers=headers,
-            params=params,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def delete_allowed_outbound_destination(
-        self,
-        project_id: str,
-        name: str,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Delete an allowed outbound destination.
-
-        Delete an allowed outbound destination.
-
-        :param str project_id: The ID of the project.
-        :param str name: The name of your allowed outbound destination.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if not name:
-            raise ValueError('name must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='delete_allowed_outbound_destination',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-
-        path_param_keys = ['project_id', 'name']
-        path_param_values = self.encode_path_vars(project_id, name)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/allowed_outbound_destinations/{name}'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='DELETE',
             url=url,
             headers=headers,
             params=params,
@@ -968,59 +968,6 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
-    def get_app(
-        self,
-        project_id: str,
-        name: str,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Get an application.
-
-        Display the details of an application.
-
-        :param str project_id: The ID of the project.
-        :param str name: The name of your application.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `App` object
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if not name:
-            raise ValueError('name must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='get_app',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-        headers['Accept'] = 'application/json'
-
-        path_param_keys = ['project_id', 'name']
-        path_param_values = self.encode_path_vars(project_id, name)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/apps/{name}'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='GET',
-            url=url,
-            headers=headers,
-            params=params,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
     def delete_app(
         self,
         project_id: str,
@@ -1070,6 +1017,59 @@ class CodeEngineV2(BaseService):
         url = '/projects/{project_id}/apps/{name}'.format(**path_param_dict)
         request = self.prepare_request(
             method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_app(
+        self,
+        project_id: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Get an application.
+
+        Display the details of an application.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of your application.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `App` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='get_app',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/apps/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
             url=url,
             headers=headers,
             params=params,
@@ -1217,6 +1217,62 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
+    def delete_app_revision(
+        self,
+        project_id: str,
+        app_name: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete an application revision.
+
+        Delete an application revision.
+
+        :param str project_id: The ID of the project.
+        :param str app_name: The name of your application.
+        :param str name: The name of your application revision.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not app_name:
+            raise ValueError('app_name must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='delete_app_revision',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['project_id', 'app_name', 'name']
+        path_param_values = self.encode_path_vars(project_id, app_name, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/apps/{app_name}/revisions/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
     def get_app_revision(
         self,
         project_id: str,
@@ -1266,62 +1322,6 @@ class CodeEngineV2(BaseService):
         url = '/projects/{project_id}/apps/{app_name}/revisions/{name}'.format(**path_param_dict)
         request = self.prepare_request(
             method='GET',
-            url=url,
-            headers=headers,
-            params=params,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def delete_app_revision(
-        self,
-        project_id: str,
-        app_name: str,
-        name: str,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Delete an application revision.
-
-        Delete an application revision.
-
-        :param str project_id: The ID of the project.
-        :param str app_name: The name of your application.
-        :param str name: The name of your application revision.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if not app_name:
-            raise ValueError('app_name must be provided')
-        if not name:
-            raise ValueError('name must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='delete_app_revision',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-
-        path_param_keys = ['project_id', 'app_name', 'name']
-        path_param_values = self.encode_path_vars(project_id, app_name, name)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/apps/{app_name}/revisions/{name}'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='DELETE',
             url=url,
             headers=headers,
             params=params,
@@ -1624,59 +1624,6 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
-    def get_job(
-        self,
-        project_id: str,
-        name: str,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Get a job.
-
-        Display the details of a job.
-
-        :param str project_id: The ID of the project.
-        :param str name: The name of your job.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `Job` object
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if not name:
-            raise ValueError('name must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='get_job',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-        headers['Accept'] = 'application/json'
-
-        path_param_keys = ['project_id', 'name']
-        path_param_values = self.encode_path_vars(project_id, name)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/jobs/{name}'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='GET',
-            url=url,
-            headers=headers,
-            params=params,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
     def delete_job(
         self,
         project_id: str,
@@ -1726,6 +1673,59 @@ class CodeEngineV2(BaseService):
         url = '/projects/{project_id}/jobs/{name}'.format(**path_param_dict)
         request = self.prepare_request(
             method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_job(
+        self,
+        project_id: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Get a job.
+
+        Display the details of a job.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of your job.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `Job` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='get_job',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/jobs/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
             url=url,
             headers=headers,
             params=params,
@@ -2043,6 +2043,58 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
+    def delete_job_run(
+        self,
+        project_id: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete a job run.
+
+        Delete a job run.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of your job run.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='delete_job_run',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/job_runs/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
     def get_job_run(
         self,
         project_id: str,
@@ -2088,58 +2140,6 @@ class CodeEngineV2(BaseService):
         url = '/projects/{project_id}/job_runs/{name}'.format(**path_param_dict)
         request = self.prepare_request(
             method='GET',
-            url=url,
-            headers=headers,
-            params=params,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def delete_job_run(
-        self,
-        project_id: str,
-        name: str,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Delete a job run.
-
-        Delete a job run.
-
-        :param str project_id: The ID of the project.
-        :param str name: The name of your job run.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if not name:
-            raise ValueError('name must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='delete_job_run',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-
-        path_param_keys = ['project_id', 'name']
-        path_param_values = self.encode_path_vars(project_id, name)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/job_runs/{name}'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='DELETE',
             url=url,
             headers=headers,
             params=params,
@@ -2383,59 +2383,6 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
-    def get_function(
-        self,
-        project_id: str,
-        name: str,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Get a function.
-
-        Display the details of a function.
-
-        :param str project_id: The ID of the project.
-        :param str name: The name of your function.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `Function` object
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if not name:
-            raise ValueError('name must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='get_function',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-        headers['Accept'] = 'application/json'
-
-        path_param_keys = ['project_id', 'name']
-        path_param_values = self.encode_path_vars(project_id, name)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/functions/{name}'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='GET',
-            url=url,
-            headers=headers,
-            params=params,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
     def delete_function(
         self,
         project_id: str,
@@ -2485,6 +2432,59 @@ class CodeEngineV2(BaseService):
         url = '/projects/{project_id}/functions/{name}'.format(**path_param_dict)
         request = self.prepare_request(
             method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_function(
+        self,
+        project_id: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Get a function.
+
+        Display the details of a function.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of your function.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `Function` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='get_function',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/functions/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
             url=url,
             headers=headers,
             params=params,
@@ -2705,6 +2705,58 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
+    def delete_binding(
+        self,
+        project_id: str,
+        id: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete a binding.
+
+        Delete a binding.
+
+        :param str project_id: The ID of the project.
+        :param str id: The id of your binding.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not id:
+            raise ValueError('id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='delete_binding',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['project_id', 'id']
+        path_param_values = self.encode_path_vars(project_id, id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/bindings/{id}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
     def get_binding(
         self,
         project_id: str,
@@ -2750,58 +2802,6 @@ class CodeEngineV2(BaseService):
         url = '/projects/{project_id}/bindings/{id}'.format(**path_param_dict)
         request = self.prepare_request(
             method='GET',
-            url=url,
-            headers=headers,
-            params=params,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def delete_binding(
-        self,
-        project_id: str,
-        id: str,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Delete a binding.
-
-        Delete a binding.
-
-        :param str project_id: The ID of the project.
-        :param str id: The id of your binding.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if not id:
-            raise ValueError('id must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='delete_binding',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-
-        path_param_keys = ['project_id', 'id']
-        path_param_values = self.encode_path_vars(project_id, id)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/bindings/{id}'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='DELETE',
             url=url,
             headers=headers,
             params=params,
@@ -3008,6 +3008,58 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
+    def delete_build(
+        self,
+        project_id: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete a build.
+
+        Delete a build.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of your build.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='delete_build',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/builds/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
     def get_build(
         self,
         project_id: str,
@@ -3053,58 +3105,6 @@ class CodeEngineV2(BaseService):
         url = '/projects/{project_id}/builds/{name}'.format(**path_param_dict)
         request = self.prepare_request(
             method='GET',
-            url=url,
-            headers=headers,
-            params=params,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def delete_build(
-        self,
-        project_id: str,
-        name: str,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Delete a build.
-
-        Delete a build.
-
-        :param str project_id: The ID of the project.
-        :param str name: The name of your build.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if not name:
-            raise ValueError('name must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='delete_build',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-
-        path_param_keys = ['project_id', 'name']
-        path_param_values = self.encode_path_vars(project_id, name)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/builds/{name}'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='DELETE',
             url=url,
             headers=headers,
             params=params,
@@ -3391,6 +3391,58 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
+    def delete_build_run(
+        self,
+        project_id: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete a build run.
+
+        Delete a build run.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of your build run.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='delete_build_run',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/build_runs/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
     def get_build_run(
         self,
         project_id: str,
@@ -3436,58 +3488,6 @@ class CodeEngineV2(BaseService):
         url = '/projects/{project_id}/build_runs/{name}'.format(**path_param_dict)
         request = self.prepare_request(
             method='GET',
-            url=url,
-            headers=headers,
-            params=params,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def delete_build_run(
-        self,
-        project_id: str,
-        name: str,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Delete a build run.
-
-        Delete a build run.
-
-        :param str project_id: The ID of the project.
-        :param str name: The name of your build run.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if not name:
-            raise ValueError('name must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='delete_build_run',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-
-        path_param_keys = ['project_id', 'name']
-        path_param_values = self.encode_path_vars(project_id, name)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/build_runs/{name}'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='DELETE',
             url=url,
             headers=headers,
             params=params,
@@ -3633,6 +3633,58 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
+    def delete_domain_mapping(
+        self,
+        project_id: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete a domain mapping.
+
+        Delete a domain mapping.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of your domain mapping.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='delete_domain_mapping',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/domain_mappings/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
     def get_domain_mapping(
         self,
         project_id: str,
@@ -3678,58 +3730,6 @@ class CodeEngineV2(BaseService):
         url = '/projects/{project_id}/domain_mappings/{name}'.format(**path_param_dict)
         request = self.prepare_request(
             method='GET',
-            url=url,
-            headers=headers,
-            params=params,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def delete_domain_mapping(
-        self,
-        project_id: str,
-        name: str,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Delete a domain mapping.
-
-        Delete a domain mapping.
-
-        :param str project_id: The ID of the project.
-        :param str name: The name of your domain mapping.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if not name:
-            raise ValueError('name must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='delete_domain_mapping',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-
-        path_param_keys = ['project_id', 'name']
-        path_param_values = self.encode_path_vars(project_id, name)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/domain_mappings/{name}'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='DELETE',
             url=url,
             headers=headers,
             params=params,
@@ -3945,6 +3945,58 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
+    def delete_config_map(
+        self,
+        project_id: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete a config map.
+
+        Delete a config map.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of your configmap.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='delete_config_map',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/config_maps/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
     def get_config_map(
         self,
         project_id: str,
@@ -4071,58 +4123,6 @@ class CodeEngineV2(BaseService):
             headers=headers,
             params=params,
             data=data,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def delete_config_map(
-        self,
-        project_id: str,
-        name: str,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Delete a config map.
-
-        Delete a config map.
-
-        :param str project_id: The ID of the project.
-        :param str name: The name of your configmap.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if not name:
-            raise ValueError('name must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='delete_config_map',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-
-        path_param_keys = ['project_id', 'name']
-        path_param_values = self.encode_path_vars(project_id, name)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/config_maps/{name}'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='DELETE',
-            url=url,
-            headers=headers,
-            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -4279,6 +4279,58 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
+    def delete_secret(
+        self,
+        project_id: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete a secret.
+
+        Delete a secret.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of your secret.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='delete_secret',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/secrets/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
     def get_secret(
         self,
         project_id: str,
@@ -4418,19 +4470,160 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
-    def delete_secret(
+    #########################
+    # Persistent data stores
+    #########################
+
+    def list_persistent_data_store(
+        self,
+        project_id: str,
+        *,
+        limit: Optional[int] = None,
+        start: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        List persistent data stores.
+
+        List all persistent data stores in a project.
+
+        :param str project_id: The ID of the project.
+        :param int limit: (optional) Optional maximum number of persistent data
+               stores per page.
+        :param str start: (optional) An optional token that indicates the beginning
+               of the page of results to be returned. If omitted, the first page of
+               results is returned. This value is obtained from the 'start' query
+               parameter in the `next` object of the operation response.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PersistentDataStoreList` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='list_persistent_data_store',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'limit': limit,
+            'start': start,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id']
+        path_param_values = self.encode_path_vars(project_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/persistent_data_stores'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def create_persistent_data_store(
+        self,
+        project_id: str,
+        name: str,
+        storage_type: str,
+        *,
+        data: Optional['StorageData'] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Create a persistent data store.
+
+        Create a persistent data store.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of the persistent data store.
+        :param str storage_type: Specify the storage type of the persistent data
+               store.
+        :param StorageData data: (optional) Data container that allows to specify
+               config parameters and their values as a key-value map. Each key field must
+               consist of alphanumeric characters, `-`, `_` or `.` and must not exceed a
+               max length of 253 characters. Each value field can consists of any
+               character and must not exceed a max length of 1048576 characters.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PersistentDataStore` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if name is None:
+            raise ValueError('name must be provided')
+        if storage_type is None:
+            raise ValueError('storage_type must be provided')
+        if data is not None:
+            data = convert_model(data)
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='create_persistent_data_store',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        data = {
+            'name': name,
+            'storage_type': storage_type,
+            'data': data,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id']
+        path_param_values = self.encode_path_vars(project_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/persistent_data_stores'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            params=params,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_persistent_data_store(
         self,
         project_id: str,
         name: str,
         **kwargs,
     ) -> DetailedResponse:
         """
-        Delete a secret.
+        Delete a persistent data store.
 
-        Delete a secret.
+        Delete a persistent data store.
 
         :param str project_id: The ID of the project.
-        :param str name: The name of your secret.
+        :param str name: The name of your persistent data store.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse
@@ -4444,7 +4637,7 @@ class CodeEngineV2(BaseService):
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
             service_version='V2',
-            operation_id='delete_secret',
+            operation_id='delete_persistent_data_store',
         )
         headers.update(sdk_headers)
 
@@ -4459,9 +4652,62 @@ class CodeEngineV2(BaseService):
         path_param_keys = ['project_id', 'name']
         path_param_values = self.encode_path_vars(project_id, name)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/secrets/{name}'.format(**path_param_dict)
+        url = '/projects/{project_id}/persistent_data_stores/{name}'.format(**path_param_dict)
         request = self.prepare_request(
             method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_persistent_data_store(
+        self,
+        project_id: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Get a persistent data store.
+
+        Get a persistent data store.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of your persistent data store.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `PersistentDataStore` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='get_persistent_data_store',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/persistent_data_stores/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
             url=url,
             headers=headers,
             params=params,
@@ -8739,6 +8985,70 @@ class BuildStatus:
         FAILED = 'failed'
 
 
+class CbrStatus:
+    """
+    Describes the model of a CBR status of a project.
+
+    :param EnforcementStatus data_plane: Describes the model of the enforcement
+          status of a CBR status.
+    """
+
+    def __init__(
+        self,
+        data_plane: 'EnforcementStatus',
+    ) -> None:
+        """
+        Initialize a CbrStatus object.
+
+        :param EnforcementStatus data_plane: Describes the model of the enforcement
+               status of a CBR status.
+        """
+        self.data_plane = data_plane
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'CbrStatus':
+        """Initialize a CbrStatus object from a json dictionary."""
+        args = {}
+        if (data_plane := _dict.get('data_plane')) is not None:
+            args['data_plane'] = EnforcementStatus.from_dict(data_plane)
+        else:
+            raise ValueError('Required property \'data_plane\' not present in CbrStatus JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a CbrStatus object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'data_plane') and self.data_plane is not None:
+            if isinstance(self.data_plane, dict):
+                _dict['data_plane'] = self.data_plane
+            else:
+                _dict['data_plane'] = self.data_plane.to_dict()
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this CbrStatus object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'CbrStatus') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'CbrStatus') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class ComponentRef:
     """
     A reference to another component.
@@ -9677,6 +9987,84 @@ class DomainMappingStatus:
         FAILED_RECONCILE_INGRESS = 'failed_reconcile_ingress'
         DEPLOYING = 'deploying'
         FAILED = 'failed'
+
+
+class EnforcementStatus:
+    """
+    Describes the model of the enforcement status of a CBR status.
+
+    :param str enforcement:
+    :param str last_synced_at: (optional)
+    """
+
+    def __init__(
+        self,
+        enforcement: str,
+        *,
+        last_synced_at: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a EnforcementStatus object.
+
+        :param str enforcement:
+        :param str last_synced_at: (optional)
+        """
+        self.enforcement = enforcement
+        self.last_synced_at = last_synced_at
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'EnforcementStatus':
+        """Initialize a EnforcementStatus object from a json dictionary."""
+        args = {}
+        if (enforcement := _dict.get('enforcement')) is not None:
+            args['enforcement'] = enforcement
+        else:
+            raise ValueError('Required property \'enforcement\' not present in EnforcementStatus JSON')
+        if (last_synced_at := _dict.get('last_synced_at')) is not None:
+            args['last_synced_at'] = last_synced_at
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a EnforcementStatus object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'enforcement') and self.enforcement is not None:
+            _dict['enforcement'] = self.enforcement
+        if hasattr(self, 'last_synced_at') and self.last_synced_at is not None:
+            _dict['last_synced_at'] = self.last_synced_at
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this EnforcementStatus object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'EnforcementStatus') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'EnforcementStatus') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class EnforcementEnum(str, Enum):
+        """
+        enforcement.
+        """
+
+        APPLIED = 'applied'
+        OUT_OF_SYNC = 'out_of_sync'
+        NONE = 'none'
+        UNKNOWN = 'unknown'
 
 
 class EnvVar:
@@ -12799,6 +13187,252 @@ class OperatorSecretPrototypeProps:
         return not self == other
 
 
+class PersistentDataStore:
+    """
+    Describes the model of a persistent data store.
+
+    :param str created_at: (optional) The timestamp when the resource was created.
+    :param StorageData data: Data container that allows to specify config parameters
+          and their values as a key-value map. Each key field must consist of alphanumeric
+          characters, `-`, `_` or `.` and must not exceed a max length of 253 characters.
+          Each value field can consists of any character and must not exceed a max length
+          of 1048576 characters.
+    :param str entity_tag: The version of the persistent data store, which is used
+          to achieve optimistic locking.
+    :param str id: (optional) The identifier of the resource.
+    :param str name: The name of the persistent data store.
+    :param str project_id: (optional) The ID of the project in which the resource is
+          located.
+    :param str region: (optional) The region of the project the resource is located
+          in. Possible values: 'au-syd', 'br-sao', 'ca-tor', 'eu-de', 'eu-gb', 'jp-osa',
+          'jp-tok', 'us-east', 'us-south'.
+    :param str storage_type: Specify the storage type of the persistent data store.
+    """
+
+    def __init__(
+        self,
+        data: 'StorageData',
+        entity_tag: str,
+        name: str,
+        storage_type: str,
+        *,
+        created_at: Optional[str] = None,
+        id: Optional[str] = None,
+        project_id: Optional[str] = None,
+        region: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a PersistentDataStore object.
+
+        :param StorageData data: Data container that allows to specify config
+               parameters and their values as a key-value map. Each key field must consist
+               of alphanumeric characters, `-`, `_` or `.` and must not exceed a max
+               length of 253 characters. Each value field can consists of any character
+               and must not exceed a max length of 1048576 characters.
+        :param str entity_tag: The version of the persistent data store, which is
+               used to achieve optimistic locking.
+        :param str name: The name of the persistent data store.
+        :param str storage_type: Specify the storage type of the persistent data
+               store.
+        """
+        self.created_at = created_at
+        self.data = data
+        self.entity_tag = entity_tag
+        self.id = id
+        self.name = name
+        self.project_id = project_id
+        self.region = region
+        self.storage_type = storage_type
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PersistentDataStore':
+        """Initialize a PersistentDataStore object from a json dictionary."""
+        args = {}
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = created_at
+        if (data := _dict.get('data')) is not None:
+            args['data'] = data
+        else:
+            raise ValueError('Required property \'data\' not present in PersistentDataStore JSON')
+        if (entity_tag := _dict.get('entity_tag')) is not None:
+            args['entity_tag'] = entity_tag
+        else:
+            raise ValueError('Required property \'entity_tag\' not present in PersistentDataStore JSON')
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError('Required property \'name\' not present in PersistentDataStore JSON')
+        if (project_id := _dict.get('project_id')) is not None:
+            args['project_id'] = project_id
+        if (region := _dict.get('region')) is not None:
+            args['region'] = region
+        if (storage_type := _dict.get('storage_type')) is not None:
+            args['storage_type'] = storage_type
+        else:
+            raise ValueError('Required property \'storage_type\' not present in PersistentDataStore JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PersistentDataStore object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = getattr(self, 'created_at')
+        if hasattr(self, 'data') and self.data is not None:
+            if isinstance(self.data, dict):
+                _dict['data'] = self.data
+            else:
+                _dict['data'] = self.data.to_dict()
+        if hasattr(self, 'entity_tag') and self.entity_tag is not None:
+            _dict['entity_tag'] = self.entity_tag
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'project_id') and getattr(self, 'project_id') is not None:
+            _dict['project_id'] = getattr(self, 'project_id')
+        if hasattr(self, 'region') and getattr(self, 'region') is not None:
+            _dict['region'] = getattr(self, 'region')
+        if hasattr(self, 'storage_type') and self.storage_type is not None:
+            _dict['storage_type'] = self.storage_type
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PersistentDataStore object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PersistentDataStore') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PersistentDataStore') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class StorageTypeEnum(str, Enum):
+        """
+        Specify the storage type of the persistent data store.
+        """
+
+        OBJECT_STORAGE = 'object_storage'
+
+
+class PersistentDataStoreList:
+    """
+    List of all persistent data stores.
+
+    :param ListFirstMetadata first: (optional) Describes properties needed to
+          retrieve the first page of a result list.
+    :param int limit: Maximum number of resources per page.
+    :param ListNextMetadata next: (optional) Describes properties needed to retrieve
+          the next page of a result list.
+    :param List[PersistentDataStore] persistent_data_stores: List of persistent data
+          stores.
+    """
+
+    def __init__(
+        self,
+        limit: int,
+        persistent_data_stores: List['PersistentDataStore'],
+        *,
+        first: Optional['ListFirstMetadata'] = None,
+        next: Optional['ListNextMetadata'] = None,
+    ) -> None:
+        """
+        Initialize a PersistentDataStoreList object.
+
+        :param int limit: Maximum number of resources per page.
+        :param List[PersistentDataStore] persistent_data_stores: List of persistent
+               data stores.
+        :param ListFirstMetadata first: (optional) Describes properties needed to
+               retrieve the first page of a result list.
+        :param ListNextMetadata next: (optional) Describes properties needed to
+               retrieve the next page of a result list.
+        """
+        self.first = first
+        self.limit = limit
+        self.next = next
+        self.persistent_data_stores = persistent_data_stores
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PersistentDataStoreList':
+        """Initialize a PersistentDataStoreList object from a json dictionary."""
+        args = {}
+        if (first := _dict.get('first')) is not None:
+            args['first'] = ListFirstMetadata.from_dict(first)
+        if (limit := _dict.get('limit')) is not None:
+            args['limit'] = limit
+        else:
+            raise ValueError('Required property \'limit\' not present in PersistentDataStoreList JSON')
+        if (next := _dict.get('next')) is not None:
+            args['next'] = ListNextMetadata.from_dict(next)
+        if (persistent_data_stores := _dict.get('persistent_data_stores')) is not None:
+            args['persistent_data_stores'] = [PersistentDataStore.from_dict(v) for v in persistent_data_stores]
+        else:
+            raise ValueError('Required property \'persistent_data_stores\' not present in PersistentDataStoreList JSON')
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PersistentDataStoreList object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'first') and self.first is not None:
+            if isinstance(self.first, dict):
+                _dict['first'] = self.first
+            else:
+                _dict['first'] = self.first.to_dict()
+        if hasattr(self, 'limit') and self.limit is not None:
+            _dict['limit'] = self.limit
+        if hasattr(self, 'next') and self.next is not None:
+            if isinstance(self.next, dict):
+                _dict['next'] = self.next
+            else:
+                _dict['next'] = self.next.to_dict()
+        if hasattr(self, 'persistent_data_stores') and self.persistent_data_stores is not None:
+            persistent_data_stores_list = []
+            for v in self.persistent_data_stores:
+                if isinstance(v, dict):
+                    persistent_data_stores_list.append(v)
+                else:
+                    persistent_data_stores_list.append(v.to_dict())
+            _dict['persistent_data_stores'] = persistent_data_stores_list
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PersistentDataStoreList object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PersistentDataStoreList') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PersistentDataStoreList') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class Probe:
     """
     Response model for probes.
@@ -13382,37 +14016,53 @@ class ProjectStatusDetails:
     """
     Describes the model of a project status details.
 
+    :param CbrStatus cbr: Status of the Context-based-restriction configuration
+          applicable for this project.
     :param str domain: Status of the domain created for the project.
     :param str project: Defines whether a project is enabled for management and
           consumption.
+    :param str vpe: Status of the Virtual Private Endpoint that exposes the project
+          on the IBM Cloud private network.
     :param bool vpe_not_enabled: (optional) Return true when project is not VPE
           enabled.
     """
 
     def __init__(
         self,
+        cbr: 'CbrStatus',
         domain: str,
         project: str,
+        vpe: str,
         *,
         vpe_not_enabled: Optional[bool] = None,
     ) -> None:
         """
         Initialize a ProjectStatusDetails object.
 
+        :param CbrStatus cbr: Status of the Context-based-restriction configuration
+               applicable for this project.
         :param str domain: Status of the domain created for the project.
         :param str project: Defines whether a project is enabled for management and
                consumption.
+        :param str vpe: Status of the Virtual Private Endpoint that exposes the
+               project on the IBM Cloud private network.
         :param bool vpe_not_enabled: (optional) Return true when project is not VPE
                enabled.
         """
+        self.cbr = cbr
         self.domain = domain
         self.project = project
+        self.vpe = vpe
         self.vpe_not_enabled = vpe_not_enabled
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'ProjectStatusDetails':
         """Initialize a ProjectStatusDetails object from a json dictionary."""
         args = {}
+        if (cbr := _dict.get('cbr')) is not None:
+            args['cbr'] = CbrStatus.from_dict(cbr)
+        else:
+            raise ValueError('Required property \'cbr\' not present in ProjectStatusDetails JSON')
         if (domain := _dict.get('domain')) is not None:
             args['domain'] = domain
         else:
@@ -13421,6 +14071,10 @@ class ProjectStatusDetails:
             args['project'] = project
         else:
             raise ValueError('Required property \'project\' not present in ProjectStatusDetails JSON')
+        if (vpe := _dict.get('vpe')) is not None:
+            args['vpe'] = vpe
+        else:
+            raise ValueError('Required property \'vpe\' not present in ProjectStatusDetails JSON')
         if (vpe_not_enabled := _dict.get('vpe_not_enabled')) is not None:
             args['vpe_not_enabled'] = vpe_not_enabled
         return cls(**args)
@@ -13433,10 +14087,17 @@ class ProjectStatusDetails:
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
+        if hasattr(self, 'cbr') and self.cbr is not None:
+            if isinstance(self.cbr, dict):
+                _dict['cbr'] = self.cbr
+            else:
+                _dict['cbr'] = self.cbr.to_dict()
         if hasattr(self, 'domain') and self.domain is not None:
             _dict['domain'] = self.domain
         if hasattr(self, 'project') and self.project is not None:
             _dict['project'] = self.project
+        if hasattr(self, 'vpe') and self.vpe is not None:
+            _dict['vpe'] = self.vpe
         if hasattr(self, 'vpe_not_enabled') and self.vpe_not_enabled is not None:
             _dict['vpe_not_enabled'] = self.vpe_not_enabled
         return _dict
@@ -13474,6 +14135,15 @@ class ProjectStatusDetails:
 
         ENABLED = 'enabled'
         DISABLED = 'disabled'
+
+    class VpeEnum(str, Enum):
+        """
+        Status of the Virtual Private Endpoint that exposes the project on the IBM Cloud
+        private network.
+        """
+
+        READY = 'ready'
+        UNKNOWN = 'unknown'
 
 
 class ResourceKeyRef:
@@ -14544,36 +15214,75 @@ class ServiceInstanceRefPrototype:
         return not self == other
 
 
+class StorageData:
+    """
+    Data container that allows to specify config parameters and their values as a
+    key-value map. Each key field must consist of alphanumeric characters, `-`, `_` or `.`
+    and must not exceed a max length of 253 characters. Each value field can consists of
+    any character and must not exceed a max length of 1048576 characters.
+
+
+    This type supports additional properties of type str.
+    """
+
+    def __init__(
+        self,
+        **kwargs: Optional[str],
+    ) -> None:
+        """
+        Initialize a StorageData object.
+
+        :param str **kwargs: (optional) Additional properties of type str
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['StorageDataObjectStorageData'])
+        )
+        raise Exception(msg)
+
+
 class VolumeMount:
     """
     Response model of a volume mount.
 
     :param str mount_path: The path that should be mounted.
-    :param str name: The name of the mount.
-    :param str reference: The name of the referenced secret or config map.
+    :param str name: (optional) The name of the mount.
+    :param bool read_only: (optional) Optional flag to specify if the volume mount
+          is read only.
+    :param str reference: The name of the referenced secret, config map, or
+          persistent data store.
+    :param str sub_path: (optional) The path mounted at the mount path.
     :param str type: Specify the type of the volume mount. Allowed types are:
-          'config_map', 'secret'.
+          'config_map', 'persistent_data_store', 'secret'.
     """
 
     def __init__(
         self,
         mount_path: str,
-        name: str,
         reference: str,
         type: str,
+        *,
+        name: Optional[str] = None,
+        read_only: Optional[bool] = None,
+        sub_path: Optional[str] = None,
     ) -> None:
         """
         Initialize a VolumeMount object.
 
         :param str mount_path: The path that should be mounted.
-        :param str name: The name of the mount.
-        :param str reference: The name of the referenced secret or config map.
+        :param str reference: The name of the referenced secret, config map, or
+               persistent data store.
         :param str type: Specify the type of the volume mount. Allowed types are:
-               'config_map', 'secret'.
+               'config_map', 'persistent_data_store', 'secret'.
+        :param str name: (optional) The name of the mount.
+        :param bool read_only: (optional) Optional flag to specify if the volume
+               mount is read only.
+        :param str sub_path: (optional) The path mounted at the mount path.
         """
         self.mount_path = mount_path
         self.name = name
+        self.read_only = read_only
         self.reference = reference
+        self.sub_path = sub_path
         self.type = type
 
     @classmethod
@@ -14586,12 +15295,14 @@ class VolumeMount:
             raise ValueError('Required property \'mount_path\' not present in VolumeMount JSON')
         if (name := _dict.get('name')) is not None:
             args['name'] = name
-        else:
-            raise ValueError('Required property \'name\' not present in VolumeMount JSON')
+        if (read_only := _dict.get('read_only')) is not None:
+            args['read_only'] = read_only
         if (reference := _dict.get('reference')) is not None:
             args['reference'] = reference
         else:
             raise ValueError('Required property \'reference\' not present in VolumeMount JSON')
+        if (sub_path := _dict.get('sub_path')) is not None:
+            args['sub_path'] = sub_path
         if (type := _dict.get('type')) is not None:
             args['type'] = type
         else:
@@ -14610,8 +15321,12 @@ class VolumeMount:
             _dict['mount_path'] = self.mount_path
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'read_only') and self.read_only is not None:
+            _dict['read_only'] = self.read_only
         if hasattr(self, 'reference') and self.reference is not None:
             _dict['reference'] = self.reference
+        if hasattr(self, 'sub_path') and self.sub_path is not None:
+            _dict['sub_path'] = self.sub_path
         if hasattr(self, 'type') and self.type is not None:
             _dict['type'] = self.type
         return _dict
@@ -14636,10 +15351,12 @@ class VolumeMount:
 
     class TypeEnum(str, Enum):
         """
-        Specify the type of the volume mount. Allowed types are: 'config_map', 'secret'.
+        Specify the type of the volume mount. Allowed types are: 'config_map',
+        'persistent_data_store', 'secret'.
         """
 
         CONFIG_MAP = 'config_map'
+        PERSISTENT_DATA_STORE = 'persistent_data_store'
         SECRET = 'secret'
 
 
@@ -14651,9 +15368,13 @@ class VolumeMountPrototype:
     :param str name: (optional) Optional name of the mount. If not set, it will be
           generated based on the `ref` and a random ID. In case the `ref` is longer than
           58 characters, it will be cut off.
-    :param str reference: The name of the referenced secret or config map.
+    :param bool read_only: (optional) Optional flag to specify if the volume mount
+          is read only.
+    :param str reference: The name of the referenced secret, config map, or
+          persistent data store.
+    :param str sub_path: (optional) The path mounted at the mount path.
     :param str type: Specify the type of the volume mount. Allowed types are:
-          'config_map', 'secret'.
+          'config_map', 'persistent_data_store', 'secret'.
     """
 
     def __init__(
@@ -14663,21 +15384,29 @@ class VolumeMountPrototype:
         type: str,
         *,
         name: Optional[str] = None,
+        read_only: Optional[bool] = None,
+        sub_path: Optional[str] = None,
     ) -> None:
         """
         Initialize a VolumeMountPrototype object.
 
         :param str mount_path: The path that should be mounted.
-        :param str reference: The name of the referenced secret or config map.
+        :param str reference: The name of the referenced secret, config map, or
+               persistent data store.
         :param str type: Specify the type of the volume mount. Allowed types are:
-               'config_map', 'secret'.
+               'config_map', 'persistent_data_store', 'secret'.
         :param str name: (optional) Optional name of the mount. If not set, it will
                be generated based on the `ref` and a random ID. In case the `ref` is
                longer than 58 characters, it will be cut off.
+        :param bool read_only: (optional) Optional flag to specify if the volume
+               mount is read only.
+        :param str sub_path: (optional) The path mounted at the mount path.
         """
         self.mount_path = mount_path
         self.name = name
+        self.read_only = read_only
         self.reference = reference
+        self.sub_path = sub_path
         self.type = type
 
     @classmethod
@@ -14690,10 +15419,14 @@ class VolumeMountPrototype:
             raise ValueError('Required property \'mount_path\' not present in VolumeMountPrototype JSON')
         if (name := _dict.get('name')) is not None:
             args['name'] = name
+        if (read_only := _dict.get('read_only')) is not None:
+            args['read_only'] = read_only
         if (reference := _dict.get('reference')) is not None:
             args['reference'] = reference
         else:
             raise ValueError('Required property \'reference\' not present in VolumeMountPrototype JSON')
+        if (sub_path := _dict.get('sub_path')) is not None:
+            args['sub_path'] = sub_path
         if (type := _dict.get('type')) is not None:
             args['type'] = type
         else:
@@ -14712,8 +15445,12 @@ class VolumeMountPrototype:
             _dict['mount_path'] = self.mount_path
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'read_only') and self.read_only is not None:
+            _dict['read_only'] = self.read_only
         if hasattr(self, 'reference') and self.reference is not None:
             _dict['reference'] = self.reference
+        if hasattr(self, 'sub_path') and self.sub_path is not None:
+            _dict['sub_path'] = self.sub_path
         if hasattr(self, 'type') and self.type is not None:
             _dict['type'] = self.type
         return _dict
@@ -14738,10 +15475,12 @@ class VolumeMountPrototype:
 
     class TypeEnum(str, Enum):
         """
-        Specify the type of the volume mount. Allowed types are: 'config_map', 'secret'.
+        Specify the type of the volume mount. Allowed types are: 'config_map',
+        'persistent_data_store', 'secret'.
         """
 
         CONFIG_MAP = 'config_map'
+        PERSISTENT_DATA_STORE = 'persistent_data_store'
         SECRET = 'secret'
 
 
@@ -15671,6 +16410,126 @@ class SecretDataTLSSecretData(SecretData):
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other: 'SecretDataTLSSecretData') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
+class StorageDataObjectStorageData(StorageData):
+    """
+    StorageDataObjectStorageData.
+
+    :param str bucket_location: Specify the location of the bucket.
+    :param str bucket_name: Specify the name of the bucket.
+    :param str secret_name: Specify the name of the HMAC secret.
+
+    This type supports additional properties of type str.
+    """
+
+    # The set of defined properties for the class
+    _properties = frozenset(['bucket_location', 'bucket_name', 'secret_name'])
+
+    def __init__(
+        self,
+        bucket_location: str,
+        bucket_name: str,
+        secret_name: str,
+        **kwargs: Optional[str],
+    ) -> None:
+        """
+        Initialize a StorageDataObjectStorageData object.
+
+        :param str bucket_location: Specify the location of the bucket.
+        :param str bucket_name: Specify the name of the bucket.
+        :param str secret_name: Specify the name of the HMAC secret.
+        :param str **kwargs: (optional) Additional properties of type str
+        """
+        # pylint: disable=super-init-not-called
+        self.bucket_location = bucket_location
+        self.bucket_name = bucket_name
+        self.secret_name = secret_name
+        for k, v in kwargs.items():
+            if k not in StorageDataObjectStorageData._properties:
+                if not isinstance(v, str):
+                    raise ValueError('Value for additional property {} must be of type str'.format(k))
+                setattr(self, k, v)
+            else:
+                raise ValueError('Property {} cannot be specified as an additional property'.format(k))
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'StorageDataObjectStorageData':
+        """Initialize a StorageDataObjectStorageData object from a json dictionary."""
+        args = {}
+        if (bucket_location := _dict.get('bucket_location')) is not None:
+            args['bucket_location'] = bucket_location
+        else:
+            raise ValueError('Required property \'bucket_location\' not present in StorageDataObjectStorageData JSON')
+        if (bucket_name := _dict.get('bucket_name')) is not None:
+            args['bucket_name'] = bucket_name
+        else:
+            raise ValueError('Required property \'bucket_name\' not present in StorageDataObjectStorageData JSON')
+        if (secret_name := _dict.get('secret_name')) is not None:
+            args['secret_name'] = secret_name
+        else:
+            raise ValueError('Required property \'secret_name\' not present in StorageDataObjectStorageData JSON')
+        for k, v in _dict.items():
+            if k not in cls._properties:
+                if not isinstance(v, str):
+                    raise ValueError('Value for additional property {} must be of type str'.format(k))
+                args[k] = v
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a StorageDataObjectStorageData object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'bucket_location') and self.bucket_location is not None:
+            _dict['bucket_location'] = self.bucket_location
+        if hasattr(self, 'bucket_name') and self.bucket_name is not None:
+            _dict['bucket_name'] = self.bucket_name
+        if hasattr(self, 'secret_name') and self.secret_name is not None:
+            _dict['secret_name'] = self.secret_name
+        for k in [_k for _k in vars(self).keys() if _k not in StorageDataObjectStorageData._properties]:
+            _dict[k] = getattr(self, k)
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def get_properties(self) -> Dict:
+        """Return the additional properties from this instance of StorageDataObjectStorageData in the form of a dict."""
+        _dict = {}
+        for k in [_k for _k in vars(self).keys() if _k not in StorageDataObjectStorageData._properties]:
+            _dict[k] = getattr(self, k)
+        return _dict
+
+    def set_properties(self, _dict: dict):
+        """Set a dictionary of additional properties in this instance of StorageDataObjectStorageData"""
+        for k in [_k for _k in vars(self).keys() if _k not in StorageDataObjectStorageData._properties]:
+            delattr(self, k)
+        for k, v in _dict.items():
+            if k not in StorageDataObjectStorageData._properties:
+                if not isinstance(v, str):
+                    raise ValueError('Value for additional property {} must be of type str'.format(k))
+                setattr(self, k, v)
+            else:
+                raise ValueError('Property {} cannot be specified as an additional property'.format(k))
+
+    def __str__(self) -> str:
+        """Return a `str` version of this StorageDataObjectStorageData object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'StorageDataObjectStorageData') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'StorageDataObjectStorageData') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
@@ -16645,6 +17504,75 @@ class SecretsPager:
         Returns all results by invoking get_next() repeatedly
         until all pages of results have been retrieved.
         :return: A List[dict], where each element is a dict that represents an instance of Secret.
+        :rtype: List[dict]
+        """
+        results = []
+        while self.has_next():
+            next_page = self.get_next()
+            results.extend(next_page)
+        return results
+
+
+class PersistentDataStorePager:
+    """
+    PersistentDataStorePager can be used to simplify the use of the "list_persistent_data_store" method.
+    """
+
+    def __init__(
+        self,
+        *,
+        client: CodeEngineV2,
+        project_id: str,
+        limit: int = None,
+    ) -> None:
+        """
+        Initialize a PersistentDataStorePager object.
+        :param str project_id: The ID of the project.
+        :param int limit: (optional) Optional maximum number of persistent data
+               stores per page.
+        """
+        self._has_next = True
+        self._client = client
+        self._page_context = {'next': None}
+        self._project_id = project_id
+        self._limit = limit
+
+    def has_next(self) -> bool:
+        """
+        Returns true if there are potentially more results to be retrieved.
+        """
+        return self._has_next
+
+    def get_next(self) -> List[dict]:
+        """
+        Returns the next page of results.
+        :return: A List[dict], where each element is a dict that represents an instance of PersistentDataStore.
+        :rtype: List[dict]
+        """
+        if not self.has_next():
+            raise StopIteration(message='No more results available')
+
+        result = self._client.list_persistent_data_store(
+            project_id=self._project_id,
+            limit=self._limit,
+            start=self._page_context.get('next'),
+        ).get_result()
+
+        next = None
+        next_page_link = result.get('next')
+        if next_page_link is not None:
+            next = next_page_link.get('start')
+        self._page_context['next'] = next
+        if next is None:
+            self._has_next = False
+
+        return result.get('persistent_data_stores')
+
+    def get_all(self) -> List[dict]:
+        """
+        Returns all results by invoking get_next() repeatedly
+        until all pages of results have been retrieved.
+        :return: A List[dict], where each element is a dict that represents an instance of PersistentDataStore.
         :rtype: List[dict]
         """
         results = []

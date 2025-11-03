@@ -17,4 +17,4 @@
 """
 Version of ibm_code_engine_sdk
 """
-__version__ = '4.20.0'
+__version__ = '4.21.1'

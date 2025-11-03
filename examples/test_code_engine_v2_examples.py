@@ -22,7 +22,7 @@ import os
 import pytest
 from ibm_code_engine_sdk.code_engine_v2 import *
 
-version = '2025-03-29'
+version = '2025-08-27'
 
 #
 # This file provides an example of how to use the Code Engine service.
@@ -1334,6 +1334,80 @@ class TestCodeEngineV2Examples:
             pytest.fail(str(e))
 
     @needscredentials
+    def test_list_persistent_data_store_example(self):
+        """
+        list_persistent_data_store request example
+        """
+        try:
+            print('\nlist_persistent_data_store() result:')
+
+            # begin-list_persistent_data_store
+
+            all_results = []
+            pager = PersistentDataStorePager(
+                client=code_engine_service,
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                limit=100,
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+            print(json.dumps(all_results, indent=2))
+
+            # end-list_persistent_data_store
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_persistent_data_store_example(self):
+        """
+        create_persistent_data_store request example
+        """
+        try:
+            print('\ncreate_persistent_data_store() result:')
+
+            # begin-create_persistent_data_store
+
+            response = code_engine_service.create_persistent_data_store(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='my-persistent-data-store',
+                storage_type='object_storage',
+            )
+            persistent_data_store = response.get_result()
+
+            print(json.dumps(persistent_data_store, indent=2))
+
+            # end-create_persistent_data_store
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_persistent_data_store_example(self):
+        """
+        get_persistent_data_store request example
+        """
+        try:
+            print('\nget_persistent_data_store() result:')
+
+            # begin-get_persistent_data_store
+
+            response = code_engine_service.get_persistent_data_store(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='my-persistent-data-store',
+            )
+            persistent_data_store = response.get_result()
+
+            print(json.dumps(persistent_data_store, indent=2))
+
+            # end-get_persistent_data_store
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
     def test_delete_project_example(self):
         """
         delete_project request example
@@ -1576,6 +1650,25 @@ class TestCodeEngineV2Examples:
 
             # end-delete_secret
             print('\ndelete_secret() response status code: ', response.get_status_code())
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_delete_persistent_data_store_example(self):
+        """
+        delete_persistent_data_store request example
+        """
+        try:
+            # begin-delete_persistent_data_store
+
+            response = code_engine_service.delete_persistent_data_store(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='my-persistent-data-store',
+            )
+
+            # end-delete_persistent_data_store
+            print('\ndelete_persistent_data_store() response status code: ', response.get_status_code())
 
         except ApiException as e:
             pytest.fail(str(e))

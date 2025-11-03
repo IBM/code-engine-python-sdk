@@ -19,7 +19,7 @@ import os
 import sys
 import pkg_resources
 
-__version__ = '4.20.0'
+__version__ = '4.21.1'
 PACKAGE_NAME = 'ibm_code_engine_sdk'
 PACKAGE_DESC = 'Python SDK for IBM Cloud Code Engine'
 

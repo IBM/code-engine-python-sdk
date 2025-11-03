@@ -1033,11 +1033,18 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_create_hmac_auth_secret(self):
+        # store the hmac credentials in the pytest context to be able to share it across tests
+        pytest.e2e_test_access_key_id = os.environ['COS_ACCESS_KEY_ID']
+        pytest.e2e_test_secret_access_key = os.environ['COS_SECRET_ACCESS_KEY']
+
         response = self.code_engine_service.create_secret(
             project_id=pytest.e2e_test_project_id,
             format='hmac_auth',
-            name='my-hmac-auth-secret',
-            data={'access_key_id': 'access-key-id', 'secret_access_key': 'secret-access-key'},
+            name='ce-api-int-test-hmac-secret',
+            data={
+                'access_key_id': pytest.e2e_test_access_key_id,
+                'secret_access_key': pytest.e2e_test_secret_access_key,
+            },
         )
 
         assert response.get_status_code() == 201
@@ -1105,7 +1112,7 @@ class TestCodeEngineV2:
     def test_get_hmac_auth_secret(self):
         response = self.code_engine_service.get_secret(
             project_id=pytest.e2e_test_project_id,
-            name='my-hmac-auth-secret',
+            name='ce-api-int-test-hmac-secret',
         )
 
         assert response.get_status_code() == 200
@@ -1192,10 +1199,78 @@ class TestCodeEngineV2:
         assert secret is not None
 
     @needscredentials
+    def test_create_persistent_data_store(self):
+        response = self.code_engine_service.create_persistent_data_store(
+            project_id=pytest.e2e_test_project_id,
+            storage_type='object_storage',
+            name='my-persistent-data-store',
+            data={
+                'bucket_location': 'eu-de',
+                'bucket_name': 'e2e-api-bucket-eu-de',
+                'secret_name': 'ce-api-int-test-hmac-secret',
+            },
+        )
+
+        assert response.get_status_code() == 201
+        persistent_data_store = response.get_result()
+        assert persistent_data_store is not None
+
+    @needscredentials
+    def test_get_persistent_data_store(self):
+        response = self.code_engine_service.get_persistent_data_store(
+            project_id=pytest.e2e_test_project_id,
+            name='my-persistent-data-store',
+        )
+
+        assert response.get_status_code() == 200
+        persistent_data_store = response.get_result()
+        assert persistent_data_store is not None
+
+    @needscredentials
+    def test_list_persistent_data_store(self):
+        response = self.code_engine_service.list_persistent_data_store(
+            project_id=pytest.e2e_test_project_id,
+            limit=100,
+        )
+
+        assert response.get_status_code() == 200
+        persistent_data_store_list = response.get_result()
+        assert persistent_data_store_list is not None
+
+    @needscredentials
+    def test_list_persistent_data_store_with_pager(self):
+        all_results = []
+
+        # Test get_next().
+        pager = PersistentDataStorePager(
+            client=self.code_engine_service,
+            project_id=pytest.e2e_test_project_id,
+            limit=100,
+        )
+        while pager.has_next():
+            next_page = pager.get_next()
+            assert next_page is not None
+            all_results.extend(next_page)
+
+        # Test get_all().
+        pager = PersistentDataStorePager(
+            client=self.code_engine_service,
+            project_id=pytest.e2e_test_project_id,
+            limit=100,
+        )
+        all_items = pager.get_all()
+        assert all_items is not None
+
+        assert len(all_results) == len(all_items)
+        print(
+            f'\nlist_persistent_data_store() returned a total of {len(all_results)} items(s) using PersistentDataStorePager.'
+        )
+
+    @needscredentials
     def test_replace_hmac_auth_secret(self):
         response = self.code_engine_service.replace_secret(
             project_id=pytest.e2e_test_project_id,
-            name='my-hmac-auth-secret',
+            name='ce-api-int-test-hmac-secret',
             if_match='*',
             data={'access_key_id': 'access-key-id-2', 'secret_access_key': 'secret-access-key-2'},
             format='hmac_auth',
@@ -1408,6 +1483,15 @@ class TestCodeEngineV2:
         assert response.get_status_code() == 202
 
     @needscredentials
+    def test_delete_persistent_data_store(self):
+        response = self.code_engine_service.delete_persistent_data_store(
+            project_id=pytest.e2e_test_project_id,
+            name='my-persistent-data-store',
+        )
+
+        assert response.get_status_code() == 202
+
+    @needscredentials
     def test_delete_config_map(self):
         response = self.code_engine_service.delete_config_map(
             project_id=pytest.e2e_test_project_id,
@@ -1456,7 +1540,7 @@ class TestCodeEngineV2:
     def test_delete_hmac_auth_secret(self):
         response = self.code_engine_service.delete_secret(
             project_id=pytest.e2e_test_project_id,
-            name='my-hmac-auth-secret',
+            name='ce-api-int-test-hmac-secret',
         )
 
         assert response.get_status_code() == 202

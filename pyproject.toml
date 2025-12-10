@@ -1,7 +1,44 @@
 [build-system]
-requires = ["setuptools >= 61.0"]
+requires = ["setuptools >= 77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [tool.black]
 line-length = 120
 skip-string-normalization = true
+
+[project]
+name = 'ibm-code-engine-sdk'
+version = '4.21.1'
+authors = [
+    { name = 'IBM', email = 'coligo@de.ibm.com'},
+]
+classifiers = [
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: Apache Software License',
+        'Operating System :: OS Independent',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: Software Development :: Libraries :: Application Frameworks',
+]
+dynamic = ['dependencies', 'optional-dependencies']
+description = 'Python SDK for IBM Cloud Code Engine'
+keywords = ['ibm_code_engine_sdk', 'ibm-code-engine-sdk', 'Code Engine', 'Code-Engine', 'code engine', 'code-engine']
+license = {text = 'Apache 2.0'}
+readme = 'README.md'
+
+[project.urls]
+'Homepage' = 'https://github.com/IBM/code-engine-python-sdk'
+
+[tool.setuptools.dynamic]
+dependencies = {file = ['requirements.txt']}
+optional-dependencies = {dev = { file = ['requirements-dev.txt'] }}
+
+[tool.setuptools]
+packages = ['ibm_code_engine_sdk']

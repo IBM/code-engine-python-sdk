@@ -8,7 +8,7 @@ skip-string-normalization = true
 
 [project]
 name = 'ibm-code-engine-sdk'
-version = '4.21.2'
+version = '4.22.0'
 authors = [
     { name = 'IBM', email = 'coligo@de.ibm.com'},
 ]

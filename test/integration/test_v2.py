@@ -24,7 +24,7 @@ import pytest
 from ibm_code_engine_sdk.code_engine_v2 import *
 
 # Config file name
-config_file = 'code_engine_v2.env'
+CONFIG_FILE = 'code_engine_v2.env'
 
 
 class TestCodeEngineV2:
@@ -34,8 +34,8 @@ class TestCodeEngineV2:
 
     @classmethod
     def setup_class(cls):
-        if os.path.exists(config_file):
-            os.environ['IBM_CREDENTIALS_FILE'] = config_file
+        if os.path.exists(CONFIG_FILE):
+            os.environ['IBM_CREDENTIALS_FILE'] = CONFIG_FILE
 
             cls.code_engine_service = CodeEngineV2.new_instance()
             assert cls.code_engine_service is not None
@@ -48,7 +48,7 @@ class TestCodeEngineV2:
         print('Setup complete.')
 
     needscredentials = pytest.mark.skipif(
-        not os.path.exists(config_file), reason="External configuration not available, skipping..."
+        not os.path.exists(CONFIG_FILE), reason="External configuration not available, skipping..."
     )
 
     @needscredentials

@@ -1,6 +1,6 @@
 # coding: utf-8
 
-# (C) Copyright IBM Corp. 2025.
+# (C) Copyright IBM Corp. 2026.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2025-08-27`.
+               `2026-02-23`.
         """
         authenticator = get_authenticator_from_environment(service_name)
         service = cls(
@@ -80,7 +80,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2025-08-27`.
+               `2026-02-23`.
         """
         BaseService.__init__(self, service_url=self.DEFAULT_SERVICE_URL, authenticator=authenticator)
         self.version = version
@@ -307,7 +307,7 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
-    def list_allowed_outbound_destination(
+    def list_allowed_outbound_destinations(
         self,
         project_id: str,
         *,
@@ -338,7 +338,7 @@ class CodeEngineV2(BaseService):
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
             service_version='V2',
-            operation_id='list_allowed_outbound_destination',
+            operation_id='list_allowed_outbound_destinations',
         )
         headers.update(sdk_headers)
 
@@ -2642,7 +2642,7 @@ class CodeEngineV2(BaseService):
 
         Create a binding. Creating a service binding with a Code Engine app will update
         the app, creating a new revision. For more information see the
-        [documentaion](https://cloud.ibm.com/docs/codeengine?topic=codeengine-service-binding).
+        [documentation](https://cloud.ibm.com/docs/codeengine?topic=codeengine-service-binding).
 
         :param str project_id: The ID of the project.
         :param ComponentRef component: A reference to another component.
@@ -2717,7 +2717,7 @@ class CodeEngineV2(BaseService):
         Delete a binding.
 
         :param str project_id: The ID of the project.
-        :param str id: The id of your binding.
+        :param str id: The ID of the binding.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse
@@ -2769,7 +2769,7 @@ class CodeEngineV2(BaseService):
         Display the details of a binding.
 
         :param str project_id: The ID of the project.
-        :param str id: The id of your binding.
+        :param str id: The ID of the binding.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse with `dict` result representing a `Binding` object
@@ -3293,8 +3293,7 @@ class CodeEngineV2(BaseService):
                references to config maps and secret keys, or literal values that are
                exposed as build arguments within the Docker file.
         :param str service_account: (optional) Optional service account, which is
-               used for resource control.” or “Optional service account that is used for
-               resource control.
+               used for resource control.
         :param str source_context_dir: (optional) Optional directory in the
                repository that contains the buildpacks file or the Dockerfile.
         :param str source_revision: (optional) Commit, tag, or branch in the source
@@ -4474,7 +4473,7 @@ class CodeEngineV2(BaseService):
     # Persistent data stores
     #########################
 
-    def list_persistent_data_store(
+    def list_persistent_data_stores(
         self,
         project_id: str,
         *,
@@ -4505,7 +4504,7 @@ class CodeEngineV2(BaseService):
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
             service_version='V2',
-            operation_id='list_persistent_data_store',
+            operation_id='list_persistent_data_stores',
         )
         headers.update(sdk_headers)
 
@@ -4746,37 +4745,58 @@ class AllowedOutboundDestination:
     """
     AllowedOutboundDestination Describes the model of an allowed outbound destination.
 
-    :param str entity_tag: The version of the allowed outbound destination, which is
-          used to achieve optimistic locking.
+    :param str entity_tag: (optional) The version of the allowed outbound
+          destination, which is used to achieve optimistic locking.
+    :param str name: (optional) The name of the allowed outbound destination.
+    :param str status: (optional) The current status of the outbound destination.
+    :param AllowedOutboundStatusDetails status_details: (optional)
     :param str type: Specify the type of the allowed outbound destination. Allowed
-          types are: 'cidr_block'.
+          types are: `cidr_block` and `private_path_service_gateway`.
     """
 
     def __init__(
         self,
-        entity_tag: str,
         type: str,
+        *,
+        entity_tag: Optional[str] = None,
+        name: Optional[str] = None,
+        status: Optional[str] = None,
+        status_details: Optional['AllowedOutboundStatusDetails'] = None,
     ) -> None:
         """
         Initialize a AllowedOutboundDestination object.
 
-        :param str entity_tag: The version of the allowed outbound destination,
-               which is used to achieve optimistic locking.
         :param str type: Specify the type of the allowed outbound destination.
-               Allowed types are: 'cidr_block'.
+               Allowed types are: `cidr_block` and `private_path_service_gateway`.
+        :param str entity_tag: (optional) The version of the allowed outbound
+               destination, which is used to achieve optimistic locking.
+        :param str name: (optional) The name of the allowed outbound destination.
+        :param AllowedOutboundStatusDetails status_details: (optional)
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join(['AllowedOutboundDestinationCidrBlockData'])
+            ", ".join(
+                ['AllowedOutboundDestinationCidrBlockData', 'AllowedOutboundDestinationPrivatePathServiceGatewayData']
+            )
         )
         raise Exception(msg)
+
+    class StatusEnum(str, Enum):
+        """
+        The current status of the outbound destination.
+        """
+
+        READY = 'ready'
+        FAILED = 'failed'
+        DEPLOYING = 'deploying'
 
     class TypeEnum(str, Enum):
         """
         Specify the type of the allowed outbound destination. Allowed types are:
-        'cidr_block'.
+        `cidr_block` and `private_path_service_gateway`.
         """
 
         CIDR_BLOCK = 'cidr_block'
+        PRIVATE_PATH_SERVICE_GATEWAY = 'private_path_service_gateway'
 
 
 class AllowedOutboundDestinationList:
@@ -4887,36 +4907,26 @@ class AllowedOutboundDestinationList:
 
 class AllowedOutboundDestinationPatch:
     """
-    AllowedOutboundDestinationPatch is the request model for allowed outbound destination
-    update operations.
+    The request model for allowed outbound destination update operations.
 
-    :param str type: (optional) Specify the type of the allowed outbound
-          destination. Allowed types are: 'cidr_block'.
     """
 
     def __init__(
         self,
-        *,
-        type: Optional[str] = None,
     ) -> None:
         """
         Initialize a AllowedOutboundDestinationPatch object.
 
-        :param str type: (optional) Specify the type of the allowed outbound
-               destination. Allowed types are: 'cidr_block'.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join(['AllowedOutboundDestinationPatchCidrBlockDataPatch'])
+            ", ".join(
+                [
+                    'AllowedOutboundDestinationPatchCidrBlockDataPatch',
+                    'AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch',
+                ]
+            )
         )
         raise Exception(msg)
-
-    class TypeEnum(str, Enum):
-        """
-        Specify the type of the allowed outbound destination. Allowed types are:
-        'cidr_block'.
-        """
-
-        CIDR_BLOCK = 'cidr_block'
 
 
 class AllowedOutboundDestinationPrototype:
@@ -4925,31 +4935,59 @@ class AllowedOutboundDestinationPrototype:
     destination create operations.
 
     :param str type: Specify the type of the allowed outbound destination. Allowed
-          types are: 'cidr_block'.
+          types are: `cidr_block` and `private_path_service_gateway`.
+    :param str name: The name of the allowed outbound destination.
     """
 
     def __init__(
         self,
         type: str,
+        name: str,
     ) -> None:
         """
         Initialize a AllowedOutboundDestinationPrototype object.
 
         :param str type: Specify the type of the allowed outbound destination.
-               Allowed types are: 'cidr_block'.
+               Allowed types are: `cidr_block` and `private_path_service_gateway`.
+        :param str name: The name of the allowed outbound destination.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
-            ", ".join(['AllowedOutboundDestinationPrototypeCidrBlockDataPrototype'])
+            ", ".join(
+                [
+                    'AllowedOutboundDestinationPrototypeCidrBlockDataPrototype',
+                    'AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype',
+                ]
+            )
         )
         raise Exception(msg)
 
     class TypeEnum(str, Enum):
         """
         Specify the type of the allowed outbound destination. Allowed types are:
-        'cidr_block'.
+        `cidr_block` and `private_path_service_gateway`.
         """
 
         CIDR_BLOCK = 'cidr_block'
+        PRIVATE_PATH_SERVICE_GATEWAY = 'private_path_service_gateway'
+
+
+class AllowedOutboundStatusDetails:
+    """
+    AllowedOutboundStatusDetails.
+
+    """
+
+    def __init__(
+        self,
+    ) -> None:
+        """
+        Initialize a AllowedOutboundStatusDetails object.
+
+        """
+        msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
+            ", ".join(['AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails'])
+        )
+        raise Exception(msg)
 
 
 class App:
@@ -4960,9 +4998,9 @@ class App:
           application.
     :param str build_run: (optional) Reference to a build run that is associated
           with the application.
-    :param List[EnvVar] computed_env_variables: (optional) References to config
-          maps, secrets or literal values, which are defined and set by Code Engine and
-          are exposed as environment variables in the application.
+    :param List[EnvVar] computed_env_variables: References to config maps, secrets
+          or literal values, which are defined and set by Code Engine and are exposed as
+          environment variables in the application.
     :param str created_at: (optional) The timestamp when the resource was created.
     :param str endpoint: (optional) Optional URL to invoke the app. Depending on
           visibility,  this is accessible publicly or in the private network only. Empty
@@ -5015,9 +5053,9 @@ class App:
     :param List[EnvVar] run_env_variables: References to config maps, secrets or
           literal values, which are defined by the app owner and are exposed as
           environment variables in the application.
-    :param str run_service_account: (optional) Optional name of the service account.
-          For built-in service accounts, you can use the shortened names `manager` ,
-          `none`, `reader`, and `writer`.
+    :param str run_service_account: Optional name of the service account. For
+          built-in service accounts, you can use the shortened names `manager` , `none`,
+          `reader`, and `writer`.
     :param List[VolumeMount] run_volume_mounts: Mounts of config maps or secrets.
     :param int scale_concurrency: (optional) Optional maximum number of requests
           that can be processed concurrently per instance.
@@ -5063,6 +5101,7 @@ class App:
 
     def __init__(
         self,
+        computed_env_variables: List['EnvVar'],
         entity_tag: str,
         image_reference: str,
         managed_domain_mappings: str,
@@ -5070,6 +5109,7 @@ class App:
         run_arguments: List[str],
         run_commands: List[str],
         run_env_variables: List['EnvVar'],
+        run_service_account: str,
         run_volume_mounts: List['VolumeMount'],
         scale_cpu_limit: str,
         scale_ephemeral_storage_limit: str,
@@ -5080,7 +5120,6 @@ class App:
         *,
         build: Optional[str] = None,
         build_run: Optional[str] = None,
-        computed_env_variables: Optional[List['EnvVar']] = None,
         created_at: Optional[str] = None,
         endpoint: Optional[str] = None,
         endpoint_internal: Optional[str] = None,
@@ -5095,7 +5134,6 @@ class App:
         resource_type: Optional[str] = None,
         run_as_user: Optional[int] = None,
         run_compute_resource_token_enabled: Optional[bool] = None,
-        run_service_account: Optional[str] = None,
         scale_concurrency: Optional[int] = None,
         scale_concurrency_target: Optional[int] = None,
         scale_down_delay: Optional[int] = None,
@@ -5106,6 +5144,9 @@ class App:
         """
         Initialize a App object.
 
+        :param List[EnvVar] computed_env_variables: References to config maps,
+               secrets or literal values, which are defined and set by Code Engine and are
+               exposed as environment variables in the application.
         :param str entity_tag: The version of the app instance, which is used to
                achieve optimistic locking.
         :param str image_reference: The name of the image that is used for this
@@ -5130,6 +5171,9 @@ class App:
         :param List[EnvVar] run_env_variables: References to config maps, secrets
                or literal values, which are defined by the app owner and are exposed as
                environment variables in the application.
+        :param str run_service_account: Optional name of the service account. For
+               built-in service accounts, you can use the shortened names `manager` ,
+               `none`, `reader`, and `writer`.
         :param List[VolumeMount] run_volume_mounts: Mounts of config maps or
                secrets.
         :param str scale_cpu_limit: Optional number of CPU set for the instance of
@@ -5159,9 +5203,6 @@ class App:
                not hit by any request for some time.
         :param int scale_request_timeout: Optional amount of time in seconds that
                is allowed for a running app to respond to a request.
-        :param List[EnvVar] computed_env_variables: (optional) References to config
-               maps, secrets or literal values, which are defined and set by Code Engine
-               and are exposed as environment variables in the application.
         :param int image_port: (optional) Optional port the app listens on. While
                the app will always be exposed via port `443` for end users, this port is
                used to connect to the port that is exposed by the container image.
@@ -5177,9 +5218,6 @@ class App:
         :param bool run_compute_resource_token_enabled: (optional) Optional flag to
                enable the use of a compute resource token mounted to the container file
                system.
-        :param str run_service_account: (optional) Optional name of the service
-               account. For built-in service accounts, you can use the shortened names
-               `manager` , `none`, `reader`, and `writer`.
         :param int scale_concurrency: (optional) Optional maximum number of
                requests that can be processed concurrently per instance.
         :param int scale_concurrency_target: (optional) Optional threshold of
@@ -5243,6 +5281,8 @@ class App:
             args['build_run'] = build_run
         if (computed_env_variables := _dict.get('computed_env_variables')) is not None:
             args['computed_env_variables'] = [EnvVar.from_dict(v) for v in computed_env_variables]
+        else:
+            raise ValueError('Required property \'computed_env_variables\' not present in App JSON')
         if (created_at := _dict.get('created_at')) is not None:
             args['created_at'] = created_at
         if (endpoint := _dict.get('endpoint')) is not None:
@@ -5301,6 +5341,8 @@ class App:
             raise ValueError('Required property \'run_env_variables\' not present in App JSON')
         if (run_service_account := _dict.get('run_service_account')) is not None:
             args['run_service_account'] = run_service_account
+        else:
+            raise ValueError('Required property \'run_service_account\' not present in App JSON')
         if (run_volume_mounts := _dict.get('run_volume_mounts')) is not None:
             args['run_volume_mounts'] = [VolumeMount.from_dict(v) for v in run_volume_mounts]
         else:
@@ -6413,9 +6455,9 @@ class AppRevision:
     AppRevision is the response model for app revision resources.
 
     :param str app_name: (optional) Name of the associated app.
-    :param List[EnvVar] computed_env_variables: (optional) References to config
-          maps, secrets or literal values, which are defined and set by Code Engine and
-          are exposed as environment variables in the application.
+    :param List[EnvVar] computed_env_variables: References to config maps, secrets
+          or literal values, which are defined and set by Code Engine and are exposed as
+          environment variables in the application.
     :param str created_at: (optional) The timestamp when the resource was created.
     :param str href: (optional) When you provision a new revision,  a URL is created
           identifying the location of the instance.
@@ -6457,9 +6499,9 @@ class AppRevision:
     :param List[EnvVar] run_env_variables: References to config maps, secrets or
           literal values, which are defined by the app owner and are exposed as
           environment variables in the application.
-    :param str run_service_account: (optional) Optional name of the service account.
-          For built-in service accounts, you can use the shortened names `manager` ,
-          `none`, `reader`, and `writer`.
+    :param str run_service_account: Optional name of the service account. For
+          built-in service accounts, you can use the shortened names `manager` , `none`,
+          `reader`, and `writer`.
     :param List[VolumeMount] run_volume_mounts: Mounts of config maps or secrets.
     :param int scale_concurrency: (optional) Optional maximum number of requests
           that can be processed concurrently per instance.
@@ -6505,10 +6547,12 @@ class AppRevision:
 
     def __init__(
         self,
+        computed_env_variables: List['EnvVar'],
         image_reference: str,
         run_arguments: List[str],
         run_commands: List[str],
         run_env_variables: List['EnvVar'],
+        run_service_account: str,
         run_volume_mounts: List['VolumeMount'],
         scale_cpu_limit: str,
         scale_ephemeral_storage_limit: str,
@@ -6518,7 +6562,6 @@ class AppRevision:
         scale_request_timeout: int,
         *,
         app_name: Optional[str] = None,
-        computed_env_variables: Optional[List['EnvVar']] = None,
         created_at: Optional[str] = None,
         href: Optional[str] = None,
         id: Optional[str] = None,
@@ -6532,7 +6575,6 @@ class AppRevision:
         resource_type: Optional[str] = None,
         run_as_user: Optional[int] = None,
         run_compute_resource_token_enabled: Optional[bool] = None,
-        run_service_account: Optional[str] = None,
         scale_concurrency: Optional[int] = None,
         scale_concurrency_target: Optional[int] = None,
         scale_down_delay: Optional[int] = None,
@@ -6543,6 +6585,9 @@ class AppRevision:
         """
         Initialize a AppRevision object.
 
+        :param List[EnvVar] computed_env_variables: References to config maps,
+               secrets or literal values, which are defined and set by Code Engine and are
+               exposed as environment variables in the application.
         :param str image_reference: The name of the image that is used for this
                app. The format is `REGISTRY/NAMESPACE/REPOSITORY:TAG` where `REGISTRY` and
                `TAG` are optional. If `REGISTRY` is not specified, the default is
@@ -6560,6 +6605,9 @@ class AppRevision:
         :param List[EnvVar] run_env_variables: References to config maps, secrets
                or literal values, which are defined by the app owner and are exposed as
                environment variables in the application.
+        :param str run_service_account: Optional name of the service account. For
+               built-in service accounts, you can use the shortened names `manager` ,
+               `none`, `reader`, and `writer`.
         :param List[VolumeMount] run_volume_mounts: Mounts of config maps or
                secrets.
         :param str scale_cpu_limit: Optional number of CPU set for the instance of
@@ -6590,9 +6638,6 @@ class AppRevision:
         :param int scale_request_timeout: Optional amount of time in seconds that
                is allowed for a running app to respond to a request.
         :param str app_name: (optional) Name of the associated app.
-        :param List[EnvVar] computed_env_variables: (optional) References to config
-               maps, secrets or literal values, which are defined and set by Code Engine
-               and are exposed as environment variables in the application.
         :param int image_port: (optional) Optional port the app listens on. While
                the app will always be exposed via port `443` for end users, this port is
                used to connect to the port that is exposed by the container image.
@@ -6608,9 +6653,6 @@ class AppRevision:
         :param bool run_compute_resource_token_enabled: (optional) Optional flag to
                enable the use of a compute resource token mounted to the container file
                system.
-        :param str run_service_account: (optional) Optional name of the service
-               account. For built-in service accounts, you can use the shortened names
-               `manager` , `none`, `reader`, and `writer`.
         :param int scale_concurrency: (optional) Optional maximum number of
                requests that can be processed concurrently per instance.
         :param int scale_concurrency_target: (optional) Optional threshold of
@@ -6667,6 +6709,8 @@ class AppRevision:
             args['app_name'] = app_name
         if (computed_env_variables := _dict.get('computed_env_variables')) is not None:
             args['computed_env_variables'] = [EnvVar.from_dict(v) for v in computed_env_variables]
+        else:
+            raise ValueError('Required property \'computed_env_variables\' not present in AppRevision JSON')
         if (created_at := _dict.get('created_at')) is not None:
             args['created_at'] = created_at
         if (href := _dict.get('href')) is not None:
@@ -6711,6 +6755,8 @@ class AppRevision:
             raise ValueError('Required property \'run_env_variables\' not present in AppRevision JSON')
         if (run_service_account := _dict.get('run_service_account')) is not None:
             args['run_service_account'] = run_service_account
+        else:
+            raise ValueError('Required property \'run_service_account\' not present in AppRevision JSON')
         if (run_volume_mounts := _dict.get('run_volume_mounts')) is not None:
             args['run_volume_mounts'] = [VolumeMount.from_dict(v) for v in run_volume_mounts]
         else:
@@ -7435,9 +7481,9 @@ class Build:
           in. Possible values: 'au-syd', 'br-sao', 'ca-tor', 'eu-de', 'eu-gb', 'jp-osa',
           'jp-tok', 'us-east', 'us-south'.
     :param str resource_type: (optional) The type of the build.
-    :param List[BuildParam] run_build_params: (optional) References to config maps
-          and secret keys, or literal values, which are defined by the build owner and are
-          exposed as build arguments in Docker files.
+    :param List[BuildParam] run_build_params: References to config maps and secret
+          keys, or literal values, which are defined by the build owner and are exposed as
+          build arguments in Docker files.
     :param str source_context_dir: (optional) Optional directory in the repository
           that contains the buildpacks file or the Dockerfile.
     :param str source_revision: (optional) Commit, tag, or branch in the source
@@ -7478,6 +7524,7 @@ class Build:
         entity_tag: str,
         output_image: str,
         output_secret: str,
+        run_build_params: List['BuildParam'],
         source_type: str,
         strategy_size: str,
         strategy_type: str,
@@ -7489,7 +7536,6 @@ class Build:
         project_id: Optional[str] = None,
         region: Optional[str] = None,
         resource_type: Optional[str] = None,
-        run_build_params: Optional[List['BuildParam']] = None,
         source_context_dir: Optional[str] = None,
         source_revision: Optional[str] = None,
         source_secret: Optional[str] = None,
@@ -7508,6 +7554,9 @@ class Build:
         :param str output_secret: The secret that is required to access the image
                registry. Make sure that the secret is granted with push permissions
                towards the specified container registry namespace.
+        :param List[BuildParam] run_build_params: References to config maps and
+               secret keys, or literal values, which are defined by the build owner and
+               are exposed as build arguments in Docker files.
         :param str source_type: Specifies the type of source to determine if your
                build source is in a repository or based on local source code.
                * local - For builds from local source code.
@@ -7517,9 +7566,6 @@ class Build:
                `xlarge`, `xxlarge`.
         :param str strategy_type: The strategy to use for building the image.
         :param str name: (optional) The name of the build.
-        :param List[BuildParam] run_build_params: (optional) References to config
-               maps and secret keys, or literal values, which are defined by the build
-               owner and are exposed as build arguments in Docker files.
         :param str source_context_dir: (optional) Optional directory in the
                repository that contains the buildpacks file or the Dockerfile.
         :param str source_revision: (optional) Commit, tag, or branch in the source
@@ -7602,6 +7648,8 @@ class Build:
             args['resource_type'] = resource_type
         if (run_build_params := _dict.get('run_build_params')) is not None:
             args['run_build_params'] = [BuildParam.from_dict(v) for v in run_build_params]
+        else:
+            raise ValueError('Required property \'run_build_params\' not present in Build JSON')
         if (source_context_dir := _dict.get('source_context_dir')) is not None:
             args['source_context_dir'] = source_context_dir
         if (source_revision := _dict.get('source_revision')) is not None:
@@ -8326,11 +8374,10 @@ class BuildRun:
           in. Possible values: 'au-syd', 'br-sao', 'ca-tor', 'eu-de', 'eu-gb', 'jp-osa',
           'jp-tok', 'us-east', 'us-south'.
     :param str resource_type: (optional) The type of the build run.
-    :param List[BuildParam] run_build_params: (optional) References to config maps
-          and secret keys, or literal values, which are defined by the build owner and are
-          exposed as build arguments in Docker files.
-    :param str service_account: (optional) Optional service account, which is used
-          for resource control.” or “Optional service account that is used for resource
+    :param List[BuildParam] run_build_params: References to config maps and secret
+          keys, or literal values, which are defined by the build owner and are exposed as
+          build arguments in Docker files.
+    :param str service_account: Optional service account, which is used for resource
           control.
     :param str source_context_dir: (optional) Optional directory in the repository
           that contains the buildpacks file or the Dockerfile.
@@ -8344,8 +8391,8 @@ class BuildRun:
           authentication, the build will be created but cannot access any source code,
           until this property is provided, too. If the `source_type` value is `local`,
           this field must be omitted.
-    :param str source_type: (optional) Specifies the type of source to determine if
-          your build source is in a repository or based on local source code.
+    :param str source_type: Specifies the type of source to determine if your build
+          source is in a repository or based on local source code.
           * local - For builds from local source code.
           * git - For builds from git version controlled source code.
     :param str source_url: (optional) The URL of the code repository. This field is
@@ -8358,12 +8405,12 @@ class BuildRun:
     :param str status: (optional) The current status of the build run.
     :param BuildRunStatus status_details: (optional) Current status condition of a
           build run.
-    :param str strategy_size: (optional) Optional size for the build, which
-          determines the amount of resources used. Build sizes are `small`, `medium`,
-          `large`, `xlarge`, `xxlarge`.
+    :param str strategy_size: Optional size for the build, which determines the
+          amount of resources used. Build sizes are `small`, `medium`, `large`, `xlarge`,
+          `xxlarge`.
     :param str strategy_spec_file: (optional) Optional path to the specification
           file that is used for build strategies for building an image.
-    :param str strategy_type: (optional) The strategy to use for building the image.
+    :param str strategy_type: The strategy to use for building the image.
     :param int timeout: (optional) The maximum amount of time, in seconds, that can
           pass before the build must succeed or fail.
     """
@@ -8372,6 +8419,11 @@ class BuildRun:
         self,
         build_name: str,
         name: str,
+        run_build_params: List['BuildParam'],
+        service_account: str,
+        source_type: str,
+        strategy_size: str,
+        strategy_type: str,
         *,
         created_at: Optional[str] = None,
         href: Optional[str] = None,
@@ -8381,18 +8433,13 @@ class BuildRun:
         project_id: Optional[str] = None,
         region: Optional[str] = None,
         resource_type: Optional[str] = None,
-        run_build_params: Optional[List['BuildParam']] = None,
-        service_account: Optional[str] = None,
         source_context_dir: Optional[str] = None,
         source_revision: Optional[str] = None,
         source_secret: Optional[str] = None,
-        source_type: Optional[str] = None,
         source_url: Optional[str] = None,
         status: Optional[str] = None,
         status_details: Optional['BuildRunStatus'] = None,
-        strategy_size: Optional[str] = None,
         strategy_spec_file: Optional[str] = None,
-        strategy_type: Optional[str] = None,
         timeout: Optional[int] = None,
     ) -> None:
         """
@@ -8404,16 +8451,23 @@ class BuildRun:
                fields `strategy_type`, `source_url`, `output_image` and `output_secret` to
                describe the build run.
         :param str name: The name of the build run.
+        :param List[BuildParam] run_build_params: References to config maps and
+               secret keys, or literal values, which are defined by the build owner and
+               are exposed as build arguments in Docker files.
+        :param str service_account: Optional service account, which is used for
+               resource control.
+        :param str source_type: Specifies the type of source to determine if your
+               build source is in a repository or based on local source code.
+               * local - For builds from local source code.
+               * git - For builds from git version controlled source code.
+        :param str strategy_size: Optional size for the build, which determines the
+               amount of resources used. Build sizes are `small`, `medium`, `large`,
+               `xlarge`, `xxlarge`.
+        :param str strategy_type: The strategy to use for building the image.
         :param str output_image: (optional) The name of the image.
         :param str output_secret: (optional) The secret that is required to access
                the image registry. Make sure that the secret is granted with push
                permissions towards the specified container registry namespace.
-        :param List[BuildParam] run_build_params: (optional) References to config
-               maps and secret keys, or literal values, which are defined by the build
-               owner and are exposed as build arguments in Docker files.
-        :param str service_account: (optional) Optional service account, which is
-               used for resource control.” or “Optional service account that is used for
-               resource control.
         :param str source_context_dir: (optional) Optional directory in the
                repository that contains the buildpacks file or the Dockerfile.
         :param str source_revision: (optional) Commit, tag, or branch in the source
@@ -8426,11 +8480,6 @@ class BuildRun:
                requires authentication, the build will be created but cannot access any
                source code, until this property is provided, too. If the `source_type`
                value is `local`, this field must be omitted.
-        :param str source_type: (optional) Specifies the type of source to
-               determine if your build source is in a repository or based on local source
-               code.
-               * local - For builds from local source code.
-               * git - For builds from git version controlled source code.
         :param str source_url: (optional) The URL of the code repository. This
                field is required if the `source_type` is `git`. If the `source_type` value
                is `local`, this field must be omitted. If the repository is publicly
@@ -8441,13 +8490,8 @@ class BuildRun:
                points to a secret of format `ssh_auth`.
         :param BuildRunStatus status_details: (optional) Current status condition
                of a build run.
-        :param str strategy_size: (optional) Optional size for the build, which
-               determines the amount of resources used. Build sizes are `small`, `medium`,
-               `large`, `xlarge`, `xxlarge`.
         :param str strategy_spec_file: (optional) Optional path to the
                specification file that is used for build strategies for building an image.
-        :param str strategy_type: (optional) The strategy to use for building the
-               image.
         :param int timeout: (optional) The maximum amount of time, in seconds, that
                can pass before the build must succeed or fail.
         """
@@ -8505,8 +8549,12 @@ class BuildRun:
             args['resource_type'] = resource_type
         if (run_build_params := _dict.get('run_build_params')) is not None:
             args['run_build_params'] = [BuildParam.from_dict(v) for v in run_build_params]
+        else:
+            raise ValueError('Required property \'run_build_params\' not present in BuildRun JSON')
         if (service_account := _dict.get('service_account')) is not None:
             args['service_account'] = service_account
+        else:
+            raise ValueError('Required property \'service_account\' not present in BuildRun JSON')
         if (source_context_dir := _dict.get('source_context_dir')) is not None:
             args['source_context_dir'] = source_context_dir
         if (source_revision := _dict.get('source_revision')) is not None:
@@ -8515,6 +8563,8 @@ class BuildRun:
             args['source_secret'] = source_secret
         if (source_type := _dict.get('source_type')) is not None:
             args['source_type'] = source_type
+        else:
+            raise ValueError('Required property \'source_type\' not present in BuildRun JSON')
         if (source_url := _dict.get('source_url')) is not None:
             args['source_url'] = source_url
         if (status := _dict.get('status')) is not None:
@@ -8523,10 +8573,14 @@ class BuildRun:
             args['status_details'] = BuildRunStatus.from_dict(status_details)
         if (strategy_size := _dict.get('strategy_size')) is not None:
             args['strategy_size'] = strategy_size
+        else:
+            raise ValueError('Required property \'strategy_size\' not present in BuildRun JSON')
         if (strategy_spec_file := _dict.get('strategy_spec_file')) is not None:
             args['strategy_spec_file'] = strategy_spec_file
         if (strategy_type := _dict.get('strategy_type')) is not None:
             args['strategy_type'] = strategy_type
+        else:
+            raise ValueError('Required property \'strategy_type\' not present in BuildRun JSON')
         if (timeout := _dict.get('timeout')) is not None:
             args['timeout'] = timeout
         return cls(**args)
@@ -8623,8 +8677,7 @@ class BuildRun:
 
     class ServiceAccountEnum(str, Enum):
         """
-        Optional service account, which is used for resource control.” or “Optional
-        service account that is used for resource control.
+        Optional service account, which is used for resource control.
         """
 
         DEFAULT = 'default'
@@ -8987,7 +9040,7 @@ class BuildStatus:
 
 class CbrStatus:
     """
-    Describes the model of a CBR status of a project.
+    Status of the Context-based-restriction configuration applicable for this project.
 
     :param EnforcementStatus data_plane: Describes the model of the enforcement
           status of a CBR status.
@@ -9989,12 +10042,96 @@ class DomainMappingStatus:
         FAILED = 'failed'
 
 
+class EndpointGatewayDetails:
+    """
+    Optional information about the endpoint gateway located in the Code Engine VPC that
+    connects to the private path service gateway.
+
+    :param str account_id: (optional) The account that created the endpoint gateway.
+    :param str created_at: (optional) The timestamp when the endpoint gateway was
+          created.
+    :param List[str] ips: (optional) The reserved IPs bound to this endpoint
+          gateway.
+    :param str name: (optional) The name for this endpoint gateway. The name is
+          unique across all endpoint gateways in the VPC.
+    """
+
+    def __init__(
+        self,
+        *,
+        account_id: Optional[str] = None,
+        created_at: Optional[str] = None,
+        ips: Optional[List[str]] = None,
+        name: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a EndpointGatewayDetails object.
+
+        """
+        self.account_id = account_id
+        self.created_at = created_at
+        self.ips = ips
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'EndpointGatewayDetails':
+        """Initialize a EndpointGatewayDetails object from a json dictionary."""
+        args = {}
+        if (account_id := _dict.get('account_id')) is not None:
+            args['account_id'] = account_id
+        if (created_at := _dict.get('created_at')) is not None:
+            args['created_at'] = created_at
+        if (ips := _dict.get('ips')) is not None:
+            args['ips'] = ips
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a EndpointGatewayDetails object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'account_id') and getattr(self, 'account_id') is not None:
+            _dict['account_id'] = getattr(self, 'account_id')
+        if hasattr(self, 'created_at') and getattr(self, 'created_at') is not None:
+            _dict['created_at'] = getattr(self, 'created_at')
+        if hasattr(self, 'ips') and getattr(self, 'ips') is not None:
+            _dict['ips'] = getattr(self, 'ips')
+        if hasattr(self, 'name') and getattr(self, 'name') is not None:
+            _dict['name'] = getattr(self, 'name')
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this EndpointGatewayDetails object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'EndpointGatewayDetails') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'EndpointGatewayDetails') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class EnforcementStatus:
     """
     Describes the model of the enforcement status of a CBR status.
 
-    :param str enforcement:
-    :param str last_synced_at: (optional)
+    :param str enforcement: Detailed information on the condition of the CBR
+          enforcement.
+    :param str last_synced_at: (optional) Date time information specifying when the
+          last synchronization happened.
     """
 
     def __init__(
@@ -10006,8 +10143,10 @@ class EnforcementStatus:
         """
         Initialize a EnforcementStatus object.
 
-        :param str enforcement:
-        :param str last_synced_at: (optional)
+        :param str enforcement: Detailed information on the condition of the CBR
+               enforcement.
+        :param str last_synced_at: (optional) Date time information specifying when
+               the last synchronization happened.
         """
         self.enforcement = enforcement
         self.last_synced_at = last_synced_at
@@ -10058,7 +10197,7 @@ class EnforcementStatus:
 
     class EnforcementEnum(str, Enum):
         """
-        enforcement.
+        Detailed information on the condition of the CBR enforcement.
         """
 
         APPLIED = 'applied'
@@ -10307,9 +10446,9 @@ class Function:
     :param str code_secret: (optional) The name of the secret that is used to access
           the specified `code_reference`. The secret is used to authenticate with a
           non-public endpoint that is specified as`code_reference`.
-    :param List[EnvVar] computed_env_variables: (optional) References to config
-          maps, secrets or literal values, which are defined and set by Code Engine and
-          are exposed as environment variables in the function.
+    :param List[EnvVar] computed_env_variables: References to config maps, secrets
+          or literal values, which are defined and set by Code Engine and are exposed as
+          environment variables in the function.
     :param str created_at: (optional) The timestamp when the resource was created.
     :param str endpoint: (optional) URL to invoke the function.
     :param str endpoint_internal: (optional) URL to function that is only visible
@@ -10360,6 +10499,7 @@ class Function:
         self,
         code_binary: bool,
         code_reference: str,
+        computed_env_variables: List['EnvVar'],
         entity_tag: str,
         managed_domain_mappings: str,
         name: str,
@@ -10374,7 +10514,6 @@ class Function:
         *,
         code_main: Optional[str] = None,
         code_secret: Optional[str] = None,
-        computed_env_variables: Optional[List['EnvVar']] = None,
         created_at: Optional[str] = None,
         endpoint: Optional[str] = None,
         endpoint_internal: Optional[str] = None,
@@ -10396,6 +10535,9 @@ class Function:
                the source code itself. To specify the source code, use the data URL scheme
                and include the source code as base64 encoded. The data URL scheme is
                defined in [RFC 2397](https://tools.ietf.org/html/rfc2397).
+        :param List[EnvVar] computed_env_variables: References to config maps,
+               secrets or literal values, which are defined and set by Code Engine and are
+               exposed as environment variables in the function.
         :param str entity_tag: The version of the function instance, which is used
                to achieve optimistic locking.
         :param str managed_domain_mappings: Optional value controlling which of the
@@ -10429,9 +10571,6 @@ class Function:
         :param str code_secret: (optional) The name of the secret that is used to
                access the specified `code_reference`. The secret is used to authenticate
                with a non-public endpoint that is specified as`code_reference`.
-        :param List[EnvVar] computed_env_variables: (optional) References to config
-               maps, secrets or literal values, which are defined and set by Code Engine
-               and are exposed as environment variables in the function.
         :param bool run_compute_resource_token_enabled: (optional) Optional flag to
                enable the use of a compute resource token mounted to the container file
                system.
@@ -10481,6 +10620,8 @@ class Function:
             args['code_secret'] = code_secret
         if (computed_env_variables := _dict.get('computed_env_variables')) is not None:
             args['computed_env_variables'] = [EnvVar.from_dict(v) for v in computed_env_variables]
+        else:
+            raise ValueError('Required property \'computed_env_variables\' not present in Function JSON')
         if (created_at := _dict.get('created_at')) is not None:
             args['created_at'] = created_at
         if (endpoint := _dict.get('endpoint')) is not None:
@@ -11096,20 +11237,18 @@ class FunctionRuntimeList:
     """
     Contains a list of Function runtimes.
 
-    :param List[FunctionRuntime] function_runtimes: (optional) List of all Function
-          runtimes.
+    :param List[FunctionRuntime] function_runtimes: List of all Function runtimes.
     """
 
     def __init__(
         self,
-        *,
-        function_runtimes: Optional[List['FunctionRuntime']] = None,
+        function_runtimes: List['FunctionRuntime'],
     ) -> None:
         """
         Initialize a FunctionRuntimeList object.
 
-        :param List[FunctionRuntime] function_runtimes: (optional) List of all
-               Function runtimes.
+        :param List[FunctionRuntime] function_runtimes: List of all Function
+               runtimes.
         """
         self.function_runtimes = function_runtimes
 
@@ -11119,6 +11258,8 @@ class FunctionRuntimeList:
         args = {}
         if (function_runtimes := _dict.get('function_runtimes')) is not None:
             args['function_runtimes'] = [FunctionRuntime.from_dict(v) for v in function_runtimes]
+        else:
+            raise ValueError('Required property \'function_runtimes\' not present in FunctionRuntimeList JSON')
         return cls(**args)
 
     @classmethod
@@ -11338,9 +11479,9 @@ class Job:
           job.
     :param str build_run: (optional) Reference to a build run that is associated
           with the job.
-    :param List[EnvVar] computed_env_variables: (optional) References to config
-          maps, secrets or literal values, which are defined and set by Code Engine and
-          are exposed as environment variables in the job run.
+    :param List[EnvVar] computed_env_variables: References to config maps, secrets
+          or literal values, which are defined and set by Code Engine and are exposed as
+          environment variables in the job run.
     :param str created_at: (optional) The timestamp when the resource was created.
     :param str entity_tag: The version of the job instance, which is used to achieve
           optimistic locking.
@@ -11385,10 +11526,10 @@ class Job:
           apply. In `daemon` mode, since there is no timeout and failed instances are
           restarted indefinitely, the `max_execution_time` and `retry_limit` properties
           are not allowed.
-    :param str run_service_account: (optional) The name of the service account. For
-          built-in service accounts, you can use the shortened names `manager`, `none`,
-          `reader`, and `writer`. This property must not be set on a job run, which
-          references a job template.
+    :param str run_service_account: The name of the service account. For built-in
+          service accounts, you can use the shortened names `manager`, `none`, `reader`,
+          and `writer`. This property must not be set on a job run, which references a job
+          template.
     :param List[VolumeMount] run_volume_mounts: Optional mounts of config maps or
           secrets.
     :param str scale_array_spec: Define a custom set of array indices as a
@@ -11422,6 +11563,7 @@ class Job:
 
     def __init__(
         self,
+        computed_env_variables: List['EnvVar'],
         entity_tag: str,
         image_reference: str,
         name: str,
@@ -11429,6 +11571,7 @@ class Job:
         run_commands: List[str],
         run_env_variables: List['EnvVar'],
         run_mode: str,
+        run_service_account: str,
         run_volume_mounts: List['VolumeMount'],
         scale_array_spec: str,
         scale_cpu_limit: str,
@@ -11437,7 +11580,6 @@ class Job:
         *,
         build: Optional[str] = None,
         build_run: Optional[str] = None,
-        computed_env_variables: Optional[List['EnvVar']] = None,
         created_at: Optional[str] = None,
         href: Optional[str] = None,
         id: Optional[str] = None,
@@ -11447,13 +11589,15 @@ class Job:
         resource_type: Optional[str] = None,
         run_as_user: Optional[int] = None,
         run_compute_resource_token_enabled: Optional[bool] = None,
-        run_service_account: Optional[str] = None,
         scale_max_execution_time: Optional[int] = None,
         scale_retry_limit: Optional[int] = None,
     ) -> None:
         """
         Initialize a Job object.
 
+        :param List[EnvVar] computed_env_variables: References to config maps,
+               secrets or literal values, which are defined and set by Code Engine and are
+               exposed as environment variables in the job run.
         :param str entity_tag: The version of the job instance, which is used to
                achieve optimistic locking.
         :param str image_reference: The name of the image that is used for this
@@ -11479,6 +11623,10 @@ class Job:
                properties apply. In `daemon` mode, since there is no timeout and failed
                instances are restarted indefinitely, the `max_execution_time` and
                `retry_limit` properties are not allowed.
+        :param str run_service_account: The name of the service account. For
+               built-in service accounts, you can use the shortened names `manager`,
+               `none`, `reader`, and `writer`. This property must not be set on a job run,
+               which references a job template.
         :param List[VolumeMount] run_volume_mounts: Optional mounts of config maps
                or secrets.
         :param str scale_array_spec: Define a custom set of array indices as a
@@ -11503,9 +11651,6 @@ class Job:
                and M are the shorthand expressions for GB and MB. For more information see
                [Units of
                measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
-        :param List[EnvVar] computed_env_variables: (optional) References to config
-               maps, secrets or literal values, which are defined and set by Code Engine
-               and are exposed as environment variables in the job run.
         :param str image_secret: (optional) The name of the image registry access
                secret. The image registry access secret is used to authenticate with a
                private registry when you download the container image. If the image
@@ -11517,10 +11662,6 @@ class Job:
         :param bool run_compute_resource_token_enabled: (optional) Optional flag to
                enable the use of a compute resource token mounted to the container file
                system.
-        :param str run_service_account: (optional) The name of the service account.
-               For built-in service accounts, you can use the shortened names `manager`,
-               `none`, `reader`, and `writer`. This property must not be set on a job run,
-               which references a job template.
         :param int scale_max_execution_time: (optional) The maximum execution time
                in seconds for runs of the job. This property can only be specified if
                `run_mode` is `task`.
@@ -11566,6 +11707,8 @@ class Job:
             args['build_run'] = build_run
         if (computed_env_variables := _dict.get('computed_env_variables')) is not None:
             args['computed_env_variables'] = [EnvVar.from_dict(v) for v in computed_env_variables]
+        else:
+            raise ValueError('Required property \'computed_env_variables\' not present in Job JSON')
         if (created_at := _dict.get('created_at')) is not None:
             args['created_at'] = created_at
         if (entity_tag := _dict.get('entity_tag')) is not None:
@@ -11614,6 +11757,8 @@ class Job:
             raise ValueError('Required property \'run_mode\' not present in Job JSON')
         if (run_service_account := _dict.get('run_service_account')) is not None:
             args['run_service_account'] = run_service_account
+        else:
+            raise ValueError('Required property \'run_service_account\' not present in Job JSON')
         if (run_volume_mounts := _dict.get('run_volume_mounts')) is not None:
             args['run_volume_mounts'] = [VolumeMount.from_dict(v) for v in run_volume_mounts]
         else:
@@ -12193,9 +12338,9 @@ class JobRun:
     """
     Response model for job run resources.
 
-    :param List[EnvVar] computed_env_variables: (optional) References to config
-          maps, secrets or literal values, which are defined and set by Code Engine and
-          are exposed as environment variables in the job run.
+    :param List[EnvVar] computed_env_variables: References to config maps, secrets
+          or literal values, which are defined and set by Code Engine and are exposed as
+          environment variables in the job run.
     :param str created_at: (optional) The timestamp when the resource was created.
     :param str href: (optional) When you provision a new job run,  a URL is created
           identifying the location of the instance.
@@ -12284,12 +12429,12 @@ class JobRun:
 
     def __init__(
         self,
+        computed_env_variables: List['EnvVar'],
         run_arguments: List[str],
         run_commands: List[str],
         run_env_variables: List['EnvVar'],
         run_volume_mounts: List['VolumeMount'],
         *,
-        computed_env_variables: Optional[List['EnvVar']] = None,
         created_at: Optional[str] = None,
         href: Optional[str] = None,
         id: Optional[str] = None,
@@ -12317,6 +12462,9 @@ class JobRun:
         """
         Initialize a JobRun object.
 
+        :param List[EnvVar] computed_env_variables: References to config maps,
+               secrets or literal values, which are defined and set by Code Engine and are
+               exposed as environment variables in the job run.
         :param List[str] run_arguments: Set arguments for the job that are passed
                to start job run containers. If not specified an empty string array will be
                applied and the arguments specified by the container image, will be used to
@@ -12330,9 +12478,6 @@ class JobRun:
                as environment variables in the job run.
         :param List[VolumeMount] run_volume_mounts: Optional mounts of config maps
                or secrets.
-        :param List[EnvVar] computed_env_variables: (optional) References to config
-               maps, secrets or literal values, which are defined and set by Code Engine
-               and are exposed as environment variables in the job run.
         :param str image_reference: (optional) The name of the image that is used
                for this job. The format is `REGISTRY/NAMESPACE/REPOSITORY:TAG` where
                `REGISTRY` and `TAG` are optional. If `REGISTRY` is not specified, the
@@ -12432,6 +12577,8 @@ class JobRun:
         args = {}
         if (computed_env_variables := _dict.get('computed_env_variables')) is not None:
             args['computed_env_variables'] = [EnvVar.from_dict(v) for v in computed_env_variables]
+        else:
+            raise ValueError('Required property \'computed_env_variables\' not present in JobRun JSON')
         if (created_at := _dict.get('created_at')) is not None:
             args['created_at'] = created_at
         if (href := _dict.get('href')) is not None:
@@ -13433,6 +13580,81 @@ class PersistentDataStoreList:
         return not self == other
 
 
+class PrivatePathServiceGatewayDetails:
+    """
+    Optional information about the private path service gateway that this allowed outbound
+    destination points to.
+
+    :param str id: (optional) The private path service gateway identifier.
+    :param str name: (optional) The name of private path service gateway.
+    :param List[str] service_endpoints: (optional) The fully qualified domain names
+          for this private path service gateway. The domains are used for endpoint
+          gateways to connect to the service and are configured in the VPC for each
+          endpoint gateway.
+    """
+
+    def __init__(
+        self,
+        *,
+        id: Optional[str] = None,
+        name: Optional[str] = None,
+        service_endpoints: Optional[List[str]] = None,
+    ) -> None:
+        """
+        Initialize a PrivatePathServiceGatewayDetails object.
+
+        """
+        self.id = id
+        self.name = name
+        self.service_endpoints = service_endpoints
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'PrivatePathServiceGatewayDetails':
+        """Initialize a PrivatePathServiceGatewayDetails object from a json dictionary."""
+        args = {}
+        if (id := _dict.get('id')) is not None:
+            args['id'] = id
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        if (service_endpoints := _dict.get('service_endpoints')) is not None:
+            args['service_endpoints'] = service_endpoints
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a PrivatePathServiceGatewayDetails object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'id') and getattr(self, 'id') is not None:
+            _dict['id'] = getattr(self, 'id')
+        if hasattr(self, 'name') and getattr(self, 'name') is not None:
+            _dict['name'] = getattr(self, 'name')
+        if hasattr(self, 'service_endpoints') and getattr(self, 'service_endpoints') is not None:
+            _dict['service_endpoints'] = getattr(self, 'service_endpoints')
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this PrivatePathServiceGatewayDetails object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'PrivatePathServiceGatewayDetails') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'PrivatePathServiceGatewayDetails') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+
 class Probe:
     """
     Response model for probes.
@@ -13448,12 +13670,13 @@ class Probe:
     :param int port: (optional) The port on which to probe the resource.
     :param int timeout: (optional) The amount of time in seconds that the probe
           waits for a response from the application before it times out and fails.
-    :param str type: (optional) Specifies whether to use HTTP or TCP for the probe
-          checks. The default is TCP.
+    :param str type: Specifies whether to use HTTP or TCP for the probe checks. The
+          default is TCP.
     """
 
     def __init__(
         self,
+        type: str,
         *,
         failure_threshold: Optional[int] = None,
         initial_delay: Optional[int] = None,
@@ -13461,11 +13684,12 @@ class Probe:
         path: Optional[str] = None,
         port: Optional[int] = None,
         timeout: Optional[int] = None,
-        type: Optional[str] = None,
     ) -> None:
         """
         Initialize a Probe object.
 
+        :param str type: Specifies whether to use HTTP or TCP for the probe checks.
+               The default is TCP.
         :param int failure_threshold: (optional) The number of consecutive,
                unsuccessful checks for the probe to be considered failed.
         :param int initial_delay: (optional) The amount of time in seconds to wait
@@ -13477,8 +13701,6 @@ class Probe:
         :param int port: (optional) The port on which to probe the resource.
         :param int timeout: (optional) The amount of time in seconds that the probe
                waits for a response from the application before it times out and fails.
-        :param str type: (optional) Specifies whether to use HTTP or TCP for the
-               probe checks. The default is TCP.
         """
         self.failure_threshold = failure_threshold
         self.initial_delay = initial_delay
@@ -13506,6 +13728,8 @@ class Probe:
             args['timeout'] = timeout
         if (type := _dict.get('type')) is not None:
             args['type'] = type
+        else:
+            raise ValueError('Required property \'type\' not present in Probe JSON')
         return cls(**args)
 
     @classmethod
@@ -14414,7 +14638,7 @@ class Secret:
           max length of 1048576 characters.
     :param str entity_tag: The version of the secret instance, which is used to
           achieve optimistic locking.
-    :param str format: (optional) Specify the format of the secret.
+    :param str format: Specify the format of the secret.
     :param str generated_by: (optional) Specifies whether the secret is user
           generated.
     :param str href: (optional) When you provision a new secret,  a URL is created
@@ -14436,11 +14660,11 @@ class Secret:
     def __init__(
         self,
         entity_tag: str,
+        format: str,
         name: str,
         *,
         created_at: Optional[str] = None,
         data: Optional[dict] = None,
-        format: Optional[str] = None,
         generated_by: Optional[str] = None,
         href: Optional[str] = None,
         id: Optional[str] = None,
@@ -14455,13 +14679,13 @@ class Secret:
 
         :param str entity_tag: The version of the secret instance, which is used to
                achieve optimistic locking.
+        :param str format: Specify the format of the secret.
         :param str name: The name of the secret.
         :param dict data: (optional) Data container that allows to specify config
                parameters and their values as a key-value map. Each key field must consist
                of alphanumeric characters, `-`, `_` or `.` and must not exceed a max
                length of 253 characters. Each value field can consists of any character
                and must not exceed a max length of 1048576 characters.
-        :param str format: (optional) Specify the format of the secret.
         :param ServiceAccessSecretProps service_access: (optional) Properties for
                Service Access Secrets.
         :param OperatorSecretProps service_operator: (optional) Properties for the
@@ -14495,6 +14719,8 @@ class Secret:
             raise ValueError('Required property \'entity_tag\' not present in Secret JSON')
         if (format := _dict.get('format')) is not None:
             args['format'] = format
+        else:
+            raise ValueError('Required property \'format\' not present in Secret JSON')
         if (generated_by := _dict.get('generated_by')) is not None:
             args['generated_by'] = generated_by
         if (href := _dict.get('href')) is not None:
@@ -15246,8 +15472,8 @@ class VolumeMount:
 
     :param str mount_path: The path that should be mounted.
     :param str name: (optional) The name of the mount.
-    :param bool read_only: (optional) Optional flag to specify if the volume mount
-          is read only.
+    :param bool read_only: (optional) Optional flag for a volume mount of type
+          'persistent_data_store' to specify whether it is read-only.
     :param str reference: The name of the referenced secret, config map, or
           persistent data store.
     :param str sub_path: (optional) The path mounted at the mount path.
@@ -15274,8 +15500,8 @@ class VolumeMount:
         :param str type: Specify the type of the volume mount. Allowed types are:
                'config_map', 'persistent_data_store', 'secret'.
         :param str name: (optional) The name of the mount.
-        :param bool read_only: (optional) Optional flag to specify if the volume
-               mount is read only.
+        :param bool read_only: (optional) Optional flag for a volume mount of type
+               'persistent_data_store' to specify whether it is read-only.
         :param str sub_path: (optional) The path mounted at the mount path.
         """
         self.mount_path = mount_path
@@ -15366,10 +15592,10 @@ class VolumeMountPrototype:
 
     :param str mount_path: The path that should be mounted.
     :param str name: (optional) Optional name of the mount. If not set, it will be
-          generated based on the `ref` and a random ID. In case the `ref` is longer than
-          58 characters, it will be cut off.
-    :param bool read_only: (optional) Optional flag to specify if the volume mount
-          is read only.
+          generated based on the `reference` and a random ID. In case the `reference` is
+          longer than 58 characters, it will be cut off.
+    :param bool read_only: (optional) Optional flag for a volume mount of type
+          'persistent_data_store' to specify whether it is read-only.
     :param str reference: The name of the referenced secret, config map, or
           persistent data store.
     :param str sub_path: (optional) The path mounted at the mount path.
@@ -15396,10 +15622,10 @@ class VolumeMountPrototype:
         :param str type: Specify the type of the volume mount. Allowed types are:
                'config_map', 'persistent_data_store', 'secret'.
         :param str name: (optional) Optional name of the mount. If not set, it will
-               be generated based on the `ref` and a random ID. In case the `ref` is
-               longer than 58 characters, it will be cut off.
-        :param bool read_only: (optional) Optional flag to specify if the volume
-               mount is read only.
+               be generated based on the `reference` and a random ID. In case the
+               `reference` is longer than 58 characters, it will be cut off.
+        :param bool read_only: (optional) Optional flag for a volume mount of type
+               'persistent_data_store' to specify whether it is read-only.
         :param str sub_path: (optional) The path mounted at the mount path.
         """
         self.mount_path = mount_path
@@ -15488,34 +15714,26 @@ class AllowedOutboundDestinationPatchCidrBlockDataPatch(AllowedOutboundDestinati
     """
     Update an allowed outbound destination by using a CIDR block.
 
-    :param str type: (optional) Specify the type of the allowed outbound
-          destination. Allowed types are: 'cidr_block'.
     :param str cidr_block: (optional) The IPv4 address range.
     """
 
     def __init__(
         self,
         *,
-        type: Optional[str] = None,
         cidr_block: Optional[str] = None,
     ) -> None:
         """
         Initialize a AllowedOutboundDestinationPatchCidrBlockDataPatch object.
 
-        :param str type: (optional) Specify the type of the allowed outbound
-               destination. Allowed types are: 'cidr_block'.
         :param str cidr_block: (optional) The IPv4 address range.
         """
         # pylint: disable=super-init-not-called
-        self.type = type
         self.cidr_block = cidr_block
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'AllowedOutboundDestinationPatchCidrBlockDataPatch':
         """Initialize a AllowedOutboundDestinationPatchCidrBlockDataPatch object from a json dictionary."""
         args = {}
-        if (type := _dict.get('type')) is not None:
-            args['type'] = type
         if (cidr_block := _dict.get('cidr_block')) is not None:
             args['cidr_block'] = cidr_block
         return cls(**args)
@@ -15528,8 +15746,6 @@ class AllowedOutboundDestinationPatchCidrBlockDataPatch(AllowedOutboundDestinati
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'type') and self.type is not None:
-            _dict['type'] = self.type
         if hasattr(self, 'cidr_block') and self.cidr_block is not None:
             _dict['cidr_block'] = self.cidr_block
         return _dict
@@ -15552,13 +15768,87 @@ class AllowedOutboundDestinationPatchCidrBlockDataPatch(AllowedOutboundDestinati
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-    class TypeEnum(str, Enum):
+
+class AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch(AllowedOutboundDestinationPatch):
+    """
+    Updating properties of an allowed outbound destination of type VPC Private Path
+    service.
+
+    :param str isolation_policy: (optional) Optional property to specify the
+          isolation policy of the private path service gateway. If set to `shared`, other
+          projects within the same account or enterprise account family can connect to
+          Private Path service, too. If set to `dedicated` the gateway can only be used by
+          a single Code Engine project. If not specified the isolation policy will be set
+          to `shared`.
+    """
+
+    def __init__(
+        self,
+        *,
+        isolation_policy: Optional[str] = None,
+    ) -> None:
         """
-        Specify the type of the allowed outbound destination. Allowed types are:
-        'cidr_block'.
+        Initialize a AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch object.
+
+        :param str isolation_policy: (optional) Optional property to specify the
+               isolation policy of the private path service gateway. If set to `shared`,
+               other projects within the same account or enterprise account family can
+               connect to Private Path service, too. If set to `dedicated` the gateway can
+               only be used by a single Code Engine project. If not specified the
+               isolation policy will be set to `shared`.
+        """
+        # pylint: disable=super-init-not-called
+        self.isolation_policy = isolation_policy
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch':
+        """Initialize a AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch object from a json dictionary."""
+        args = {}
+        if (isolation_policy := _dict.get('isolation_policy')) is not None:
+            args['isolation_policy'] = isolation_policy
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'isolation_policy') and self.isolation_policy is not None:
+            _dict['isolation_policy'] = self.isolation_policy
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class IsolationPolicyEnum(str, Enum):
+        """
+        Optional property to specify the isolation policy of the private path service
+        gateway. If set to `shared`, other projects within the same account or enterprise
+        account family can connect to Private Path service, too. If set to `dedicated` the
+        gateway can only be used by a single Code Engine project. If not specified the
+        isolation policy will be set to `shared`.
         """
 
-        CIDR_BLOCK = 'cidr_block'
+        SHARED = 'shared'
+        DEDICATED = 'dedicated'
 
 
 class AllowedOutboundDestinationPrototypeCidrBlockDataPrototype(AllowedOutboundDestinationPrototype):
@@ -15566,29 +15856,29 @@ class AllowedOutboundDestinationPrototypeCidrBlockDataPrototype(AllowedOutboundD
     Create an allowed outbound destination by using a CIDR block.
 
     :param str type: Specify the type of the allowed outbound destination. Allowed
-          types are: 'cidr_block'.
+          types are: `cidr_block` and `private_path_service_gateway`.
+    :param str name: The name of the allowed outbound destination.
     :param str cidr_block: The IPv4 address range.
-    :param str name: The name of the CIDR block.
     """
 
     def __init__(
         self,
         type: str,
-        cidr_block: str,
         name: str,
+        cidr_block: str,
     ) -> None:
         """
         Initialize a AllowedOutboundDestinationPrototypeCidrBlockDataPrototype object.
 
         :param str type: Specify the type of the allowed outbound destination.
-               Allowed types are: 'cidr_block'.
+               Allowed types are: `cidr_block` and `private_path_service_gateway`.
+        :param str name: The name of the allowed outbound destination.
         :param str cidr_block: The IPv4 address range.
-        :param str name: The name of the CIDR block.
         """
         # pylint: disable=super-init-not-called
         self.type = type
-        self.cidr_block = cidr_block
         self.name = name
+        self.cidr_block = cidr_block
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'AllowedOutboundDestinationPrototypeCidrBlockDataPrototype':
@@ -15600,17 +15890,17 @@ class AllowedOutboundDestinationPrototypeCidrBlockDataPrototype(AllowedOutboundD
             raise ValueError(
                 'Required property \'type\' not present in AllowedOutboundDestinationPrototypeCidrBlockDataPrototype JSON'
             )
-        if (cidr_block := _dict.get('cidr_block')) is not None:
-            args['cidr_block'] = cidr_block
-        else:
-            raise ValueError(
-                'Required property \'cidr_block\' not present in AllowedOutboundDestinationPrototypeCidrBlockDataPrototype JSON'
-            )
         if (name := _dict.get('name')) is not None:
             args['name'] = name
         else:
             raise ValueError(
                 'Required property \'name\' not present in AllowedOutboundDestinationPrototypeCidrBlockDataPrototype JSON'
+            )
+        if (cidr_block := _dict.get('cidr_block')) is not None:
+            args['cidr_block'] = cidr_block
+        else:
+            raise ValueError(
+                'Required property \'cidr_block\' not present in AllowedOutboundDestinationPrototypeCidrBlockDataPrototype JSON'
             )
         return cls(**args)
 
@@ -15624,10 +15914,10 @@ class AllowedOutboundDestinationPrototypeCidrBlockDataPrototype(AllowedOutboundD
         _dict = {}
         if hasattr(self, 'type') and self.type is not None:
             _dict['type'] = self.type
-        if hasattr(self, 'cidr_block') and self.cidr_block is not None:
-            _dict['cidr_block'] = self.cidr_block
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'cidr_block') and self.cidr_block is not None:
+            _dict['cidr_block'] = self.cidr_block
         return _dict
 
     def _to_dict(self):
@@ -15651,46 +15941,189 @@ class AllowedOutboundDestinationPrototypeCidrBlockDataPrototype(AllowedOutboundD
     class TypeEnum(str, Enum):
         """
         Specify the type of the allowed outbound destination. Allowed types are:
-        'cidr_block'.
+        `cidr_block` and `private_path_service_gateway`.
         """
 
         CIDR_BLOCK = 'cidr_block'
+        PRIVATE_PATH_SERVICE_GATEWAY = 'private_path_service_gateway'
 
 
-class AllowedOutboundDestinationCidrBlockData(AllowedOutboundDestination):
+class AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype(AllowedOutboundDestinationPrototype):
     """
-    Allowed outbound destination CIDR block.
+    Create an allowed outbound destination by connecting to a VPC Private Path service.
 
-    :param str entity_tag: The version of the allowed outbound destination, which is
-          used to achieve optimistic locking.
     :param str type: Specify the type of the allowed outbound destination. Allowed
-          types are: 'cidr_block'.
-    :param str cidr_block: The IPv4 address range.
-    :param str name: The name of the CIDR block.
+          types are: `cidr_block` and `private_path_service_gateway`.
+    :param str name: The name of the allowed outbound destination.
+    :param str private_path_service_gateway_crn: The CRN of the Private Path
+          service. The CRN can be obtained in the resource details of the target Private
+          Path service. [Learn
+          more](https://cloud.ibm.com/docs/vpc?topic=vpc-pps-ui-communicate).
+    :param str isolation_policy: (optional) Optional property to specify the
+          isolation policy of the private path service gateway. If set to `shared`, other
+          projects within the same account or enterprise account family can connect to
+          Private Path service, too. If set to `dedicated` the gateway can only be used by
+          a single Code Engine project. If not specified the isolation policy will be set
+          to `shared`.
     """
 
     def __init__(
         self,
-        entity_tag: str,
+        type: str,
+        name: str,
+        private_path_service_gateway_crn: str,
+        *,
+        isolation_policy: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype object.
+
+        :param str type: Specify the type of the allowed outbound destination.
+               Allowed types are: `cidr_block` and `private_path_service_gateway`.
+        :param str name: The name of the allowed outbound destination.
+        :param str private_path_service_gateway_crn: The CRN of the Private Path
+               service. The CRN can be obtained in the resource details of the target
+               Private Path service. [Learn
+               more](https://cloud.ibm.com/docs/vpc?topic=vpc-pps-ui-communicate).
+        :param str isolation_policy: (optional) Optional property to specify the
+               isolation policy of the private path service gateway. If set to `shared`,
+               other projects within the same account or enterprise account family can
+               connect to Private Path service, too. If set to `dedicated` the gateway can
+               only be used by a single Code Engine project. If not specified the
+               isolation policy will be set to `shared`.
+        """
+        # pylint: disable=super-init-not-called
+        self.type = type
+        self.name = name
+        self.private_path_service_gateway_crn = private_path_service_gateway_crn
+        self.isolation_policy = isolation_policy
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype':
+        """Initialize a AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype object from a json dictionary."""
+        args = {}
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype JSON'
+            )
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        else:
+            raise ValueError(
+                'Required property \'name\' not present in AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype JSON'
+            )
+        if (private_path_service_gateway_crn := _dict.get('private_path_service_gateway_crn')) is not None:
+            args['private_path_service_gateway_crn'] = private_path_service_gateway_crn
+        else:
+            raise ValueError(
+                'Required property \'private_path_service_gateway_crn\' not present in AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype JSON'
+            )
+        if (isolation_policy := _dict.get('isolation_policy')) is not None:
+            args['isolation_policy'] = isolation_policy
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'private_path_service_gateway_crn') and self.private_path_service_gateway_crn is not None:
+            _dict['private_path_service_gateway_crn'] = self.private_path_service_gateway_crn
+        if hasattr(self, 'isolation_policy') and self.isolation_policy is not None:
+            _dict['isolation_policy'] = self.isolation_policy
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class TypeEnum(str, Enum):
+        """
+        Specify the type of the allowed outbound destination. Allowed types are:
+        `cidr_block` and `private_path_service_gateway`.
+        """
+
+        CIDR_BLOCK = 'cidr_block'
+        PRIVATE_PATH_SERVICE_GATEWAY = 'private_path_service_gateway'
+
+    class IsolationPolicyEnum(str, Enum):
+        """
+        Optional property to specify the isolation policy of the private path service
+        gateway. If set to `shared`, other projects within the same account or enterprise
+        account family can connect to Private Path service, too. If set to `dedicated` the
+        gateway can only be used by a single Code Engine project. If not specified the
+        isolation policy will be set to `shared`.
+        """
+
+        SHARED = 'shared'
+        DEDICATED = 'dedicated'
+
+
+class AllowedOutboundDestinationCidrBlockData(AllowedOutboundDestination):
+    """
+    Allowed outbound destination of type CIDR block.
+
+    :param str entity_tag: (optional) The version of the allowed outbound
+          destination, which is used to achieve optimistic locking.
+    :param str name: (optional) The name of the allowed outbound destination.
+    :param str status: (optional) The current status of the outbound destination.
+    :param AllowedOutboundStatusDetails status_details: (optional)
+    :param str type: Specify the type of the allowed outbound destination. Allowed
+          types are: `cidr_block` and `private_path_service_gateway`.
+    :param str cidr_block: The IPv4 address range.
+    """
+
+    def __init__(
+        self,
         type: str,
         cidr_block: str,
-        name: str,
+        *,
+        entity_tag: Optional[str] = None,
+        name: Optional[str] = None,
+        status: Optional[str] = None,
+        status_details: Optional['AllowedOutboundStatusDetails'] = None,
     ) -> None:
         """
         Initialize a AllowedOutboundDestinationCidrBlockData object.
 
-        :param str entity_tag: The version of the allowed outbound destination,
-               which is used to achieve optimistic locking.
         :param str type: Specify the type of the allowed outbound destination.
-               Allowed types are: 'cidr_block'.
+               Allowed types are: `cidr_block` and `private_path_service_gateway`.
         :param str cidr_block: The IPv4 address range.
-        :param str name: The name of the CIDR block.
+        :param str entity_tag: (optional) The version of the allowed outbound
+               destination, which is used to achieve optimistic locking.
+        :param str name: (optional) The name of the allowed outbound destination.
+        :param AllowedOutboundStatusDetails status_details: (optional)
         """
         # pylint: disable=super-init-not-called
         self.entity_tag = entity_tag
+        self.name = name
+        self.status = status
+        self.status_details = status_details
         self.type = type
         self.cidr_block = cidr_block
-        self.name = name
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'AllowedOutboundDestinationCidrBlockData':
@@ -15698,10 +16131,12 @@ class AllowedOutboundDestinationCidrBlockData(AllowedOutboundDestination):
         args = {}
         if (entity_tag := _dict.get('entity_tag')) is not None:
             args['entity_tag'] = entity_tag
-        else:
-            raise ValueError(
-                'Required property \'entity_tag\' not present in AllowedOutboundDestinationCidrBlockData JSON'
-            )
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        if (status := _dict.get('status')) is not None:
+            args['status'] = status
+        if (status_details := _dict.get('status_details')) is not None:
+            args['status_details'] = status_details
         if (type := _dict.get('type')) is not None:
             args['type'] = type
         else:
@@ -15712,10 +16147,6 @@ class AllowedOutboundDestinationCidrBlockData(AllowedOutboundDestination):
             raise ValueError(
                 'Required property \'cidr_block\' not present in AllowedOutboundDestinationCidrBlockData JSON'
             )
-        if (name := _dict.get('name')) is not None:
-            args['name'] = name
-        else:
-            raise ValueError('Required property \'name\' not present in AllowedOutboundDestinationCidrBlockData JSON')
         return cls(**args)
 
     @classmethod
@@ -15728,12 +16159,19 @@ class AllowedOutboundDestinationCidrBlockData(AllowedOutboundDestination):
         _dict = {}
         if hasattr(self, 'entity_tag') and self.entity_tag is not None:
             _dict['entity_tag'] = self.entity_tag
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'status') and getattr(self, 'status') is not None:
+            _dict['status'] = getattr(self, 'status')
+        if hasattr(self, 'status_details') and self.status_details is not None:
+            if isinstance(self.status_details, dict):
+                _dict['status_details'] = self.status_details
+            else:
+                _dict['status_details'] = self.status_details.to_dict()
         if hasattr(self, 'type') and self.type is not None:
             _dict['type'] = self.type
         if hasattr(self, 'cidr_block') and self.cidr_block is not None:
             _dict['cidr_block'] = self.cidr_block
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         return _dict
 
     def _to_dict(self):
@@ -15754,13 +16192,299 @@ class AllowedOutboundDestinationCidrBlockData(AllowedOutboundDestination):
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+    class StatusEnum(str, Enum):
+        """
+        The current status of the outbound destination.
+        """
+
+        READY = 'ready'
+        FAILED = 'failed'
+        DEPLOYING = 'deploying'
+
     class TypeEnum(str, Enum):
         """
         Specify the type of the allowed outbound destination. Allowed types are:
-        'cidr_block'.
+        `cidr_block` and `private_path_service_gateway`.
         """
 
         CIDR_BLOCK = 'cidr_block'
+        PRIVATE_PATH_SERVICE_GATEWAY = 'private_path_service_gateway'
+
+
+class AllowedOutboundDestinationPrivatePathServiceGatewayData(AllowedOutboundDestination):
+    """
+    Allowed outbound destination of type VPC Private Path service.
+
+    :param str entity_tag: (optional) The version of the allowed outbound
+          destination, which is used to achieve optimistic locking.
+    :param str name: (optional) The name of the allowed outbound destination.
+    :param str status: (optional) The current status of the outbound destination.
+    :param AllowedOutboundStatusDetails status_details: (optional)
+    :param str type: Specify the type of the allowed outbound destination. Allowed
+          types are: `cidr_block` and `private_path_service_gateway`.
+    :param str private_path_service_gateway_crn: The CRN of the Private Path
+          service.
+    :param str isolation_policy: Optional property to specify the isolation policy
+          of the private path service gateway. If set to `shared`, other projects within
+          the same account or enterprise account family can connect to Private Path
+          service, too. If set to `dedicated` the gateway can only be used by a single
+          Code Engine project. If not specified the isolation policy will be set to
+          `shared`.
+    """
+
+    def __init__(
+        self,
+        type: str,
+        private_path_service_gateway_crn: str,
+        isolation_policy: str,
+        *,
+        entity_tag: Optional[str] = None,
+        name: Optional[str] = None,
+        status: Optional[str] = None,
+        status_details: Optional['AllowedOutboundStatusDetails'] = None,
+    ) -> None:
+        """
+        Initialize a AllowedOutboundDestinationPrivatePathServiceGatewayData object.
+
+        :param str type: Specify the type of the allowed outbound destination.
+               Allowed types are: `cidr_block` and `private_path_service_gateway`.
+        :param str private_path_service_gateway_crn: The CRN of the Private Path
+               service.
+        :param str isolation_policy: Optional property to specify the isolation
+               policy of the private path service gateway. If set to `shared`, other
+               projects within the same account or enterprise account family can connect
+               to Private Path service, too. If set to `dedicated` the gateway can only be
+               used by a single Code Engine project. If not specified the isolation policy
+               will be set to `shared`.
+        :param str entity_tag: (optional) The version of the allowed outbound
+               destination, which is used to achieve optimistic locking.
+        :param str name: (optional) The name of the allowed outbound destination.
+        :param AllowedOutboundStatusDetails status_details: (optional)
+        """
+        # pylint: disable=super-init-not-called
+        self.entity_tag = entity_tag
+        self.name = name
+        self.status = status
+        self.status_details = status_details
+        self.type = type
+        self.private_path_service_gateway_crn = private_path_service_gateway_crn
+        self.isolation_policy = isolation_policy
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'AllowedOutboundDestinationPrivatePathServiceGatewayData':
+        """Initialize a AllowedOutboundDestinationPrivatePathServiceGatewayData object from a json dictionary."""
+        args = {}
+        if (entity_tag := _dict.get('entity_tag')) is not None:
+            args['entity_tag'] = entity_tag
+        if (name := _dict.get('name')) is not None:
+            args['name'] = name
+        if (status := _dict.get('status')) is not None:
+            args['status'] = status
+        if (status_details := _dict.get('status_details')) is not None:
+            args['status_details'] = status_details
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in AllowedOutboundDestinationPrivatePathServiceGatewayData JSON'
+            )
+        if (private_path_service_gateway_crn := _dict.get('private_path_service_gateway_crn')) is not None:
+            args['private_path_service_gateway_crn'] = private_path_service_gateway_crn
+        else:
+            raise ValueError(
+                'Required property \'private_path_service_gateway_crn\' not present in AllowedOutboundDestinationPrivatePathServiceGatewayData JSON'
+            )
+        if (isolation_policy := _dict.get('isolation_policy')) is not None:
+            args['isolation_policy'] = isolation_policy
+        else:
+            raise ValueError(
+                'Required property \'isolation_policy\' not present in AllowedOutboundDestinationPrivatePathServiceGatewayData JSON'
+            )
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a AllowedOutboundDestinationPrivatePathServiceGatewayData object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'entity_tag') and self.entity_tag is not None:
+            _dict['entity_tag'] = self.entity_tag
+        if hasattr(self, 'name') and self.name is not None:
+            _dict['name'] = self.name
+        if hasattr(self, 'status') and getattr(self, 'status') is not None:
+            _dict['status'] = getattr(self, 'status')
+        if hasattr(self, 'status_details') and self.status_details is not None:
+            if isinstance(self.status_details, dict):
+                _dict['status_details'] = self.status_details
+            else:
+                _dict['status_details'] = self.status_details.to_dict()
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
+        if hasattr(self, 'private_path_service_gateway_crn') and self.private_path_service_gateway_crn is not None:
+            _dict['private_path_service_gateway_crn'] = self.private_path_service_gateway_crn
+        if hasattr(self, 'isolation_policy') and self.isolation_policy is not None:
+            _dict['isolation_policy'] = self.isolation_policy
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this AllowedOutboundDestinationPrivatePathServiceGatewayData object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'AllowedOutboundDestinationPrivatePathServiceGatewayData') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'AllowedOutboundDestinationPrivatePathServiceGatewayData') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class StatusEnum(str, Enum):
+        """
+        The current status of the outbound destination.
+        """
+
+        READY = 'ready'
+        FAILED = 'failed'
+        DEPLOYING = 'deploying'
+
+    class TypeEnum(str, Enum):
+        """
+        Specify the type of the allowed outbound destination. Allowed types are:
+        `cidr_block` and `private_path_service_gateway`.
+        """
+
+        CIDR_BLOCK = 'cidr_block'
+        PRIVATE_PATH_SERVICE_GATEWAY = 'private_path_service_gateway'
+
+    class IsolationPolicyEnum(str, Enum):
+        """
+        Optional property to specify the isolation policy of the private path service
+        gateway. If set to `shared`, other projects within the same account or enterprise
+        account family can connect to Private Path service, too. If set to `dedicated` the
+        gateway can only be used by a single Code Engine project. If not specified the
+        isolation policy will be set to `shared`.
+        """
+
+        SHARED = 'shared'
+        DEDICATED = 'dedicated'
+
+
+class AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails(AllowedOutboundStatusDetails):
+    """
+    Detailed status information related to the corresponding VPC Private Path service.
+
+    :param EndpointGatewayDetails endpoint_gateway: (optional) Optional information
+          about the endpoint gateway located in the Code Engine VPC that connects to the
+          private path service gateway.
+    :param PrivatePathServiceGatewayDetails private_path_service_gateway: (optional)
+          Optional information about the private path service gateway that this allowed
+          outbound destination points to.
+    :param str reason: (optional) Optional information to provide more context in
+          case of a 'failed' or 'deploying' status.
+    """
+
+    def __init__(
+        self,
+        *,
+        endpoint_gateway: Optional['EndpointGatewayDetails'] = None,
+        private_path_service_gateway: Optional['PrivatePathServiceGatewayDetails'] = None,
+        reason: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize a AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails object.
+
+        :param EndpointGatewayDetails endpoint_gateway: (optional) Optional
+               information about the endpoint gateway located in the Code Engine VPC that
+               connects to the private path service gateway.
+        :param PrivatePathServiceGatewayDetails private_path_service_gateway:
+               (optional) Optional information about the private path service gateway that
+               this allowed outbound destination points to.
+        """
+        # pylint: disable=super-init-not-called
+        self.endpoint_gateway = endpoint_gateway
+        self.private_path_service_gateway = private_path_service_gateway
+        self.reason = reason
+
+    @classmethod
+    def from_dict(cls, _dict: Dict) -> 'AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails':
+        """Initialize a AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails object from a json dictionary."""
+        args = {}
+        if (endpoint_gateway := _dict.get('endpoint_gateway')) is not None:
+            args['endpoint_gateway'] = EndpointGatewayDetails.from_dict(endpoint_gateway)
+        if (private_path_service_gateway := _dict.get('private_path_service_gateway')) is not None:
+            args['private_path_service_gateway'] = PrivatePathServiceGatewayDetails.from_dict(
+                private_path_service_gateway
+            )
+        if (reason := _dict.get('reason')) is not None:
+            args['reason'] = reason
+        return cls(**args)
+
+    @classmethod
+    def _from_dict(cls, _dict):
+        """Initialize a AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails object from a json dictionary."""
+        return cls.from_dict(_dict)
+
+    def to_dict(self) -> Dict:
+        """Return a json dictionary representing this model."""
+        _dict = {}
+        if hasattr(self, 'endpoint_gateway') and self.endpoint_gateway is not None:
+            if isinstance(self.endpoint_gateway, dict):
+                _dict['endpoint_gateway'] = self.endpoint_gateway
+            else:
+                _dict['endpoint_gateway'] = self.endpoint_gateway.to_dict()
+        if hasattr(self, 'private_path_service_gateway') and self.private_path_service_gateway is not None:
+            if isinstance(self.private_path_service_gateway, dict):
+                _dict['private_path_service_gateway'] = self.private_path_service_gateway
+            else:
+                _dict['private_path_service_gateway'] = self.private_path_service_gateway.to_dict()
+        if hasattr(self, 'reason') and getattr(self, 'reason') is not None:
+            _dict['reason'] = getattr(self, 'reason')
+        return _dict
+
+    def _to_dict(self):
+        """Return a json dictionary representing this model."""
+        return self.to_dict()
+
+    def __str__(self) -> str:
+        """Return a `str` version of this AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails object."""
+        return json.dumps(self.to_dict(), indent=2)
+
+    def __eq__(self, other: 'AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails') -> bool:
+        """Return `true` when self and other are equal, false otherwise."""
+        if not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other: 'AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails') -> bool:
+        """Return `true` when self and other are not equal, false otherwise."""
+        return not self == other
+
+    class ReasonEnum(str, Enum):
+        """
+        Optional information to provide more context in case of a 'failed' or 'deploying'
+        status.
+        """
+
+        READY = 'ready'
+        PRIVATE_PATH_CRN_INVALID = 'private_path_crn_invalid'
+        PRIVATE_PATH_NOT_IN_SAME_REGION = 'private_path_not_in_same_region'
+        PRIVATE_PATH_NOT_IN_SAME_ACCOUNT_FAMILY = 'private_path_not_in_same_account_family'
+        PRIVATE_PATH_NOT_FOUND = 'private_path_not_found'
+        PRIVATE_PATH_NOT_PUBLISHED = 'private_path_not_published'
+        PRIVATE_PATH_CONNECTION_ALREADY_EXISTS = 'private_path_connection_already_exists'
+        PRIVATE_PATH_CONNECTION_APPROVAL_DENIED = 'private_path_connection_approval_denied'
+        PRIVATE_PATH_CONNECTION_APPROVAL_PENDING = 'private_path_connection_approval_pending'
+        DEPLOYING = 'deploying'
+        FAILED = 'failed'
 
 
 class SecretDataBasicAuthSecretData(SecretData):
@@ -16416,7 +17140,10 @@ class SecretDataTLSSecretData(SecretData):
 
 class StorageDataObjectStorageData(StorageData):
     """
-    StorageDataObjectStorageData.
+    Data container that allows to specify config parameters and their values as a
+    key-value map. Each key field must consist of alphanumeric characters, `-`, `_` or `.`
+    and must not exceed a max length of 253 characters. Each value field can consists of
+    any character and must not exceed a max length of 1048576 characters.
 
     :param str bucket_location: Specify the location of the bucket.
     :param str bucket_name: Specify the name of the bucket.
@@ -16533,6 +17260,33 @@ class StorageDataObjectStorageData(StorageData):
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
+    class BucketLocationEnum(str, Enum):
+        """
+        Specify the location of the bucket.
+        """
+
+        AU_SYD = 'au-syd'
+        BR_SAO = 'br-sao'
+        CA_MON = 'ca-mon'
+        CA_TOR = 'ca-tor'
+        EU_DE = 'eu-de'
+        EU_ES = 'eu-es'
+        EU_GB = 'eu-gb'
+        JP_OSA = 'jp-osa'
+        JP_TOK = 'jp-tok'
+        US_EAST = 'us-east'
+        US_SOUTH = 'us-south'
+        AP = 'ap'
+        EU = 'eu'
+        US = 'us'
+        AMS03 = 'ams03'
+        CHE01 = 'che01'
+        MIL01 = 'mil01'
+        MON01 = 'mon01'
+        PAR01 = 'par01'
+        SJC04 = 'sjc04'
+        SNG01 = 'sng01'
+
 
 ##############################################################################
 # Pagers
@@ -16603,9 +17357,9 @@ class ProjectsPager:
         return results
 
 
-class AllowedOutboundDestinationPager:
+class AllowedOutboundDestinationsPager:
     """
-    AllowedOutboundDestinationPager can be used to simplify the use of the "list_allowed_outbound_destination" method.
+    AllowedOutboundDestinationsPager can be used to simplify the use of the "list_allowed_outbound_destinations" method.
     """
 
     def __init__(
@@ -16616,7 +17370,7 @@ class AllowedOutboundDestinationPager:
         limit: int = None,
     ) -> None:
         """
-        Initialize a AllowedOutboundDestinationPager object.
+        Initialize a AllowedOutboundDestinationsPager object.
         :param str project_id: The ID of the project.
         :param int limit: (optional) Optional maximum number of allowed outbound
                destinations per page.
@@ -16642,7 +17396,7 @@ class AllowedOutboundDestinationPager:
         if not self.has_next():
             raise StopIteration(message='No more results available')
 
-        result = self._client.list_allowed_outbound_destination(
+        result = self._client.list_allowed_outbound_destinations(
             project_id=self._project_id,
             limit=self._limit,
             start=self._page_context.get('next'),
@@ -17513,9 +18267,9 @@ class SecretsPager:
         return results
 
 
-class PersistentDataStorePager:
+class PersistentDataStoresPager:
     """
-    PersistentDataStorePager can be used to simplify the use of the "list_persistent_data_store" method.
+    PersistentDataStoresPager can be used to simplify the use of the "list_persistent_data_stores" method.
     """
 
     def __init__(
@@ -17526,7 +18280,7 @@ class PersistentDataStorePager:
         limit: int = None,
     ) -> None:
         """
-        Initialize a PersistentDataStorePager object.
+        Initialize a PersistentDataStoresPager object.
         :param str project_id: The ID of the project.
         :param int limit: (optional) Optional maximum number of persistent data
                stores per page.
@@ -17552,7 +18306,7 @@ class PersistentDataStorePager:
         if not self.has_next():
             raise StopIteration(message='No more results available')
 
-        result = self._client.list_persistent_data_store(
+        result = self._client.list_persistent_data_stores(
             project_id=self._project_id,
             limit=self._limit,
             start=self._page_context.get('next'),

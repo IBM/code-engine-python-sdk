@@ -103,7 +103,7 @@ class TestCodeEngineV2:
 
     @needscredentials
     def test_get_project(self):
-        time.sleep(120)
+        time.sleep(60)
         response = self.code_engine_service.get_project(
             id=pytest.e2e_test_project_id,
         )
@@ -1205,8 +1205,8 @@ class TestCodeEngineV2:
             storage_type='object_storage',
             name='my-persistent-data-store',
             data={
-                'bucket_location': 'eu-de',
-                'bucket_name': 'e2e-api-bucket-eu-de',
+                'bucket_location': os.environ['COS_BUCKET_LOCATION'],
+                'bucket_name': os.environ['COS_BUCKET_NAME'],
                 'secret_name': 'ce-api-int-test-hmac-secret',
             },
         )
@@ -1227,8 +1227,8 @@ class TestCodeEngineV2:
         assert persistent_data_store is not None
 
     @needscredentials
-    def test_list_persistent_data_store(self):
-        response = self.code_engine_service.list_persistent_data_store(
+    def test_list_persistent_data_stores(self):
+        response = self.code_engine_service.list_persistent_data_stores(
             project_id=pytest.e2e_test_project_id,
             limit=100,
         )
@@ -1238,11 +1238,11 @@ class TestCodeEngineV2:
         assert persistent_data_store_list is not None
 
     @needscredentials
-    def test_list_persistent_data_store_with_pager(self):
+    def test_list_persistent_data_stores_with_pager(self):
         all_results = []
 
         # Test get_next().
-        pager = PersistentDataStorePager(
+        pager = PersistentDataStoresPager(
             client=self.code_engine_service,
             project_id=pytest.e2e_test_project_id,
             limit=100,
@@ -1253,7 +1253,7 @@ class TestCodeEngineV2:
             all_results.extend(next_page)
 
         # Test get_all().
-        pager = PersistentDataStorePager(
+        pager = PersistentDataStoresPager(
             client=self.code_engine_service,
             project_id=pytest.e2e_test_project_id,
             limit=100,
@@ -1263,7 +1263,7 @@ class TestCodeEngineV2:
 
         assert len(all_results) == len(all_items)
         print(
-            f'\nlist_persistent_data_store() returned a total of {len(all_results)} items(s) using PersistentDataStorePager.'
+            f'\nlist_persistent_data_stores() returned a total of {len(all_results)} items(s) using PersistentDataStoresPager.'
         )
 
     @needscredentials
@@ -1354,8 +1354,8 @@ class TestCodeEngineV2:
         assert function_runtime_list is not None
 
     @needscredentials
-    def test_list_allowed_outbound_destination(self):
-        response = self.code_engine_service.list_allowed_outbound_destination(
+    def test_list_allowed_outbound_destinations(self):
+        response = self.code_engine_service.list_allowed_outbound_destinations(
             project_id=pytest.e2e_test_project_id,
             limit=100,
         )

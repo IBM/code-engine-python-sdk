@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (C) Copyright IBM Corp. 2025.
+# (C) Copyright IBM Corp. 2026.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import responses
 import urllib
 from ibm_code_engine_sdk.code_engine_v2 import *
 
-version = '2025-08-27'
+version = '2026-02-23'
 
 _service = CodeEngineV2(authenticator=NoAuthAuthenticator())
 
@@ -608,19 +608,19 @@ class TestGetProject:
         self.test_get_project_value_error()
 
 
-class TestListAllowedOutboundDestination:
+class TestListAllowedOutboundDestinations:
     """
-    Test Class for list_allowed_outbound_destination
+    Test Class for list_allowed_outbound_destinations
     """
 
     @responses.activate
-    def test_list_allowed_outbound_destination_all_params(self):
+    def test_list_allowed_outbound_destinations_all_params(self):
         """
-        list_allowed_outbound_destination()
+        list_allowed_outbound_destinations()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations')
-        mock_response = '{"allowed_outbound_destinations": [{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        mock_response = '{"allowed_outbound_destinations": [{"entity_tag": "2385407409", "name": "allow-all", "status": "ready", "status_details": {"endpoint_gateway": {"account_id": "account_id", "created_at": "2025-09-13T11:41:35+02:00", "ips": ["ips"], "name": "my-endpoint-gateway"}, "private_path_service_gateway": {"id": "r006-7268d425-59b7-48fd-9735-81a7271657d5", "name": "my-private-path-service-gateway", "service_endpoints": ["service_endpoints"]}, "reason": "ready"}, "type": "cidr_block", "cidr_block": "cidr_block"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
         responses.add(
             responses.GET,
             url,
@@ -635,7 +635,7 @@ class TestListAllowedOutboundDestination:
         start = 'testString'
 
         # Invoke method
-        response = _service.list_allowed_outbound_destination(
+        response = _service.list_allowed_outbound_destinations(
             project_id,
             limit=limit,
             start=start,
@@ -651,23 +651,23 @@ class TestListAllowedOutboundDestination:
         assert 'limit={}'.format(limit) in query_string
         assert 'start={}'.format(start) in query_string
 
-    def test_list_allowed_outbound_destination_all_params_with_retries(self):
-        # Enable retries and run test_list_allowed_outbound_destination_all_params.
+    def test_list_allowed_outbound_destinations_all_params_with_retries(self):
+        # Enable retries and run test_list_allowed_outbound_destinations_all_params.
         _service.enable_retries()
-        self.test_list_allowed_outbound_destination_all_params()
+        self.test_list_allowed_outbound_destinations_all_params()
 
-        # Disable retries and run test_list_allowed_outbound_destination_all_params.
+        # Disable retries and run test_list_allowed_outbound_destinations_all_params.
         _service.disable_retries()
-        self.test_list_allowed_outbound_destination_all_params()
+        self.test_list_allowed_outbound_destinations_all_params()
 
     @responses.activate
-    def test_list_allowed_outbound_destination_required_params(self):
+    def test_list_allowed_outbound_destinations_required_params(self):
         """
-        test_list_allowed_outbound_destination_required_params()
+        test_list_allowed_outbound_destinations_required_params()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations')
-        mock_response = '{"allowed_outbound_destinations": [{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        mock_response = '{"allowed_outbound_destinations": [{"entity_tag": "2385407409", "name": "allow-all", "status": "ready", "status_details": {"endpoint_gateway": {"account_id": "account_id", "created_at": "2025-09-13T11:41:35+02:00", "ips": ["ips"], "name": "my-endpoint-gateway"}, "private_path_service_gateway": {"id": "r006-7268d425-59b7-48fd-9735-81a7271657d5", "name": "my-private-path-service-gateway", "service_endpoints": ["service_endpoints"]}, "reason": "ready"}, "type": "cidr_block", "cidr_block": "cidr_block"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
         responses.add(
             responses.GET,
             url,
@@ -680,7 +680,7 @@ class TestListAllowedOutboundDestination:
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
 
         # Invoke method
-        response = _service.list_allowed_outbound_destination(
+        response = _service.list_allowed_outbound_destinations(
             project_id,
             headers={},
         )
@@ -689,23 +689,23 @@ class TestListAllowedOutboundDestination:
         assert len(responses.calls) == 1
         assert response.status_code == 200
 
-    def test_list_allowed_outbound_destination_required_params_with_retries(self):
-        # Enable retries and run test_list_allowed_outbound_destination_required_params.
+    def test_list_allowed_outbound_destinations_required_params_with_retries(self):
+        # Enable retries and run test_list_allowed_outbound_destinations_required_params.
         _service.enable_retries()
-        self.test_list_allowed_outbound_destination_required_params()
+        self.test_list_allowed_outbound_destinations_required_params()
 
-        # Disable retries and run test_list_allowed_outbound_destination_required_params.
+        # Disable retries and run test_list_allowed_outbound_destinations_required_params.
         _service.disable_retries()
-        self.test_list_allowed_outbound_destination_required_params()
+        self.test_list_allowed_outbound_destinations_required_params()
 
     @responses.activate
-    def test_list_allowed_outbound_destination_value_error(self):
+    def test_list_allowed_outbound_destinations_value_error(self):
         """
-        test_list_allowed_outbound_destination_value_error()
+        test_list_allowed_outbound_destinations_value_error()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations')
-        mock_response = '{"allowed_outbound_destinations": [{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
+        mock_response = '{"allowed_outbound_destinations": [{"entity_tag": "2385407409", "name": "allow-all", "status": "ready", "status_details": {"endpoint_gateway": {"account_id": "account_id", "created_at": "2025-09-13T11:41:35+02:00", "ips": ["ips"], "name": "my-endpoint-gateway"}, "private_path_service_gateway": {"id": "r006-7268d425-59b7-48fd-9735-81a7271657d5", "name": "my-private-path-service-gateway", "service_endpoints": ["service_endpoints"]}, "reason": "ready"}, "type": "cidr_block", "cidr_block": "cidr_block"}], "first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}}'
         responses.add(
             responses.GET,
             url,
@@ -724,26 +724,26 @@ class TestListAllowedOutboundDestination:
         for param in req_param_dict.keys():
             req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
             with pytest.raises(ValueError):
-                _service.list_allowed_outbound_destination(**req_copy)
+                _service.list_allowed_outbound_destinations(**req_copy)
 
-    def test_list_allowed_outbound_destination_value_error_with_retries(self):
-        # Enable retries and run test_list_allowed_outbound_destination_value_error.
+    def test_list_allowed_outbound_destinations_value_error_with_retries(self):
+        # Enable retries and run test_list_allowed_outbound_destinations_value_error.
         _service.enable_retries()
-        self.test_list_allowed_outbound_destination_value_error()
+        self.test_list_allowed_outbound_destinations_value_error()
 
-        # Disable retries and run test_list_allowed_outbound_destination_value_error.
+        # Disable retries and run test_list_allowed_outbound_destinations_value_error.
         _service.disable_retries()
-        self.test_list_allowed_outbound_destination_value_error()
+        self.test_list_allowed_outbound_destinations_value_error()
 
     @responses.activate
-    def test_list_allowed_outbound_destination_with_pager_get_next(self):
+    def test_list_allowed_outbound_destinations_with_pager_get_next(self):
         """
-        test_list_allowed_outbound_destination_with_pager_get_next()
+        test_list_allowed_outbound_destinations_with_pager_get_next()
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations')
-        mock_response1 = '{"next":{"start":"1"},"allowed_outbound_destinations":[{"entity_tag":"2385407409","type":"cidr_block","cidr_block":"cidr_block","name":"name"}],"total_count":2,"limit":1}'
-        mock_response2 = '{"allowed_outbound_destinations":[{"entity_tag":"2385407409","type":"cidr_block","cidr_block":"cidr_block","name":"name"}],"total_count":2,"limit":1}'
+        mock_response1 = '{"next":{"start":"1"},"allowed_outbound_destinations":[{"entity_tag":"2385407409","name":"allow-all","status":"ready","status_details":{"endpoint_gateway":{"account_id":"account_id","created_at":"2025-09-13T11:41:35+02:00","ips":["ips"],"name":"my-endpoint-gateway"},"private_path_service_gateway":{"id":"r006-7268d425-59b7-48fd-9735-81a7271657d5","name":"my-private-path-service-gateway","service_endpoints":["service_endpoints"]},"reason":"ready"},"type":"cidr_block","cidr_block":"cidr_block"}],"total_count":2,"limit":1}'
+        mock_response2 = '{"allowed_outbound_destinations":[{"entity_tag":"2385407409","name":"allow-all","status":"ready","status_details":{"endpoint_gateway":{"account_id":"account_id","created_at":"2025-09-13T11:41:35+02:00","ips":["ips"],"name":"my-endpoint-gateway"},"private_path_service_gateway":{"id":"r006-7268d425-59b7-48fd-9735-81a7271657d5","name":"my-private-path-service-gateway","service_endpoints":["service_endpoints"]},"reason":"ready"},"type":"cidr_block","cidr_block":"cidr_block"}],"total_count":2,"limit":1}'
         responses.add(
             responses.GET,
             url,
@@ -761,7 +761,7 @@ class TestListAllowedOutboundDestination:
 
         # Exercise the pager class for this operation
         all_results = []
-        pager = AllowedOutboundDestinationPager(
+        pager = AllowedOutboundDestinationsPager(
             client=_service,
             project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
             limit=100,
@@ -773,14 +773,14 @@ class TestListAllowedOutboundDestination:
         assert len(all_results) == 2
 
     @responses.activate
-    def test_list_allowed_outbound_destination_with_pager_get_all(self):
+    def test_list_allowed_outbound_destinations_with_pager_get_all(self):
         """
-        test_list_allowed_outbound_destination_with_pager_get_all()
+        test_list_allowed_outbound_destinations_with_pager_get_all()
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations')
-        mock_response1 = '{"next":{"start":"1"},"allowed_outbound_destinations":[{"entity_tag":"2385407409","type":"cidr_block","cidr_block":"cidr_block","name":"name"}],"total_count":2,"limit":1}'
-        mock_response2 = '{"allowed_outbound_destinations":[{"entity_tag":"2385407409","type":"cidr_block","cidr_block":"cidr_block","name":"name"}],"total_count":2,"limit":1}'
+        mock_response1 = '{"next":{"start":"1"},"allowed_outbound_destinations":[{"entity_tag":"2385407409","name":"allow-all","status":"ready","status_details":{"endpoint_gateway":{"account_id":"account_id","created_at":"2025-09-13T11:41:35+02:00","ips":["ips"],"name":"my-endpoint-gateway"},"private_path_service_gateway":{"id":"r006-7268d425-59b7-48fd-9735-81a7271657d5","name":"my-private-path-service-gateway","service_endpoints":["service_endpoints"]},"reason":"ready"},"type":"cidr_block","cidr_block":"cidr_block"}],"total_count":2,"limit":1}'
+        mock_response2 = '{"allowed_outbound_destinations":[{"entity_tag":"2385407409","name":"allow-all","status":"ready","status_details":{"endpoint_gateway":{"account_id":"account_id","created_at":"2025-09-13T11:41:35+02:00","ips":["ips"],"name":"my-endpoint-gateway"},"private_path_service_gateway":{"id":"r006-7268d425-59b7-48fd-9735-81a7271657d5","name":"my-private-path-service-gateway","service_endpoints":["service_endpoints"]},"reason":"ready"},"type":"cidr_block","cidr_block":"cidr_block"}],"total_count":2,"limit":1}'
         responses.add(
             responses.GET,
             url,
@@ -797,7 +797,7 @@ class TestListAllowedOutboundDestination:
         )
 
         # Exercise the pager class for this operation
-        pager = AllowedOutboundDestinationPager(
+        pager = AllowedOutboundDestinationsPager(
             client=_service,
             project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
             limit=100,
@@ -819,7 +819,7 @@ class TestCreateAllowedOutboundDestination:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations')
-        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        mock_response = '{"entity_tag": "2385407409", "name": "allow-all", "status": "ready", "status_details": {"endpoint_gateway": {"account_id": "account_id", "created_at": "2025-09-13T11:41:35+02:00", "ips": ["ips"], "name": "my-endpoint-gateway"}, "private_path_service_gateway": {"id": "r006-7268d425-59b7-48fd-9735-81a7271657d5", "name": "my-private-path-service-gateway", "service_endpoints": ["service_endpoints"]}, "reason": "ready"}, "type": "cidr_block", "cidr_block": "cidr_block"}'
         responses.add(
             responses.POST,
             url,
@@ -831,8 +831,8 @@ class TestCreateAllowedOutboundDestination:
         # Construct a dict representation of a AllowedOutboundDestinationPrototypeCidrBlockDataPrototype model
         allowed_outbound_destination_prototype_model = {}
         allowed_outbound_destination_prototype_model['type'] = 'cidr_block'
+        allowed_outbound_destination_prototype_model['name'] = 'allow-all'
         allowed_outbound_destination_prototype_model['cidr_block'] = 'testString'
-        allowed_outbound_destination_prototype_model['name'] = 'testString'
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -868,7 +868,7 @@ class TestCreateAllowedOutboundDestination:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations')
-        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        mock_response = '{"entity_tag": "2385407409", "name": "allow-all", "status": "ready", "status_details": {"endpoint_gateway": {"account_id": "account_id", "created_at": "2025-09-13T11:41:35+02:00", "ips": ["ips"], "name": "my-endpoint-gateway"}, "private_path_service_gateway": {"id": "r006-7268d425-59b7-48fd-9735-81a7271657d5", "name": "my-private-path-service-gateway", "service_endpoints": ["service_endpoints"]}, "reason": "ready"}, "type": "cidr_block", "cidr_block": "cidr_block"}'
         responses.add(
             responses.POST,
             url,
@@ -880,8 +880,8 @@ class TestCreateAllowedOutboundDestination:
         # Construct a dict representation of a AllowedOutboundDestinationPrototypeCidrBlockDataPrototype model
         allowed_outbound_destination_prototype_model = {}
         allowed_outbound_destination_prototype_model['type'] = 'cidr_block'
+        allowed_outbound_destination_prototype_model['name'] = 'allow-all'
         allowed_outbound_destination_prototype_model['cidr_block'] = 'testString'
-        allowed_outbound_destination_prototype_model['name'] = 'testString'
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -917,7 +917,7 @@ class TestCreateAllowedOutboundDestination:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations')
-        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        mock_response = '{"entity_tag": "2385407409", "name": "allow-all", "status": "ready", "status_details": {"endpoint_gateway": {"account_id": "account_id", "created_at": "2025-09-13T11:41:35+02:00", "ips": ["ips"], "name": "my-endpoint-gateway"}, "private_path_service_gateway": {"id": "r006-7268d425-59b7-48fd-9735-81a7271657d5", "name": "my-private-path-service-gateway", "service_endpoints": ["service_endpoints"]}, "reason": "ready"}, "type": "cidr_block", "cidr_block": "cidr_block"}'
         responses.add(
             responses.POST,
             url,
@@ -929,8 +929,8 @@ class TestCreateAllowedOutboundDestination:
         # Construct a dict representation of a AllowedOutboundDestinationPrototypeCidrBlockDataPrototype model
         allowed_outbound_destination_prototype_model = {}
         allowed_outbound_destination_prototype_model['type'] = 'cidr_block'
+        allowed_outbound_destination_prototype_model['name'] = 'allow-all'
         allowed_outbound_destination_prototype_model['cidr_block'] = 'testString'
-        allowed_outbound_destination_prototype_model['name'] = 'testString'
 
         # Set up parameter values
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
@@ -1092,7 +1092,7 @@ class TestGetAllowedOutboundDestination:
         url = preprocess_url(
             '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations/my-allowed-outbound-destination'
         )
-        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        mock_response = '{"entity_tag": "2385407409", "name": "allow-all", "status": "ready", "status_details": {"endpoint_gateway": {"account_id": "account_id", "created_at": "2025-09-13T11:41:35+02:00", "ips": ["ips"], "name": "my-endpoint-gateway"}, "private_path_service_gateway": {"id": "r006-7268d425-59b7-48fd-9735-81a7271657d5", "name": "my-private-path-service-gateway", "service_endpoints": ["service_endpoints"]}, "reason": "ready"}, "type": "cidr_block", "cidr_block": "cidr_block"}'
         responses.add(
             responses.GET,
             url,
@@ -1134,7 +1134,7 @@ class TestGetAllowedOutboundDestination:
         url = preprocess_url(
             '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations/my-allowed-outbound-destination'
         )
-        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        mock_response = '{"entity_tag": "2385407409", "name": "allow-all", "status": "ready", "status_details": {"endpoint_gateway": {"account_id": "account_id", "created_at": "2025-09-13T11:41:35+02:00", "ips": ["ips"], "name": "my-endpoint-gateway"}, "private_path_service_gateway": {"id": "r006-7268d425-59b7-48fd-9735-81a7271657d5", "name": "my-private-path-service-gateway", "service_endpoints": ["service_endpoints"]}, "reason": "ready"}, "type": "cidr_block", "cidr_block": "cidr_block"}'
         responses.add(
             responses.GET,
             url,
@@ -1176,7 +1176,7 @@ class TestGetAllowedOutboundDestination:
         url = preprocess_url(
             '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations/my-allowed-outbound-destination'
         )
-        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        mock_response = '{"entity_tag": "2385407409", "name": "allow-all", "status": "ready", "status_details": {"endpoint_gateway": {"account_id": "account_id", "created_at": "2025-09-13T11:41:35+02:00", "ips": ["ips"], "name": "my-endpoint-gateway"}, "private_path_service_gateway": {"id": "r006-7268d425-59b7-48fd-9735-81a7271657d5", "name": "my-private-path-service-gateway", "service_endpoints": ["service_endpoints"]}, "reason": "ready"}, "type": "cidr_block", "cidr_block": "cidr_block"}'
         responses.add(
             responses.GET,
             url,
@@ -1223,7 +1223,7 @@ class TestUpdateAllowedOutboundDestination:
         url = preprocess_url(
             '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations/my-allowed-outbound-destination'
         )
-        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        mock_response = '{"entity_tag": "2385407409", "name": "allow-all", "status": "ready", "status_details": {"endpoint_gateway": {"account_id": "account_id", "created_at": "2025-09-13T11:41:35+02:00", "ips": ["ips"], "name": "my-endpoint-gateway"}, "private_path_service_gateway": {"id": "r006-7268d425-59b7-48fd-9735-81a7271657d5", "name": "my-private-path-service-gateway", "service_endpoints": ["service_endpoints"]}, "reason": "ready"}, "type": "cidr_block", "cidr_block": "cidr_block"}'
         responses.add(
             responses.PATCH,
             url,
@@ -1234,7 +1234,6 @@ class TestUpdateAllowedOutboundDestination:
 
         # Construct a dict representation of a AllowedOutboundDestinationPatchCidrBlockDataPatch model
         allowed_outbound_destination_patch_model = {}
-        allowed_outbound_destination_patch_model['type'] = 'cidr_block'
         allowed_outbound_destination_patch_model['cidr_block'] = 'testString'
 
         # Set up parameter values
@@ -1277,7 +1276,7 @@ class TestUpdateAllowedOutboundDestination:
         url = preprocess_url(
             '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations/my-allowed-outbound-destination'
         )
-        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        mock_response = '{"entity_tag": "2385407409", "name": "allow-all", "status": "ready", "status_details": {"endpoint_gateway": {"account_id": "account_id", "created_at": "2025-09-13T11:41:35+02:00", "ips": ["ips"], "name": "my-endpoint-gateway"}, "private_path_service_gateway": {"id": "r006-7268d425-59b7-48fd-9735-81a7271657d5", "name": "my-private-path-service-gateway", "service_endpoints": ["service_endpoints"]}, "reason": "ready"}, "type": "cidr_block", "cidr_block": "cidr_block"}'
         responses.add(
             responses.PATCH,
             url,
@@ -1288,7 +1287,6 @@ class TestUpdateAllowedOutboundDestination:
 
         # Construct a dict representation of a AllowedOutboundDestinationPatchCidrBlockDataPatch model
         allowed_outbound_destination_patch_model = {}
-        allowed_outbound_destination_patch_model['type'] = 'cidr_block'
         allowed_outbound_destination_patch_model['cidr_block'] = 'testString'
 
         # Set up parameter values
@@ -1331,7 +1329,7 @@ class TestUpdateAllowedOutboundDestination:
         url = preprocess_url(
             '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/allowed_outbound_destinations/my-allowed-outbound-destination'
         )
-        mock_response = '{"entity_tag": "2385407409", "type": "cidr_block", "cidr_block": "cidr_block", "name": "name"}'
+        mock_response = '{"entity_tag": "2385407409", "name": "allow-all", "status": "ready", "status_details": {"endpoint_gateway": {"account_id": "account_id", "created_at": "2025-09-13T11:41:35+02:00", "ips": ["ips"], "name": "my-endpoint-gateway"}, "private_path_service_gateway": {"id": "r006-7268d425-59b7-48fd-9735-81a7271657d5", "name": "my-private-path-service-gateway", "service_endpoints": ["service_endpoints"]}, "reason": "ready"}, "type": "cidr_block", "cidr_block": "cidr_block"}'
         responses.add(
             responses.PATCH,
             url,
@@ -1342,7 +1340,6 @@ class TestUpdateAllowedOutboundDestination:
 
         # Construct a dict representation of a AllowedOutboundDestinationPatchCidrBlockDataPatch model
         allowed_outbound_destination_patch_model = {}
-        allowed_outbound_destination_patch_model['type'] = 'cidr_block'
         allowed_outbound_destination_patch_model['cidr_block'] = 'testString'
 
         # Set up parameter values
@@ -3250,7 +3247,7 @@ class TestListAppInstances:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/instances')
-        mock_response = '{"first": {"href": "href"}, "instances": [{"app_name": "my-app", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-app-00001-deployment-6c9b5cf966-wjs44", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_instance_v2", "revision_name": "my-app", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_memory_limit": "4G", "status": "pending", "status_details": {"restarts": 4, "system_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 100, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 100, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}}, "user_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 100, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 100, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}}}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        mock_response = '{"first": {"href": "href"}, "instances": [{"app_name": "my-app", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-app-00001-deployment-6c9b5cf966-wjs44", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_instance_v2", "revision_name": "my-app", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_memory_limit": "4G", "status": "pending", "status_details": {"restarts": 4, "system_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 0, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 0, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}}, "user_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 0, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 0, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}}}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
         responses.add(
             responses.GET,
             url,
@@ -3299,7 +3296,7 @@ class TestListAppInstances:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/instances')
-        mock_response = '{"first": {"href": "href"}, "instances": [{"app_name": "my-app", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-app-00001-deployment-6c9b5cf966-wjs44", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_instance_v2", "revision_name": "my-app", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_memory_limit": "4G", "status": "pending", "status_details": {"restarts": 4, "system_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 100, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 100, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}}, "user_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 100, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 100, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}}}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        mock_response = '{"first": {"href": "href"}, "instances": [{"app_name": "my-app", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-app-00001-deployment-6c9b5cf966-wjs44", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_instance_v2", "revision_name": "my-app", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_memory_limit": "4G", "status": "pending", "status_details": {"restarts": 4, "system_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 0, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 0, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}}, "user_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 0, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 0, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}}}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
         responses.add(
             responses.GET,
             url,
@@ -3339,7 +3336,7 @@ class TestListAppInstances:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/instances')
-        mock_response = '{"first": {"href": "href"}, "instances": [{"app_name": "my-app", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-app-00001-deployment-6c9b5cf966-wjs44", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_instance_v2", "revision_name": "my-app", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_memory_limit": "4G", "status": "pending", "status_details": {"restarts": 4, "system_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 100, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 100, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}}, "user_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 100, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 100, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}}}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
+        mock_response = '{"first": {"href": "href"}, "instances": [{"app_name": "my-app", "created_at": "2022-09-13T11:41:35+02:00", "href": "https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-app-00001-deployment-6c9b5cf966-wjs44", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "resource_type": "app_instance_v2", "revision_name": "my-app", "scale_cpu_limit": "1", "scale_ephemeral_storage_limit": "4G", "scale_memory_limit": "4G", "status": "pending", "status_details": {"restarts": 4, "system_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 0, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 0, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}}, "user_container": {"current_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 0, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}, "last_observed_state": {"completed_at": "2022-09-22T17:40:00Z", "container_status": "running", "exit_code": 0, "reason": "some_error_reason", "started_at": "2022-09-22T17:34:00Z"}}}}], "limit": 100, "next": {"href": "href", "start": "start"}}'
         responses.add(
             responses.GET,
             url,
@@ -3378,8 +3375,8 @@ class TestListAppInstances:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/instances')
-        mock_response1 = '{"next":{"start":"1"},"instances":[{"app_name":"my-app","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-app-00001-deployment-6c9b5cf966-wjs44","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_instance_v2","revision_name":"my-app","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_memory_limit":"4G","status":"pending","status_details":{"restarts":4,"system_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":100,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":100,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"}},"user_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":100,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":100,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"}}}}],"total_count":2,"limit":1}'
-        mock_response2 = '{"instances":[{"app_name":"my-app","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-app-00001-deployment-6c9b5cf966-wjs44","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_instance_v2","revision_name":"my-app","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_memory_limit":"4G","status":"pending","status_details":{"restarts":4,"system_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":100,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":100,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"}},"user_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":100,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":100,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"}}}}],"total_count":2,"limit":1}'
+        mock_response1 = '{"next":{"start":"1"},"instances":[{"app_name":"my-app","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-app-00001-deployment-6c9b5cf966-wjs44","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_instance_v2","revision_name":"my-app","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_memory_limit":"4G","status":"pending","status_details":{"restarts":4,"system_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":0,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":0,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"}},"user_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":0,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":0,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"}}}}],"total_count":2,"limit":1}'
+        mock_response2 = '{"instances":[{"app_name":"my-app","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-app-00001-deployment-6c9b5cf966-wjs44","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_instance_v2","revision_name":"my-app","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_memory_limit":"4G","status":"pending","status_details":{"restarts":4,"system_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":0,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":0,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"}},"user_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":0,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":0,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"}}}}],"total_count":2,"limit":1}'
         responses.add(
             responses.GET,
             url,
@@ -3416,8 +3413,8 @@ class TestListAppInstances:
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/apps/my-app/instances')
-        mock_response1 = '{"next":{"start":"1"},"instances":[{"app_name":"my-app","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-app-00001-deployment-6c9b5cf966-wjs44","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_instance_v2","revision_name":"my-app","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_memory_limit":"4G","status":"pending","status_details":{"restarts":4,"system_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":100,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":100,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"}},"user_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":100,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":100,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"}}}}],"total_count":2,"limit":1}'
-        mock_response2 = '{"instances":[{"app_name":"my-app","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-app-00001-deployment-6c9b5cf966-wjs44","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_instance_v2","revision_name":"my-app","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_memory_limit":"4G","status":"pending","status_details":{"restarts":4,"system_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":100,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":100,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"}},"user_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":100,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":100,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"}}}}],"total_count":2,"limit":1}'
+        mock_response1 = '{"next":{"start":"1"},"instances":[{"app_name":"my-app","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-app-00001-deployment-6c9b5cf966-wjs44","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_instance_v2","revision_name":"my-app","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_memory_limit":"4G","status":"pending","status_details":{"restarts":4,"system_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":0,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":0,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"}},"user_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":0,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":0,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"}}}}],"total_count":2,"limit":1}'
+        mock_response2 = '{"instances":[{"app_name":"my-app","created_at":"2022-09-13T11:41:35+02:00","href":"https://api.eu-de.codeengine.cloud.ibm.com/v2/projects/4e49b3e0-27a8-48d2-a784-c7ee48bb863b/apps/my-app/instances","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-app-00001-deployment-6c9b5cf966-wjs44","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","resource_type":"app_instance_v2","revision_name":"my-app","scale_cpu_limit":"1","scale_ephemeral_storage_limit":"4G","scale_memory_limit":"4G","status":"pending","status_details":{"restarts":4,"system_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":0,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":0,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"}},"user_container":{"current_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":0,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"},"last_observed_state":{"completed_at":"2022-09-22T17:40:00Z","container_status":"running","exit_code":0,"reason":"some_error_reason","started_at":"2022-09-22T17:34:00Z"}}}}],"total_count":2,"limit":1}'
         responses.add(
             responses.GET,
             url,
@@ -10990,19 +10987,19 @@ class TestNewInstance:
             )
 
 
-class TestListPersistentDataStore:
+class TestListPersistentDataStores:
     """
-    Test Class for list_persistent_data_store
+    Test Class for list_persistent_data_stores
     """
 
     @responses.activate
-    def test_list_persistent_data_store_all_params(self):
+    def test_list_persistent_data_stores_all_params(self):
         """
-        list_persistent_data_store()
+        list_persistent_data_stores()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/persistent_data_stores')
-        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "persistent_data_stores": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "bucket_location", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}]}'
+        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "persistent_data_stores": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "au-syd", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}]}'
         responses.add(
             responses.GET,
             url,
@@ -11017,7 +11014,7 @@ class TestListPersistentDataStore:
         start = 'testString'
 
         # Invoke method
-        response = _service.list_persistent_data_store(
+        response = _service.list_persistent_data_stores(
             project_id,
             limit=limit,
             start=start,
@@ -11033,23 +11030,23 @@ class TestListPersistentDataStore:
         assert 'limit={}'.format(limit) in query_string
         assert 'start={}'.format(start) in query_string
 
-    def test_list_persistent_data_store_all_params_with_retries(self):
-        # Enable retries and run test_list_persistent_data_store_all_params.
+    def test_list_persistent_data_stores_all_params_with_retries(self):
+        # Enable retries and run test_list_persistent_data_stores_all_params.
         _service.enable_retries()
-        self.test_list_persistent_data_store_all_params()
+        self.test_list_persistent_data_stores_all_params()
 
-        # Disable retries and run test_list_persistent_data_store_all_params.
+        # Disable retries and run test_list_persistent_data_stores_all_params.
         _service.disable_retries()
-        self.test_list_persistent_data_store_all_params()
+        self.test_list_persistent_data_stores_all_params()
 
     @responses.activate
-    def test_list_persistent_data_store_required_params(self):
+    def test_list_persistent_data_stores_required_params(self):
         """
-        test_list_persistent_data_store_required_params()
+        test_list_persistent_data_stores_required_params()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/persistent_data_stores')
-        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "persistent_data_stores": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "bucket_location", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}]}'
+        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "persistent_data_stores": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "au-syd", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}]}'
         responses.add(
             responses.GET,
             url,
@@ -11062,7 +11059,7 @@ class TestListPersistentDataStore:
         project_id = '15314cc3-85b4-4338-903f-c28cdee6d005'
 
         # Invoke method
-        response = _service.list_persistent_data_store(
+        response = _service.list_persistent_data_stores(
             project_id,
             headers={},
         )
@@ -11071,23 +11068,23 @@ class TestListPersistentDataStore:
         assert len(responses.calls) == 1
         assert response.status_code == 200
 
-    def test_list_persistent_data_store_required_params_with_retries(self):
-        # Enable retries and run test_list_persistent_data_store_required_params.
+    def test_list_persistent_data_stores_required_params_with_retries(self):
+        # Enable retries and run test_list_persistent_data_stores_required_params.
         _service.enable_retries()
-        self.test_list_persistent_data_store_required_params()
+        self.test_list_persistent_data_stores_required_params()
 
-        # Disable retries and run test_list_persistent_data_store_required_params.
+        # Disable retries and run test_list_persistent_data_stores_required_params.
         _service.disable_retries()
-        self.test_list_persistent_data_store_required_params()
+        self.test_list_persistent_data_stores_required_params()
 
     @responses.activate
-    def test_list_persistent_data_store_value_error(self):
+    def test_list_persistent_data_stores_value_error(self):
         """
-        test_list_persistent_data_store_value_error()
+        test_list_persistent_data_stores_value_error()
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/persistent_data_stores')
-        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "persistent_data_stores": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "bucket_location", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}]}'
+        mock_response = '{"first": {"href": "href"}, "limit": 100, "next": {"href": "href", "start": "start"}, "persistent_data_stores": [{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "au-syd", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}]}'
         responses.add(
             responses.GET,
             url,
@@ -11106,26 +11103,26 @@ class TestListPersistentDataStore:
         for param in req_param_dict.keys():
             req_copy = {key: val if key is not param else None for (key, val) in req_param_dict.items()}
             with pytest.raises(ValueError):
-                _service.list_persistent_data_store(**req_copy)
+                _service.list_persistent_data_stores(**req_copy)
 
-    def test_list_persistent_data_store_value_error_with_retries(self):
-        # Enable retries and run test_list_persistent_data_store_value_error.
+    def test_list_persistent_data_stores_value_error_with_retries(self):
+        # Enable retries and run test_list_persistent_data_stores_value_error.
         _service.enable_retries()
-        self.test_list_persistent_data_store_value_error()
+        self.test_list_persistent_data_stores_value_error()
 
-        # Disable retries and run test_list_persistent_data_store_value_error.
+        # Disable retries and run test_list_persistent_data_stores_value_error.
         _service.disable_retries()
-        self.test_list_persistent_data_store_value_error()
+        self.test_list_persistent_data_stores_value_error()
 
     @responses.activate
-    def test_list_persistent_data_store_with_pager_get_next(self):
+    def test_list_persistent_data_stores_with_pager_get_next(self):
         """
-        test_list_persistent_data_store_with_pager_get_next()
+        test_list_persistent_data_stores_with_pager_get_next()
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/persistent_data_stores')
-        mock_response1 = '{"next":{"start":"1"},"persistent_data_stores":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"bucket_location":"bucket_location","bucket_name":"bucket_name","secret_name":"secret_name"},"entity_tag":"2385407409","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-persistent-data-store","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","storage_type":"object_storage"}],"total_count":2,"limit":1}'
-        mock_response2 = '{"persistent_data_stores":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"bucket_location":"bucket_location","bucket_name":"bucket_name","secret_name":"secret_name"},"entity_tag":"2385407409","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-persistent-data-store","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","storage_type":"object_storage"}],"total_count":2,"limit":1}'
+        mock_response1 = '{"next":{"start":"1"},"persistent_data_stores":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"bucket_location":"au-syd","bucket_name":"bucket_name","secret_name":"secret_name"},"entity_tag":"2385407409","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-persistent-data-store","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","storage_type":"object_storage"}],"total_count":2,"limit":1}'
+        mock_response2 = '{"persistent_data_stores":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"bucket_location":"au-syd","bucket_name":"bucket_name","secret_name":"secret_name"},"entity_tag":"2385407409","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-persistent-data-store","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","storage_type":"object_storage"}],"total_count":2,"limit":1}'
         responses.add(
             responses.GET,
             url,
@@ -11143,7 +11140,7 @@ class TestListPersistentDataStore:
 
         # Exercise the pager class for this operation
         all_results = []
-        pager = PersistentDataStorePager(
+        pager = PersistentDataStoresPager(
             client=_service,
             project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
             limit=100,
@@ -11155,14 +11152,14 @@ class TestListPersistentDataStore:
         assert len(all_results) == 2
 
     @responses.activate
-    def test_list_persistent_data_store_with_pager_get_all(self):
+    def test_list_persistent_data_stores_with_pager_get_all(self):
         """
-        test_list_persistent_data_store_with_pager_get_all()
+        test_list_persistent_data_stores_with_pager_get_all()
         """
         # Set up a two-page mock response
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/persistent_data_stores')
-        mock_response1 = '{"next":{"start":"1"},"persistent_data_stores":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"bucket_location":"bucket_location","bucket_name":"bucket_name","secret_name":"secret_name"},"entity_tag":"2385407409","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-persistent-data-store","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","storage_type":"object_storage"}],"total_count":2,"limit":1}'
-        mock_response2 = '{"persistent_data_stores":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"bucket_location":"bucket_location","bucket_name":"bucket_name","secret_name":"secret_name"},"entity_tag":"2385407409","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-persistent-data-store","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","storage_type":"object_storage"}],"total_count":2,"limit":1}'
+        mock_response1 = '{"next":{"start":"1"},"persistent_data_stores":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"bucket_location":"au-syd","bucket_name":"bucket_name","secret_name":"secret_name"},"entity_tag":"2385407409","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-persistent-data-store","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","storage_type":"object_storage"}],"total_count":2,"limit":1}'
+        mock_response2 = '{"persistent_data_stores":[{"created_at":"2022-09-13T11:41:35+02:00","data":{"bucket_location":"au-syd","bucket_name":"bucket_name","secret_name":"secret_name"},"entity_tag":"2385407409","id":"e33b1cv7-7390-4437-a5c2-130d5ccdddc3","name":"my-persistent-data-store","project_id":"4e49b3e0-27a8-48d2-a784-c7ee48bb863b","region":"us-east","storage_type":"object_storage"}],"total_count":2,"limit":1}'
         responses.add(
             responses.GET,
             url,
@@ -11179,7 +11176,7 @@ class TestListPersistentDataStore:
         )
 
         # Exercise the pager class for this operation
-        pager = PersistentDataStorePager(
+        pager = PersistentDataStoresPager(
             client=_service,
             project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
             limit=100,
@@ -11201,7 +11198,7 @@ class TestCreatePersistentDataStore:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/persistent_data_stores')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "bucket_location", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}'
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "au-syd", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}'
         responses.add(
             responses.POST,
             url,
@@ -11212,7 +11209,7 @@ class TestCreatePersistentDataStore:
 
         # Construct a dict representation of a StorageDataObjectStorageData model
         storage_data_model = {}
-        storage_data_model['bucket_location'] = 'testString'
+        storage_data_model['bucket_location'] = 'au-syd'
         storage_data_model['bucket_name'] = 'testString'
         storage_data_model['secret_name'] = 'testString'
         storage_data_model['foo'] = 'testString'
@@ -11257,7 +11254,7 @@ class TestCreatePersistentDataStore:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/persistent_data_stores')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "bucket_location", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}'
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "au-syd", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}'
         responses.add(
             responses.POST,
             url,
@@ -11268,7 +11265,7 @@ class TestCreatePersistentDataStore:
 
         # Construct a dict representation of a StorageDataObjectStorageData model
         storage_data_model = {}
-        storage_data_model['bucket_location'] = 'testString'
+        storage_data_model['bucket_location'] = 'au-syd'
         storage_data_model['bucket_name'] = 'testString'
         storage_data_model['secret_name'] = 'testString'
         storage_data_model['foo'] = 'testString'
@@ -11313,7 +11310,7 @@ class TestCreatePersistentDataStore:
         """
         # Set up mock
         url = preprocess_url('/projects/15314cc3-85b4-4338-903f-c28cdee6d005/persistent_data_stores')
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "bucket_location", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}'
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "au-syd", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}'
         responses.add(
             responses.POST,
             url,
@@ -11324,7 +11321,7 @@ class TestCreatePersistentDataStore:
 
         # Construct a dict representation of a StorageDataObjectStorageData model
         storage_data_model = {}
-        storage_data_model['bucket_location'] = 'testString'
+        storage_data_model['bucket_location'] = 'au-syd'
         storage_data_model['bucket_name'] = 'testString'
         storage_data_model['secret_name'] = 'testString'
         storage_data_model['foo'] = 'testString'
@@ -11492,7 +11489,7 @@ class TestGetPersistentDataStore:
         url = preprocess_url(
             '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/persistent_data_stores/my-persistent-data-store'
         )
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "bucket_location", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}'
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "au-syd", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}'
         responses.add(
             responses.GET,
             url,
@@ -11534,7 +11531,7 @@ class TestGetPersistentDataStore:
         url = preprocess_url(
             '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/persistent_data_stores/my-persistent-data-store'
         )
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "bucket_location", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}'
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "au-syd", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}'
         responses.add(
             responses.GET,
             url,
@@ -11576,7 +11573,7 @@ class TestGetPersistentDataStore:
         url = preprocess_url(
             '/projects/15314cc3-85b4-4338-903f-c28cdee6d005/persistent_data_stores/my-persistent-data-store'
         )
-        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "bucket_location", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}'
+        mock_response = '{"created_at": "2022-09-13T11:41:35+02:00", "data": {"bucket_location": "au-syd", "bucket_name": "bucket_name", "secret_name": "secret_name"}, "entity_tag": "2385407409", "id": "e33b1cv7-7390-4437-a5c2-130d5ccdddc3", "name": "my-persistent-data-store", "project_id": "4e49b3e0-27a8-48d2-a784-c7ee48bb863b", "region": "us-east", "storage_type": "object_storage"}'
         responses.add(
             responses.GET,
             url,
@@ -11633,11 +11630,22 @@ class TestModel_AllowedOutboundDestinationList:
 
         # Construct dict forms of any model objects needed in order to build this model.
 
+        endpoint_gateway_details_model = {}  # EndpointGatewayDetails
+
+        private_path_service_gateway_details_model = {}  # PrivatePathServiceGatewayDetails
+
+        allowed_outbound_status_details_model = {}  # AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails
+        allowed_outbound_status_details_model['endpoint_gateway'] = endpoint_gateway_details_model
+        allowed_outbound_status_details_model['private_path_service_gateway'] = (
+            private_path_service_gateway_details_model
+        )
+
         allowed_outbound_destination_model = {}  # AllowedOutboundDestinationCidrBlockData
         allowed_outbound_destination_model['entity_tag'] = '2385407409'
-        allowed_outbound_destination_model['type'] = 'cidr_block'
-        allowed_outbound_destination_model['cidr_block'] = '192.68.3.0/24'
         allowed_outbound_destination_model['name'] = 'my-cidr-block'
+        allowed_outbound_destination_model['status_details'] = allowed_outbound_status_details_model
+        allowed_outbound_destination_model['type'] = 'cidr_block'
+        allowed_outbound_destination_model['cidr_block'] = '192.168.3.0/24'
 
         list_first_metadata_model = {}  # ListFirstMetadata
         list_first_metadata_model['href'] = 'testString'
@@ -11691,11 +11699,11 @@ class TestModel_App:
 
         env_var_model = {}  # EnvVar
         env_var_model['key'] = 'MY_VARIABLE'
-        env_var_model['name'] = 'SOME'
+        env_var_model['name'] = 'CE_SUBDOMAIN'
         env_var_model['prefix'] = 'PREFIX_'
         env_var_model['reference'] = 'my-secret'
         env_var_model['type'] = 'literal'
-        env_var_model['value'] = 'VALUE'
+        env_var_model['value'] = 'uyh5shf7s0f'
 
         probe_model = {}  # Probe
         probe_model['failure_threshold'] = 5
@@ -11926,11 +11934,11 @@ class TestModel_AppList:
 
         env_var_model = {}  # EnvVar
         env_var_model['key'] = 'MY_VARIABLE'
-        env_var_model['name'] = 'SOME'
+        env_var_model['name'] = 'CE_SUBDOMAIN'
         env_var_model['prefix'] = 'PREFIX_'
         env_var_model['reference'] = 'my-secret'
         env_var_model['type'] = 'literal'
-        env_var_model['value'] = 'VALUE'
+        env_var_model['value'] = 'uyh5shf7s0f'
 
         probe_model = {}  # Probe
         probe_model['failure_threshold'] = 5
@@ -12103,11 +12111,11 @@ class TestModel_AppRevision:
 
         env_var_model = {}  # EnvVar
         env_var_model['key'] = 'MY_VARIABLE'
-        env_var_model['name'] = 'SOME'
+        env_var_model['name'] = 'CE_SUBDOMAIN'
         env_var_model['prefix'] = 'PREFIX_'
         env_var_model['reference'] = 'my-secret'
         env_var_model['type'] = 'literal'
-        env_var_model['value'] = 'VALUE'
+        env_var_model['value'] = 'uyh5shf7s0f'
 
         probe_model = {}  # Probe
         probe_model['failure_threshold'] = 5
@@ -12193,11 +12201,11 @@ class TestModel_AppRevisionList:
 
         env_var_model = {}  # EnvVar
         env_var_model['key'] = 'MY_VARIABLE'
-        env_var_model['name'] = 'SOME'
+        env_var_model['name'] = 'CE_SUBDOMAIN'
         env_var_model['prefix'] = 'PREFIX_'
         env_var_model['reference'] = 'my-secret'
         env_var_model['type'] = 'literal'
-        env_var_model['value'] = 'VALUE'
+        env_var_model['value'] = 'uyh5shf7s0f'
 
         probe_model = {}  # Probe
         probe_model['failure_threshold'] = 5
@@ -12746,7 +12754,7 @@ class TestModel_BuildRunList:
         build_run_model['source_type'] = 'git'
         build_run_model['source_url'] = 'https://github.com/IBM/CodeEngine'
         build_run_model['status_details'] = build_run_status_model
-        build_run_model['strategy_size'] = 'medium'
+        build_run_model['strategy_size'] = 'large'
         build_run_model['strategy_spec_file'] = 'Dockerfile'
         build_run_model['strategy_type'] = 'dockerfile'
         build_run_model['timeout'] = 600
@@ -13214,6 +13222,37 @@ class TestModel_DomainMappingStatus:
         assert domain_mapping_status_model_json2 == domain_mapping_status_model_json
 
 
+class TestModel_EndpointGatewayDetails:
+    """
+    Test Class for EndpointGatewayDetails
+    """
+
+    def test_endpoint_gateway_details_serialization(self):
+        """
+        Test serialization/deserialization for EndpointGatewayDetails
+        """
+
+        # Construct a json representation of a EndpointGatewayDetails model
+        endpoint_gateway_details_model_json = {}
+
+        # Construct a model instance of EndpointGatewayDetails by calling from_dict on the json representation
+        endpoint_gateway_details_model = EndpointGatewayDetails.from_dict(endpoint_gateway_details_model_json)
+        assert endpoint_gateway_details_model != False
+
+        # Construct a model instance of EndpointGatewayDetails by calling from_dict on the json representation
+        endpoint_gateway_details_model_dict = EndpointGatewayDetails.from_dict(
+            endpoint_gateway_details_model_json
+        ).__dict__
+        endpoint_gateway_details_model2 = EndpointGatewayDetails(**endpoint_gateway_details_model_dict)
+
+        # Verify the model instances are equivalent
+        assert endpoint_gateway_details_model == endpoint_gateway_details_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        endpoint_gateway_details_model_json2 = endpoint_gateway_details_model.to_dict()
+        assert endpoint_gateway_details_model_json2 == endpoint_gateway_details_model_json
+
+
 class TestModel_EnforcementStatus:
     """
     Test Class for EnforcementStatus
@@ -13390,11 +13429,11 @@ class TestModel_FunctionList:
 
         env_var_model = {}  # EnvVar
         env_var_model['key'] = 'MY_VARIABLE'
-        env_var_model['name'] = 'SOME'
+        env_var_model['name'] = 'CE_API_BASE_URL'
         env_var_model['prefix'] = 'PREFIX_'
         env_var_model['reference'] = 'my-secret'
         env_var_model['type'] = 'literal'
-        env_var_model['value'] = 'VALUE'
+        env_var_model['value'] = 'https://api.us-east.codeengine.cloud.ibm.com'
 
         function_status_model = {}  # FunctionStatus
 
@@ -14257,6 +14296,41 @@ class TestModel_PersistentDataStoreList:
         assert persistent_data_store_list_model_json2 == persistent_data_store_list_model_json
 
 
+class TestModel_PrivatePathServiceGatewayDetails:
+    """
+    Test Class for PrivatePathServiceGatewayDetails
+    """
+
+    def test_private_path_service_gateway_details_serialization(self):
+        """
+        Test serialization/deserialization for PrivatePathServiceGatewayDetails
+        """
+
+        # Construct a json representation of a PrivatePathServiceGatewayDetails model
+        private_path_service_gateway_details_model_json = {}
+
+        # Construct a model instance of PrivatePathServiceGatewayDetails by calling from_dict on the json representation
+        private_path_service_gateway_details_model = PrivatePathServiceGatewayDetails.from_dict(
+            private_path_service_gateway_details_model_json
+        )
+        assert private_path_service_gateway_details_model != False
+
+        # Construct a model instance of PrivatePathServiceGatewayDetails by calling from_dict on the json representation
+        private_path_service_gateway_details_model_dict = PrivatePathServiceGatewayDetails.from_dict(
+            private_path_service_gateway_details_model_json
+        ).__dict__
+        private_path_service_gateway_details_model2 = PrivatePathServiceGatewayDetails(
+            **private_path_service_gateway_details_model_dict
+        )
+
+        # Verify the model instances are equivalent
+        assert private_path_service_gateway_details_model == private_path_service_gateway_details_model2
+
+        # Convert model instance back to dict and verify no loss of data
+        private_path_service_gateway_details_model_json2 = private_path_service_gateway_details_model.to_dict()
+        assert private_path_service_gateway_details_model_json2 == private_path_service_gateway_details_model_json
+
+
 class TestModel_Probe:
     """
     Test Class for Probe
@@ -14453,7 +14527,7 @@ class TestModel_ProjectStatusDetails:
 
         enforcement_status_model = {}  # EnforcementStatus
         enforcement_status_model['enforcement'] = 'applied'
-        enforcement_status_model['last_synced_at'] = 'testString'
+        enforcement_status_model['last_synced_at'] = '2025-06-30T11:41:35Z'
 
         cbr_status_model = {}  # CbrStatus
         cbr_status_model['data_plane'] = enforcement_status_model
@@ -15066,7 +15140,6 @@ class TestModel_AllowedOutboundDestinationPatchCidrBlockDataPatch:
 
         # Construct a json representation of a AllowedOutboundDestinationPatchCidrBlockDataPatch model
         allowed_outbound_destination_patch_cidr_block_data_patch_model_json = {}
-        allowed_outbound_destination_patch_cidr_block_data_patch_model_json['type'] = 'cidr_block'
         allowed_outbound_destination_patch_cidr_block_data_patch_model_json['cidr_block'] = 'testString'
 
         # Construct a model instance of AllowedOutboundDestinationPatchCidrBlockDataPatch by calling from_dict on the json representation
@@ -15105,6 +15178,58 @@ class TestModel_AllowedOutboundDestinationPatchCidrBlockDataPatch:
         )
 
 
+class TestModel_AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch:
+    """
+    Test Class for AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch
+    """
+
+    def test_allowed_outbound_destination_patch_private_path_service_gateway_data_patch_serialization(self):
+        """
+        Test serialization/deserialization for AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch
+        """
+
+        # Construct a json representation of a AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch model
+        allowed_outbound_destination_patch_private_path_service_gateway_data_patch_model_json = {}
+        allowed_outbound_destination_patch_private_path_service_gateway_data_patch_model_json['isolation_policy'] = (
+            'shared'
+        )
+
+        # Construct a model instance of AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch by calling from_dict on the json representation
+        allowed_outbound_destination_patch_private_path_service_gateway_data_patch_model = (
+            AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch.from_dict(
+                allowed_outbound_destination_patch_private_path_service_gateway_data_patch_model_json
+            )
+        )
+        assert allowed_outbound_destination_patch_private_path_service_gateway_data_patch_model != False
+
+        # Construct a model instance of AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch by calling from_dict on the json representation
+        allowed_outbound_destination_patch_private_path_service_gateway_data_patch_model_dict = (
+            AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch.from_dict(
+                allowed_outbound_destination_patch_private_path_service_gateway_data_patch_model_json
+            ).__dict__
+        )
+        allowed_outbound_destination_patch_private_path_service_gateway_data_patch_model2 = (
+            AllowedOutboundDestinationPatchPrivatePathServiceGatewayDataPatch(
+                **allowed_outbound_destination_patch_private_path_service_gateway_data_patch_model_dict
+            )
+        )
+
+        # Verify the model instances are equivalent
+        assert (
+            allowed_outbound_destination_patch_private_path_service_gateway_data_patch_model
+            == allowed_outbound_destination_patch_private_path_service_gateway_data_patch_model2
+        )
+
+        # Convert model instance back to dict and verify no loss of data
+        allowed_outbound_destination_patch_private_path_service_gateway_data_patch_model_json2 = (
+            allowed_outbound_destination_patch_private_path_service_gateway_data_patch_model.to_dict()
+        )
+        assert (
+            allowed_outbound_destination_patch_private_path_service_gateway_data_patch_model_json2
+            == allowed_outbound_destination_patch_private_path_service_gateway_data_patch_model_json
+        )
+
+
 class TestModel_AllowedOutboundDestinationPrototypeCidrBlockDataPrototype:
     """
     Test Class for AllowedOutboundDestinationPrototypeCidrBlockDataPrototype
@@ -15118,8 +15243,8 @@ class TestModel_AllowedOutboundDestinationPrototypeCidrBlockDataPrototype:
         # Construct a json representation of a AllowedOutboundDestinationPrototypeCidrBlockDataPrototype model
         allowed_outbound_destination_prototype_cidr_block_data_prototype_model_json = {}
         allowed_outbound_destination_prototype_cidr_block_data_prototype_model_json['type'] = 'cidr_block'
+        allowed_outbound_destination_prototype_cidr_block_data_prototype_model_json['name'] = 'allow-all'
         allowed_outbound_destination_prototype_cidr_block_data_prototype_model_json['cidr_block'] = 'testString'
-        allowed_outbound_destination_prototype_cidr_block_data_prototype_model_json['name'] = 'testString'
 
         # Construct a model instance of AllowedOutboundDestinationPrototypeCidrBlockDataPrototype by calling from_dict on the json representation
         allowed_outbound_destination_prototype_cidr_block_data_prototype_model = (
@@ -15157,6 +15282,67 @@ class TestModel_AllowedOutboundDestinationPrototypeCidrBlockDataPrototype:
         )
 
 
+class TestModel_AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype:
+    """
+    Test Class for AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype
+    """
+
+    def test_allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_serialization(self):
+        """
+        Test serialization/deserialization for AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype
+        """
+
+        # Construct a json representation of a AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype model
+        allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model_json = {}
+        allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model_json['type'] = (
+            'cidr_block'
+        )
+        allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model_json['name'] = (
+            'allow-all'
+        )
+        allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model_json[
+            'private_path_service_gateway_crn'
+        ] = 'testString'
+        allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model_json[
+            'isolation_policy'
+        ] = 'shared'
+
+        # Construct a model instance of AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype by calling from_dict on the json representation
+        allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model = (
+            AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype.from_dict(
+                allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model_json
+            )
+        )
+        assert allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model != False
+
+        # Construct a model instance of AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype by calling from_dict on the json representation
+        allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model_dict = (
+            AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype.from_dict(
+                allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model_json
+            ).__dict__
+        )
+        allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model2 = (
+            AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype(
+                **allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model_dict
+            )
+        )
+
+        # Verify the model instances are equivalent
+        assert (
+            allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model
+            == allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model2
+        )
+
+        # Convert model instance back to dict and verify no loss of data
+        allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model_json2 = (
+            allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model.to_dict()
+        )
+        assert (
+            allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model_json2
+            == allowed_outbound_destination_prototype_private_path_service_gateway_data_prototype_model_json
+        )
+
+
 class TestModel_AllowedOutboundDestinationCidrBlockData:
     """
     Test Class for AllowedOutboundDestinationCidrBlockData
@@ -15167,12 +15353,27 @@ class TestModel_AllowedOutboundDestinationCidrBlockData:
         Test serialization/deserialization for AllowedOutboundDestinationCidrBlockData
         """
 
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        endpoint_gateway_details_model = {}  # EndpointGatewayDetails
+
+        private_path_service_gateway_details_model = {}  # PrivatePathServiceGatewayDetails
+
+        allowed_outbound_status_details_model = {}  # AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails
+        allowed_outbound_status_details_model['endpoint_gateway'] = endpoint_gateway_details_model
+        allowed_outbound_status_details_model['private_path_service_gateway'] = (
+            private_path_service_gateway_details_model
+        )
+
         # Construct a json representation of a AllowedOutboundDestinationCidrBlockData model
         allowed_outbound_destination_cidr_block_data_model_json = {}
         allowed_outbound_destination_cidr_block_data_model_json['entity_tag'] = '2385407409'
+        allowed_outbound_destination_cidr_block_data_model_json['name'] = 'allow-all'
+        allowed_outbound_destination_cidr_block_data_model_json['status_details'] = (
+            allowed_outbound_status_details_model
+        )
         allowed_outbound_destination_cidr_block_data_model_json['type'] = 'cidr_block'
         allowed_outbound_destination_cidr_block_data_model_json['cidr_block'] = 'testString'
-        allowed_outbound_destination_cidr_block_data_model_json['name'] = 'testString'
 
         # Construct a model instance of AllowedOutboundDestinationCidrBlockData by calling from_dict on the json representation
         allowed_outbound_destination_cidr_block_data_model = AllowedOutboundDestinationCidrBlockData.from_dict(
@@ -15198,6 +15399,138 @@ class TestModel_AllowedOutboundDestinationCidrBlockData:
         assert (
             allowed_outbound_destination_cidr_block_data_model_json2
             == allowed_outbound_destination_cidr_block_data_model_json
+        )
+
+
+class TestModel_AllowedOutboundDestinationPrivatePathServiceGatewayData:
+    """
+    Test Class for AllowedOutboundDestinationPrivatePathServiceGatewayData
+    """
+
+    def test_allowed_outbound_destination_private_path_service_gateway_data_serialization(self):
+        """
+        Test serialization/deserialization for AllowedOutboundDestinationPrivatePathServiceGatewayData
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        endpoint_gateway_details_model = {}  # EndpointGatewayDetails
+
+        private_path_service_gateway_details_model = {}  # PrivatePathServiceGatewayDetails
+
+        allowed_outbound_status_details_model = {}  # AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails
+        allowed_outbound_status_details_model['endpoint_gateway'] = endpoint_gateway_details_model
+        allowed_outbound_status_details_model['private_path_service_gateway'] = (
+            private_path_service_gateway_details_model
+        )
+
+        # Construct a json representation of a AllowedOutboundDestinationPrivatePathServiceGatewayData model
+        allowed_outbound_destination_private_path_service_gateway_data_model_json = {}
+        allowed_outbound_destination_private_path_service_gateway_data_model_json['entity_tag'] = '2385407409'
+        allowed_outbound_destination_private_path_service_gateway_data_model_json['name'] = 'allow-all'
+        allowed_outbound_destination_private_path_service_gateway_data_model_json['status_details'] = (
+            allowed_outbound_status_details_model
+        )
+        allowed_outbound_destination_private_path_service_gateway_data_model_json['type'] = 'cidr_block'
+        allowed_outbound_destination_private_path_service_gateway_data_model_json[
+            'private_path_service_gateway_crn'
+        ] = 'testString'
+        allowed_outbound_destination_private_path_service_gateway_data_model_json['isolation_policy'] = 'shared'
+
+        # Construct a model instance of AllowedOutboundDestinationPrivatePathServiceGatewayData by calling from_dict on the json representation
+        allowed_outbound_destination_private_path_service_gateway_data_model = (
+            AllowedOutboundDestinationPrivatePathServiceGatewayData.from_dict(
+                allowed_outbound_destination_private_path_service_gateway_data_model_json
+            )
+        )
+        assert allowed_outbound_destination_private_path_service_gateway_data_model != False
+
+        # Construct a model instance of AllowedOutboundDestinationPrivatePathServiceGatewayData by calling from_dict on the json representation
+        allowed_outbound_destination_private_path_service_gateway_data_model_dict = (
+            AllowedOutboundDestinationPrivatePathServiceGatewayData.from_dict(
+                allowed_outbound_destination_private_path_service_gateway_data_model_json
+            ).__dict__
+        )
+        allowed_outbound_destination_private_path_service_gateway_data_model2 = (
+            AllowedOutboundDestinationPrivatePathServiceGatewayData(
+                **allowed_outbound_destination_private_path_service_gateway_data_model_dict
+            )
+        )
+
+        # Verify the model instances are equivalent
+        assert (
+            allowed_outbound_destination_private_path_service_gateway_data_model
+            == allowed_outbound_destination_private_path_service_gateway_data_model2
+        )
+
+        # Convert model instance back to dict and verify no loss of data
+        allowed_outbound_destination_private_path_service_gateway_data_model_json2 = (
+            allowed_outbound_destination_private_path_service_gateway_data_model.to_dict()
+        )
+        assert (
+            allowed_outbound_destination_private_path_service_gateway_data_model_json2
+            == allowed_outbound_destination_private_path_service_gateway_data_model_json
+        )
+
+
+class TestModel_AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails:
+    """
+    Test Class for AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails
+    """
+
+    def test_allowed_outbound_status_details_private_path_service_gateway_status_details_serialization(self):
+        """
+        Test serialization/deserialization for AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails
+        """
+
+        # Construct dict forms of any model objects needed in order to build this model.
+
+        endpoint_gateway_details_model = {}  # EndpointGatewayDetails
+
+        private_path_service_gateway_details_model = {}  # PrivatePathServiceGatewayDetails
+
+        # Construct a json representation of a AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails model
+        allowed_outbound_status_details_private_path_service_gateway_status_details_model_json = {}
+        allowed_outbound_status_details_private_path_service_gateway_status_details_model_json['endpoint_gateway'] = (
+            endpoint_gateway_details_model
+        )
+        allowed_outbound_status_details_private_path_service_gateway_status_details_model_json[
+            'private_path_service_gateway'
+        ] = private_path_service_gateway_details_model
+
+        # Construct a model instance of AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails by calling from_dict on the json representation
+        allowed_outbound_status_details_private_path_service_gateway_status_details_model = (
+            AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails.from_dict(
+                allowed_outbound_status_details_private_path_service_gateway_status_details_model_json
+            )
+        )
+        assert allowed_outbound_status_details_private_path_service_gateway_status_details_model != False
+
+        # Construct a model instance of AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails by calling from_dict on the json representation
+        allowed_outbound_status_details_private_path_service_gateway_status_details_model_dict = (
+            AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails.from_dict(
+                allowed_outbound_status_details_private_path_service_gateway_status_details_model_json
+            ).__dict__
+        )
+        allowed_outbound_status_details_private_path_service_gateway_status_details_model2 = (
+            AllowedOutboundStatusDetailsPrivatePathServiceGatewayStatusDetails(
+                **allowed_outbound_status_details_private_path_service_gateway_status_details_model_dict
+            )
+        )
+
+        # Verify the model instances are equivalent
+        assert (
+            allowed_outbound_status_details_private_path_service_gateway_status_details_model
+            == allowed_outbound_status_details_private_path_service_gateway_status_details_model2
+        )
+
+        # Convert model instance back to dict and verify no loss of data
+        allowed_outbound_status_details_private_path_service_gateway_status_details_model_json2 = (
+            allowed_outbound_status_details_private_path_service_gateway_status_details_model.to_dict()
+        )
+        assert (
+            allowed_outbound_status_details_private_path_service_gateway_status_details_model_json2
+            == allowed_outbound_status_details_private_path_service_gateway_status_details_model_json
         )
 
 
@@ -15493,7 +15826,7 @@ class TestModel_StorageDataObjectStorageData:
 
         # Construct a json representation of a StorageDataObjectStorageData model
         storage_data_object_storage_data_model_json = {}
-        storage_data_object_storage_data_model_json['bucket_location'] = 'testString'
+        storage_data_object_storage_data_model_json['bucket_location'] = 'au-syd'
         storage_data_object_storage_data_model_json['bucket_name'] = 'testString'
         storage_data_object_storage_data_model_json['secret_name'] = 'testString'
         storage_data_object_storage_data_model_json['foo'] = 'testString'

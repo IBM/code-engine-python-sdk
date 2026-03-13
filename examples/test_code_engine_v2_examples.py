@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (C) Copyright IBM Corp. 2025.
+# (C) Copyright IBM Corp. 2026.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import os
 import pytest
 from ibm_code_engine_sdk.code_engine_v2 import *
 
-version = '2025-08-27'
+version = '2026-02-23'
 
 #
 # This file provides an example of how to use the Code Engine service.
@@ -147,17 +147,17 @@ class TestCodeEngineV2Examples:
             pytest.fail(str(e))
 
     @needscredentials
-    def test_list_allowed_outbound_destination_example(self):
+    def test_list_allowed_outbound_destinations_example(self):
         """
-        list_allowed_outbound_destination request example
+        list_allowed_outbound_destinations request example
         """
         try:
-            print('\nlist_allowed_outbound_destination() result:')
+            print('\nlist_allowed_outbound_destinations() result:')
 
-            # begin-list_allowed_outbound_destination
+            # begin-list_allowed_outbound_destinations
 
             all_results = []
-            pager = AllowedOutboundDestinationPager(
+            pager = AllowedOutboundDestinationsPager(
                 client=code_engine_service,
                 project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
                 limit=100,
@@ -169,7 +169,7 @@ class TestCodeEngineV2Examples:
 
             print(json.dumps(all_results, indent=2))
 
-            # end-list_allowed_outbound_destination
+            # end-list_allowed_outbound_destinations
         except ApiException as e:
             pytest.fail(str(e))
 
@@ -185,8 +185,8 @@ class TestCodeEngineV2Examples:
 
             allowed_outbound_destination_prototype_model = {
                 'type': 'cidr_block',
+                'name': 'allow-all',
                 'cidr_block': 'testString',
-                'name': 'testString',
             }
 
             response = code_engine_service.create_allowed_outbound_destination(
@@ -1334,17 +1334,17 @@ class TestCodeEngineV2Examples:
             pytest.fail(str(e))
 
     @needscredentials
-    def test_list_persistent_data_store_example(self):
+    def test_list_persistent_data_stores_example(self):
         """
-        list_persistent_data_store request example
+        list_persistent_data_stores request example
         """
         try:
-            print('\nlist_persistent_data_store() result:')
+            print('\nlist_persistent_data_stores() result:')
 
-            # begin-list_persistent_data_store
+            # begin-list_persistent_data_stores
 
             all_results = []
-            pager = PersistentDataStorePager(
+            pager = PersistentDataStoresPager(
                 client=code_engine_service,
                 project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
                 limit=100,
@@ -1356,7 +1356,7 @@ class TestCodeEngineV2Examples:
 
             print(json.dumps(all_results, indent=2))
 
-            # end-list_persistent_data_store
+            # end-list_persistent_data_stores
         except ApiException as e:
             pytest.fail(str(e))
 

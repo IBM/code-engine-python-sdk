@@ -14,19 +14,17 @@
 # limitations under the License.
 
 from setuptools import setup
-from setuptools.command.test import test as TestCommand
 import os
 import sys
-import pkg_resources
 
 __version__ = '4.21.1'
 PACKAGE_NAME = 'ibm_code_engine_sdk'
 PACKAGE_DESC = 'Python SDK for IBM Cloud Code Engine'
 
 with open('requirements.txt') as f:
-    install_requires = [str(req) for req in pkg_resources.parse_requirements(f)]
+    install_requires = [line.strip() for line in f if line.strip() and not line.startswith('#')]
 with open('requirements-dev.txt') as f:
-    tests_require = [str(req) for req in pkg_resources.parse_requirements(f)]
+    tests_require = [line.strip() for line in f if line.strip() and not line.startswith('#')]
 
 if sys.argv[-1] == 'publish':
     # test server

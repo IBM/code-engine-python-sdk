@@ -56,7 +56,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2026-02-23`.
+               `2026-03-27`.
         """
         authenticator = get_authenticator_from_environment(service_name)
         service = cls(
@@ -80,7 +80,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2026-02-23`.
+               `2026-03-27`.
         """
         BaseService.__init__(self, service_url=self.DEFAULT_SERVICE_URL, authenticator=authenticator)
         self.version = version
@@ -968,6 +968,245 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
+    def list_app_instances(
+        self,
+        project_id: str,
+        app_name: str,
+        *,
+        limit: Optional[int] = None,
+        start: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        List application instances.
+
+        List all instances of an application.
+
+        :param str project_id: The ID of the project.
+        :param str app_name: The name of your application.
+        :param int limit: (optional) Optional maximum number of apps per page.
+        :param str start: (optional) An optional token that indicates the beginning
+               of the page of results to be returned. If omitted, the first page of
+               results is returned. This value is obtained from the 'start' query
+               parameter in the `next` object of the operation response.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `AppInstanceList` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not app_name:
+            raise ValueError('app_name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='list_app_instances',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'limit': limit,
+            'start': start,
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id', 'app_name']
+        path_param_values = self.encode_path_vars(project_id, app_name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/apps/{app_name}/instances'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def list_app_revisions(
+        self,
+        project_id: str,
+        app_name: str,
+        *,
+        limit: Optional[int] = None,
+        start: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        List application revisions.
+
+        List all application revisions in a particular application.
+
+        :param str project_id: The ID of the project.
+        :param str app_name: The name of your application.
+        :param int limit: (optional) Optional maximum number of apps per page.
+        :param str start: (optional) An optional token that indicates the beginning
+               of the page of results to be returned. If omitted, the first page of
+               results is returned. This value is obtained from the 'start' query
+               parameter in the `next` object of the operation response.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `AppRevisionList` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not app_name:
+            raise ValueError('app_name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='list_app_revisions',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'limit': limit,
+            'start': start,
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id', 'app_name']
+        path_param_values = self.encode_path_vars(project_id, app_name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/apps/{app_name}/revisions'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_app_revision(
+        self,
+        project_id: str,
+        app_name: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete an application revision.
+
+        Delete an application revision.
+
+        :param str project_id: The ID of the project.
+        :param str app_name: The name of your application.
+        :param str name: The name of your application revision.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not app_name:
+            raise ValueError('app_name must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='delete_app_revision',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['project_id', 'app_name', 'name']
+        path_param_values = self.encode_path_vars(project_id, app_name, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/apps/{app_name}/revisions/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_app_revision(
+        self,
+        project_id: str,
+        app_name: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Get an application revision.
+
+        Display the details of an application revision.
+
+        :param str project_id: The ID of the project.
+        :param str app_name: The name of your application.
+        :param str name: The name of your application revision.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `AppRevision` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not app_name:
+            raise ValueError('app_name must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='get_app_revision',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id', 'app_name', 'name']
+        path_param_values = self.encode_path_vars(project_id, app_name, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/apps/{app_name}/revisions/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
     def delete_app(
         self,
         project_id: str,
@@ -1154,48 +1393,52 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
-    def list_app_revisions(
+    #########################
+    # Jobs
+    #########################
+
+    def list_job_runs(
         self,
         project_id: str,
-        app_name: str,
         *,
+        job_name: Optional[str] = None,
         limit: Optional[int] = None,
         start: Optional[str] = None,
         **kwargs,
     ) -> DetailedResponse:
         """
-        List application revisions.
+        List job runs.
 
-        List all application revisions in a particular application.
+        List all job runs in a project.
 
         :param str project_id: The ID of the project.
-        :param str app_name: The name of your application.
-        :param int limit: (optional) Optional maximum number of apps per page.
+        :param str job_name: (optional) Optional name of the job that you want to
+               use to filter.
+        :param int limit: (optional) Optional maximum number of job runs per page.
         :param str start: (optional) An optional token that indicates the beginning
                of the page of results to be returned. If omitted, the first page of
                results is returned. This value is obtained from the 'start' query
                parameter in the `next` object of the operation response.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `AppRevisionList` object
+        :rtype: DetailedResponse with `dict` result representing a `JobRunList` object
         """
 
         if not project_id:
             raise ValueError('project_id must be provided')
-        if not app_name:
-            raise ValueError('app_name must be provided')
         headers = {}
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
             service_version='V2',
-            operation_id='list_app_revisions',
+            operation_id='list_job_runs',
         )
         headers.update(sdk_headers)
 
         params = {
+            'version': self.version,
+            'job_name': job_name,
             'limit': limit,
             'start': start,
-            'version': self.version,
         }
 
         if 'headers' in kwargs:
@@ -1203,10 +1446,10 @@ class CodeEngineV2(BaseService):
             del kwargs['headers']
         headers['Accept'] = 'application/json'
 
-        path_param_keys = ['project_id', 'app_name']
-        path_param_values = self.encode_path_vars(project_id, app_name)
+        path_param_keys = ['project_id']
+        path_param_values = self.encode_path_vars(project_id)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/apps/{app_name}/revisions'.format(**path_param_dict)
+        url = '/projects/{project_id}/job_runs'.format(**path_param_dict)
         request = self.prepare_request(
             method='GET',
             url=url,
@@ -1217,21 +1460,192 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
-    def delete_app_revision(
+    def create_job_run(
         self,
         project_id: str,
-        app_name: str,
+        *,
+        image_reference: Optional[str] = None,
+        image_secret: Optional[str] = None,
+        job_name: Optional[str] = None,
+        name: Optional[str] = None,
+        run_arguments: Optional[List[str]] = None,
+        run_as_user: Optional[int] = None,
+        run_commands: Optional[List[str]] = None,
+        run_compute_resource_token_enabled: Optional[bool] = None,
+        run_env_variables: Optional[List['EnvVarPrototype']] = None,
+        run_mode: Optional[str] = None,
+        run_service_account: Optional[str] = None,
+        run_volume_mounts: Optional[List['VolumeMountPrototype']] = None,
+        scale_array_size_variable_override: Optional[int] = None,
+        scale_array_spec: Optional[str] = None,
+        scale_cpu_limit: Optional[str] = None,
+        scale_ephemeral_storage_limit: Optional[str] = None,
+        scale_max_execution_time: Optional[int] = None,
+        scale_memory_limit: Optional[str] = None,
+        scale_retry_limit: Optional[int] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Create a job run.
+
+        Create an job run.
+
+        :param str project_id: The ID of the project.
+        :param str image_reference: (optional) The name of the image that is used
+               for this job. The format is `REGISTRY/NAMESPACE/REPOSITORY:TAG` where
+               `REGISTRY` and `TAG` are optional. If `REGISTRY` is not specified, the
+               default is `docker.io`. If `TAG` is not specified, the default is `latest`.
+               If the image reference points to a registry that requires authentication,
+               make sure to also specify the property `image_secret`.
+        :param str image_secret: (optional) The name of the image registry access
+               secret. The image registry access secret is used to authenticate with a
+               private registry when you download the container image. If the image
+               reference points to a registry that requires authentication, the job / job
+               runs will be created but submitted job runs will fail, until this property
+               is provided, too. This property must not be set on a job run, which
+               references a job template.
+        :param str job_name: (optional) Optional name of the job on which this job
+               run is based on. If specified, the job run will inherit the configuration
+               of the referenced job.
+        :param str name: (optional) The name of the job. Use a name that is unique
+               within the project.
+        :param List[str] run_arguments: (optional) Set arguments for the job that
+               are passed to start job run containers. If not specified an empty string
+               array will be applied and the arguments specified by the container image,
+               will be used to start the container.
+        :param int run_as_user: (optional) The user ID (UID) to run the job.
+        :param List[str] run_commands: (optional) Set commands for the job that are
+               passed to start job run containers. If not specified an empty string array
+               will be applied and the command specified by the container image, will be
+               used to start the container.
+        :param bool run_compute_resource_token_enabled: (optional) Optional flag to
+               enable the use of a compute resource token mounted to the container file
+               system.
+        :param List[EnvVarPrototype] run_env_variables: (optional) Optional
+               references to config maps, secrets or literal values.
+        :param str run_mode: (optional) The mode for runs of the job. Valid values
+               are `task` and `daemon`. In `task` mode, the `max_execution_time` and
+               `retry_limit` properties apply. In `daemon` mode, since there is no timeout
+               and failed instances are restarted indefinitely, the `max_execution_time`
+               and `retry_limit` properties are not allowed.
+        :param str run_service_account: (optional) The name of the service account.
+               For built-in service accounts, you can use the shortened names `manager`,
+               `none`, `reader`, and `writer`. This property must not be set on a job run,
+               which references a job template.
+        :param List[VolumeMountPrototype] run_volume_mounts: (optional) Optional
+               mounts of config maps or a secrets.
+        :param int scale_array_size_variable_override: (optional) Optional value to
+               override the JOB_ARRAY_SIZE environment variable for a job run.
+        :param str scale_array_spec: (optional) Define a custom set of array
+               indices as a comma-separated list containing single values and
+               hyphen-separated ranges, such as  5,12-14,23,27. Each instance gets its
+               array index value from the environment variable JOB_INDEX. The number of
+               unique array indices that you specify with this parameter determines the
+               number of job instances to run.
+        :param str scale_cpu_limit: (optional) Optional amount of CPU set for the
+               instance of the job. For valid values see [Supported memory and CPU
+               combinations](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo).
+        :param str scale_ephemeral_storage_limit: (optional) Optional amount of
+               ephemeral storage to set for the instance of the job. The amount specified
+               as ephemeral storage, must not exceed the amount of `scale_memory_limit`.
+               The units for specifying ephemeral storage are Megabyte (M) or Gigabyte
+               (G), whereas G and M are the shorthand expressions for GB and MB. For more
+               information see [Units of
+               measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
+        :param int scale_max_execution_time: (optional) The maximum execution time
+               in seconds for runs of the job. This property can only be specified if
+               `run_mode` is `task`.
+        :param str scale_memory_limit: (optional) Optional amount of memory set for
+               the instance of the job. For valid values see [Supported memory and CPU
+               combinations](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo).
+               The units for specifying memory are Megabyte (M) or Gigabyte (G), whereas G
+               and M are the shorthand expressions for GB and MB. For more information see
+               [Units of
+               measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
+        :param int scale_retry_limit: (optional) The number of times to rerun an
+               instance of the job before the job is marked as failed. This property can
+               only be specified if `run_mode` is `task`.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `JobRun` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if run_env_variables is not None:
+            run_env_variables = [convert_model(x) for x in run_env_variables]
+        if run_volume_mounts is not None:
+            run_volume_mounts = [convert_model(x) for x in run_volume_mounts]
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='create_job_run',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        data = {
+            'image_reference': image_reference,
+            'image_secret': image_secret,
+            'job_name': job_name,
+            'name': name,
+            'run_arguments': run_arguments,
+            'run_as_user': run_as_user,
+            'run_commands': run_commands,
+            'run_compute_resource_token_enabled': run_compute_resource_token_enabled,
+            'run_env_variables': run_env_variables,
+            'run_mode': run_mode,
+            'run_service_account': run_service_account,
+            'run_volume_mounts': run_volume_mounts,
+            'scale_array_size_variable_override': scale_array_size_variable_override,
+            'scale_array_spec': scale_array_spec,
+            'scale_cpu_limit': scale_cpu_limit,
+            'scale_ephemeral_storage_limit': scale_ephemeral_storage_limit,
+            'scale_max_execution_time': scale_max_execution_time,
+            'scale_memory_limit': scale_memory_limit,
+            'scale_retry_limit': scale_retry_limit,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id']
+        path_param_values = self.encode_path_vars(project_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/job_runs'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            params=params,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_job_run(
+        self,
+        project_id: str,
         name: str,
         **kwargs,
     ) -> DetailedResponse:
         """
-        Delete an application revision.
+        Delete a job run.
 
-        Delete an application revision.
+        Delete a job run.
 
         :param str project_id: The ID of the project.
-        :param str app_name: The name of your application.
-        :param str name: The name of your application revision.
+        :param str name: The name of your job run.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
         :rtype: DetailedResponse
@@ -1239,15 +1653,13 @@ class CodeEngineV2(BaseService):
 
         if not project_id:
             raise ValueError('project_id must be provided')
-        if not app_name:
-            raise ValueError('app_name must be provided')
         if not name:
             raise ValueError('name must be provided')
         headers = {}
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
             service_version='V2',
-            operation_id='delete_app_revision',
+            operation_id='delete_job_run',
         )
         headers.update(sdk_headers)
 
@@ -1259,10 +1671,10 @@ class CodeEngineV2(BaseService):
             headers.update(kwargs.get('headers'))
             del kwargs['headers']
 
-        path_param_keys = ['project_id', 'app_name', 'name']
-        path_param_values = self.encode_path_vars(project_id, app_name, name)
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/apps/{app_name}/revisions/{name}'.format(**path_param_dict)
+        url = '/projects/{project_id}/job_runs/{name}'.format(**path_param_dict)
         request = self.prepare_request(
             method='DELETE',
             url=url,
@@ -1273,37 +1685,33 @@ class CodeEngineV2(BaseService):
         response = self.send(request, **kwargs)
         return response
 
-    def get_app_revision(
+    def get_job_run(
         self,
         project_id: str,
-        app_name: str,
         name: str,
         **kwargs,
     ) -> DetailedResponse:
         """
-        Get an application revision.
+        Get a job run.
 
-        Display the details of an application revision.
+        Display the details of a job run.
 
         :param str project_id: The ID of the project.
-        :param str app_name: The name of your application.
-        :param str name: The name of your application revision.
+        :param str name: The name of your job run.
         :param dict headers: A `dict` containing the request headers
         :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `AppRevision` object
+        :rtype: DetailedResponse with `dict` result representing a `JobRun` object
         """
 
         if not project_id:
             raise ValueError('project_id must be provided')
-        if not app_name:
-            raise ValueError('app_name must be provided')
         if not name:
             raise ValueError('name must be provided')
         headers = {}
         sdk_headers = get_sdk_headers(
             service_name=self.DEFAULT_SERVICE_NAME,
             service_version='V2',
-            operation_id='get_app_revision',
+            operation_id='get_job_run',
         )
         headers.update(sdk_headers)
 
@@ -1316,10 +1724,10 @@ class CodeEngineV2(BaseService):
             del kwargs['headers']
         headers['Accept'] = 'application/json'
 
-        path_param_keys = ['project_id', 'app_name', 'name']
-        path_param_values = self.encode_path_vars(project_id, app_name, name)
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
         path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/apps/{app_name}/revisions/{name}'.format(**path_param_dict)
+        url = '/projects/{project_id}/job_runs/{name}'.format(**path_param_dict)
         request = self.prepare_request(
             method='GET',
             url=url,
@@ -1329,73 +1737,6 @@ class CodeEngineV2(BaseService):
 
         response = self.send(request, **kwargs)
         return response
-
-    def list_app_instances(
-        self,
-        project_id: str,
-        app_name: str,
-        *,
-        limit: Optional[int] = None,
-        start: Optional[str] = None,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        List application instances.
-
-        List all instances of an application.
-
-        :param str project_id: The ID of the project.
-        :param str app_name: The name of your application.
-        :param int limit: (optional) Optional maximum number of apps per page.
-        :param str start: (optional) An optional token that indicates the beginning
-               of the page of results to be returned. If omitted, the first page of
-               results is returned. This value is obtained from the 'start' query
-               parameter in the `next` object of the operation response.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `AppInstanceList` object
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if not app_name:
-            raise ValueError('app_name must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='list_app_instances',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'limit': limit,
-            'start': start,
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-        headers['Accept'] = 'application/json'
-
-        path_param_keys = ['project_id', 'app_name']
-        path_param_values = self.encode_path_vars(project_id, app_name)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/apps/{app_name}/instances'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='GET',
-            url=url,
-            headers=headers,
-            params=params,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    #########################
-    # Jobs
-    #########################
 
     def list_jobs(
         self,
@@ -1802,347 +2143,6 @@ class CodeEngineV2(BaseService):
             headers=headers,
             params=params,
             data=data,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def list_job_runs(
-        self,
-        project_id: str,
-        *,
-        job_name: Optional[str] = None,
-        limit: Optional[int] = None,
-        start: Optional[str] = None,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        List job runs.
-
-        List all job runs in a project.
-
-        :param str project_id: The ID of the project.
-        :param str job_name: (optional) Optional name of the job that you want to
-               use to filter.
-        :param int limit: (optional) Optional maximum number of job runs per page.
-        :param str start: (optional) An optional token that indicates the beginning
-               of the page of results to be returned. If omitted, the first page of
-               results is returned. This value is obtained from the 'start' query
-               parameter in the `next` object of the operation response.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `JobRunList` object
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='list_job_runs',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-            'job_name': job_name,
-            'limit': limit,
-            'start': start,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-        headers['Accept'] = 'application/json'
-
-        path_param_keys = ['project_id']
-        path_param_values = self.encode_path_vars(project_id)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/job_runs'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='GET',
-            url=url,
-            headers=headers,
-            params=params,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def create_job_run(
-        self,
-        project_id: str,
-        *,
-        image_reference: Optional[str] = None,
-        image_secret: Optional[str] = None,
-        job_name: Optional[str] = None,
-        name: Optional[str] = None,
-        run_arguments: Optional[List[str]] = None,
-        run_as_user: Optional[int] = None,
-        run_commands: Optional[List[str]] = None,
-        run_compute_resource_token_enabled: Optional[bool] = None,
-        run_env_variables: Optional[List['EnvVarPrototype']] = None,
-        run_mode: Optional[str] = None,
-        run_service_account: Optional[str] = None,
-        run_volume_mounts: Optional[List['VolumeMountPrototype']] = None,
-        scale_array_size_variable_override: Optional[int] = None,
-        scale_array_spec: Optional[str] = None,
-        scale_cpu_limit: Optional[str] = None,
-        scale_ephemeral_storage_limit: Optional[str] = None,
-        scale_max_execution_time: Optional[int] = None,
-        scale_memory_limit: Optional[str] = None,
-        scale_retry_limit: Optional[int] = None,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Create a job run.
-
-        Create an job run.
-
-        :param str project_id: The ID of the project.
-        :param str image_reference: (optional) The name of the image that is used
-               for this job. The format is `REGISTRY/NAMESPACE/REPOSITORY:TAG` where
-               `REGISTRY` and `TAG` are optional. If `REGISTRY` is not specified, the
-               default is `docker.io`. If `TAG` is not specified, the default is `latest`.
-               If the image reference points to a registry that requires authentication,
-               make sure to also specify the property `image_secret`.
-        :param str image_secret: (optional) The name of the image registry access
-               secret. The image registry access secret is used to authenticate with a
-               private registry when you download the container image. If the image
-               reference points to a registry that requires authentication, the job / job
-               runs will be created but submitted job runs will fail, until this property
-               is provided, too. This property must not be set on a job run, which
-               references a job template.
-        :param str job_name: (optional) Optional name of the job on which this job
-               run is based on. If specified, the job run will inherit the configuration
-               of the referenced job.
-        :param str name: (optional) The name of the job. Use a name that is unique
-               within the project.
-        :param List[str] run_arguments: (optional) Set arguments for the job that
-               are passed to start job run containers. If not specified an empty string
-               array will be applied and the arguments specified by the container image,
-               will be used to start the container.
-        :param int run_as_user: (optional) The user ID (UID) to run the job.
-        :param List[str] run_commands: (optional) Set commands for the job that are
-               passed to start job run containers. If not specified an empty string array
-               will be applied and the command specified by the container image, will be
-               used to start the container.
-        :param bool run_compute_resource_token_enabled: (optional) Optional flag to
-               enable the use of a compute resource token mounted to the container file
-               system.
-        :param List[EnvVarPrototype] run_env_variables: (optional) Optional
-               references to config maps, secrets or literal values.
-        :param str run_mode: (optional) The mode for runs of the job. Valid values
-               are `task` and `daemon`. In `task` mode, the `max_execution_time` and
-               `retry_limit` properties apply. In `daemon` mode, since there is no timeout
-               and failed instances are restarted indefinitely, the `max_execution_time`
-               and `retry_limit` properties are not allowed.
-        :param str run_service_account: (optional) The name of the service account.
-               For built-in service accounts, you can use the shortened names `manager`,
-               `none`, `reader`, and `writer`. This property must not be set on a job run,
-               which references a job template.
-        :param List[VolumeMountPrototype] run_volume_mounts: (optional) Optional
-               mounts of config maps or a secrets.
-        :param int scale_array_size_variable_override: (optional) Optional value to
-               override the JOB_ARRAY_SIZE environment variable for a job run.
-        :param str scale_array_spec: (optional) Define a custom set of array
-               indices as a comma-separated list containing single values and
-               hyphen-separated ranges, such as  5,12-14,23,27. Each instance gets its
-               array index value from the environment variable JOB_INDEX. The number of
-               unique array indices that you specify with this parameter determines the
-               number of job instances to run.
-        :param str scale_cpu_limit: (optional) Optional amount of CPU set for the
-               instance of the job. For valid values see [Supported memory and CPU
-               combinations](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo).
-        :param str scale_ephemeral_storage_limit: (optional) Optional amount of
-               ephemeral storage to set for the instance of the job. The amount specified
-               as ephemeral storage, must not exceed the amount of `scale_memory_limit`.
-               The units for specifying ephemeral storage are Megabyte (M) or Gigabyte
-               (G), whereas G and M are the shorthand expressions for GB and MB. For more
-               information see [Units of
-               measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
-        :param int scale_max_execution_time: (optional) The maximum execution time
-               in seconds for runs of the job. This property can only be specified if
-               `run_mode` is `task`.
-        :param str scale_memory_limit: (optional) Optional amount of memory set for
-               the instance of the job. For valid values see [Supported memory and CPU
-               combinations](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo).
-               The units for specifying memory are Megabyte (M) or Gigabyte (G), whereas G
-               and M are the shorthand expressions for GB and MB. For more information see
-               [Units of
-               measurement](https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo#unit-measurements).
-        :param int scale_retry_limit: (optional) The number of times to rerun an
-               instance of the job before the job is marked as failed. This property can
-               only be specified if `run_mode` is `task`.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `JobRun` object
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if run_env_variables is not None:
-            run_env_variables = [convert_model(x) for x in run_env_variables]
-        if run_volume_mounts is not None:
-            run_volume_mounts = [convert_model(x) for x in run_volume_mounts]
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='create_job_run',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        data = {
-            'image_reference': image_reference,
-            'image_secret': image_secret,
-            'job_name': job_name,
-            'name': name,
-            'run_arguments': run_arguments,
-            'run_as_user': run_as_user,
-            'run_commands': run_commands,
-            'run_compute_resource_token_enabled': run_compute_resource_token_enabled,
-            'run_env_variables': run_env_variables,
-            'run_mode': run_mode,
-            'run_service_account': run_service_account,
-            'run_volume_mounts': run_volume_mounts,
-            'scale_array_size_variable_override': scale_array_size_variable_override,
-            'scale_array_spec': scale_array_spec,
-            'scale_cpu_limit': scale_cpu_limit,
-            'scale_ephemeral_storage_limit': scale_ephemeral_storage_limit,
-            'scale_max_execution_time': scale_max_execution_time,
-            'scale_memory_limit': scale_memory_limit,
-            'scale_retry_limit': scale_retry_limit,
-        }
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-        headers['Accept'] = 'application/json'
-
-        path_param_keys = ['project_id']
-        path_param_values = self.encode_path_vars(project_id)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/job_runs'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='POST',
-            url=url,
-            headers=headers,
-            params=params,
-            data=data,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def delete_job_run(
-        self,
-        project_id: str,
-        name: str,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Delete a job run.
-
-        Delete a job run.
-
-        :param str project_id: The ID of the project.
-        :param str name: The name of your job run.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if not name:
-            raise ValueError('name must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='delete_job_run',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-
-        path_param_keys = ['project_id', 'name']
-        path_param_values = self.encode_path_vars(project_id, name)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/job_runs/{name}'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='DELETE',
-            url=url,
-            headers=headers,
-            params=params,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def get_job_run(
-        self,
-        project_id: str,
-        name: str,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Get a job run.
-
-        Display the details of a job run.
-
-        :param str project_id: The ID of the project.
-        :param str name: The name of your job run.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `JobRun` object
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if not name:
-            raise ValueError('name must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='get_job_run',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-        headers['Accept'] = 'application/json'
-
-        path_param_keys = ['project_id', 'name']
-        path_param_values = self.encode_path_vars(project_id, name)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/job_runs/{name}'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='GET',
-            url=url,
-            headers=headers,
-            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -2814,6 +2814,315 @@ class CodeEngineV2(BaseService):
     # Image builds
     #########################
 
+    def list_build_runs(
+        self,
+        project_id: str,
+        *,
+        build_name: Optional[str] = None,
+        limit: Optional[int] = None,
+        start: Optional[str] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        List build runs.
+
+        List all build runs in a project.
+
+        :param str project_id: The ID of the project.
+        :param str build_name: (optional) Optional name of the build that should be
+               filtered for.
+        :param int limit: (optional) Optional maximum number of build runs per
+               page.
+        :param str start: (optional) An optional token that indicates the beginning
+               of the page of results to be returned. If omitted, the first page of
+               results is returned. This value is obtained from the 'start' query
+               parameter in the `next` object of the operation response.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BuildRunList` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='list_build_runs',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+            'build_name': build_name,
+            'limit': limit,
+            'start': start,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id']
+        path_param_values = self.encode_path_vars(project_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/build_runs'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def create_build_run(
+        self,
+        project_id: str,
+        *,
+        build_name: Optional[str] = None,
+        name: Optional[str] = None,
+        output_image: Optional[str] = None,
+        output_secret: Optional[str] = None,
+        run_build_params: Optional[List['BuildParamPrototype']] = None,
+        service_account: Optional[str] = None,
+        source_context_dir: Optional[str] = None,
+        source_revision: Optional[str] = None,
+        source_secret: Optional[str] = None,
+        source_type: Optional[str] = None,
+        source_url: Optional[str] = None,
+        strategy_size: Optional[str] = None,
+        strategy_spec_file: Optional[str] = None,
+        strategy_type: Optional[str] = None,
+        timeout: Optional[int] = None,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Create a build run.
+
+        Create a build run.
+
+        :param str project_id: The ID of the project.
+        :param str build_name: (optional) Optional name of the build on which this
+               build run is based on. If specified, the build run will inherit the
+               configuration of the referenced build. If not specified, make sure to
+               specify at least the fields `strategy_type`, `source_url`, `output_image`
+               and `output_secret` to describe the build run.
+        :param str name: (optional) Name of the build run. This field is optional,
+               if the field `build_name` is specified and its value will be generated like
+               so: `[BUILD_NAME]-run-[timestamp with format: YYMMDD-hhmmss] if not set.`.
+        :param str output_image: (optional) The name of the image.
+        :param str output_secret: (optional) The secret that is required to access
+               the image registry. Make sure that the secret is granted with push
+               permissions towards the specified container registry namespace.
+        :param List[BuildParamPrototype] run_build_params: (optional) Optional
+               references to config maps and secret keys, or literal values that are
+               exposed as build arguments within the Docker file.
+        :param str service_account: (optional) Optional service account, which is
+               used for resource control.
+        :param str source_context_dir: (optional) Optional directory in the
+               repository that contains the buildpacks file or the Dockerfile.
+        :param str source_revision: (optional) Commit, tag, or branch in the source
+               repository to pull. This field is optional if the `source_type` is `git`
+               and uses the HEAD of default branch if not specified. If the `source_type`
+               value is `local`, this field must be omitted.
+        :param str source_secret: (optional) Name of the secret that is used access
+               the repository source. This field is optional if the `source_type` is
+               `git`. Additionally, if the `source_url` points to a repository that
+               requires authentication, the build will be created but cannot access any
+               source code, until this property is provided, too. If the `source_type`
+               value is `local`, this field must be omitted.
+        :param str source_type: (optional) Specifies the type of source to
+               determine if your build source is in a repository or based on local source
+               code.
+               * local - For builds from local source code.
+               * git - For builds from git version controlled source code.
+        :param str source_url: (optional) The URL of the code repository. This
+               field is required if the `source_type` is `git`. If the `source_type` value
+               is `local`, this field must be omitted. If the repository is publicly
+               available you can provide a 'https' URL like
+               `https://github.com/IBM/CodeEngine`. If the repository requires
+               authentication, you need to provide a 'ssh' URL like
+               `git@github.com:IBM/CodeEngine.git` along with a `source_secret` that
+               points to a secret of format `ssh_auth`.
+        :param str strategy_size: (optional) Optional size for the build, which
+               determines the amount of resources used. Build sizes are `small`, `medium`,
+               `large`, `xlarge`, `xxlarge`.
+        :param str strategy_spec_file: (optional) Optional path to the
+               specification file that is used for build strategies for building an image.
+        :param str strategy_type: (optional) The strategy to use for building the
+               image.
+        :param int timeout: (optional) The maximum amount of time, in seconds, that
+               can pass before the build must succeed or fail.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BuildRun` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if run_build_params is not None:
+            run_build_params = [convert_model(x) for x in run_build_params]
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='create_build_run',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        data = {
+            'build_name': build_name,
+            'name': name,
+            'output_image': output_image,
+            'output_secret': output_secret,
+            'run_build_params': run_build_params,
+            'service_account': service_account,
+            'source_context_dir': source_context_dir,
+            'source_revision': source_revision,
+            'source_secret': source_secret,
+            'source_type': source_type,
+            'source_url': source_url,
+            'strategy_size': strategy_size,
+            'strategy_spec_file': strategy_spec_file,
+            'strategy_type': strategy_type,
+            'timeout': timeout,
+        }
+        data = {k: v for (k, v) in data.items() if v is not None}
+        data = json.dumps(data)
+        headers['content-type'] = 'application/json'
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id']
+        path_param_values = self.encode_path_vars(project_id)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/build_runs'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='POST',
+            url=url,
+            headers=headers,
+            params=params,
+            data=data,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def delete_build_run(
+        self,
+        project_id: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Delete a build run.
+
+        Delete a build run.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of your build run.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='delete_build_run',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/build_runs/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='DELETE',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
+    def get_build_run(
+        self,
+        project_id: str,
+        name: str,
+        **kwargs,
+    ) -> DetailedResponse:
+        """
+        Get a build run.
+
+        Display the details of a build run.
+
+        :param str project_id: The ID of the project.
+        :param str name: The name of your build run.
+        :param dict headers: A `dict` containing the request headers
+        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
+        :rtype: DetailedResponse with `dict` result representing a `BuildRun` object
+        """
+
+        if not project_id:
+            raise ValueError('project_id must be provided')
+        if not name:
+            raise ValueError('name must be provided')
+        headers = {}
+        sdk_headers = get_sdk_headers(
+            service_name=self.DEFAULT_SERVICE_NAME,
+            service_version='V2',
+            operation_id='get_build_run',
+        )
+        headers.update(sdk_headers)
+
+        params = {
+            'version': self.version,
+        }
+
+        if 'headers' in kwargs:
+            headers.update(kwargs.get('headers'))
+            del kwargs['headers']
+        headers['Accept'] = 'application/json'
+
+        path_param_keys = ['project_id', 'name']
+        path_param_values = self.encode_path_vars(project_id, name)
+        path_param_dict = dict(zip(path_param_keys, path_param_values))
+        url = '/projects/{project_id}/build_runs/{name}'.format(**path_param_dict)
+        request = self.prepare_request(
+            method='GET',
+            url=url,
+            headers=headers,
+            params=params,
+        )
+
+        response = self.send(request, **kwargs)
+        return response
+
     def list_builds(
         self,
         project_id: str,
@@ -3181,315 +3490,6 @@ class CodeEngineV2(BaseService):
             headers=headers,
             params=params,
             data=data,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def list_build_runs(
-        self,
-        project_id: str,
-        *,
-        build_name: Optional[str] = None,
-        limit: Optional[int] = None,
-        start: Optional[str] = None,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        List build runs.
-
-        List all build runs in a project.
-
-        :param str project_id: The ID of the project.
-        :param str build_name: (optional) Optional name of the build that should be
-               filtered for.
-        :param int limit: (optional) Optional maximum number of build runs per
-               page.
-        :param str start: (optional) An optional token that indicates the beginning
-               of the page of results to be returned. If omitted, the first page of
-               results is returned. This value is obtained from the 'start' query
-               parameter in the `next` object of the operation response.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `BuildRunList` object
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='list_build_runs',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-            'build_name': build_name,
-            'limit': limit,
-            'start': start,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-        headers['Accept'] = 'application/json'
-
-        path_param_keys = ['project_id']
-        path_param_values = self.encode_path_vars(project_id)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/build_runs'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='GET',
-            url=url,
-            headers=headers,
-            params=params,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def create_build_run(
-        self,
-        project_id: str,
-        *,
-        build_name: Optional[str] = None,
-        name: Optional[str] = None,
-        output_image: Optional[str] = None,
-        output_secret: Optional[str] = None,
-        run_build_params: Optional[List['BuildParamPrototype']] = None,
-        service_account: Optional[str] = None,
-        source_context_dir: Optional[str] = None,
-        source_revision: Optional[str] = None,
-        source_secret: Optional[str] = None,
-        source_type: Optional[str] = None,
-        source_url: Optional[str] = None,
-        strategy_size: Optional[str] = None,
-        strategy_spec_file: Optional[str] = None,
-        strategy_type: Optional[str] = None,
-        timeout: Optional[int] = None,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Create a build run.
-
-        Create a build run.
-
-        :param str project_id: The ID of the project.
-        :param str build_name: (optional) Optional name of the build on which this
-               build run is based on. If specified, the build run will inherit the
-               configuration of the referenced build. If not specified, make sure to
-               specify at least the fields `strategy_type`, `source_url`, `output_image`
-               and `output_secret` to describe the build run.
-        :param str name: (optional) Name of the build run. This field is optional,
-               if the field `build_name` is specified and its value will be generated like
-               so: `[BUILD_NAME]-run-[timestamp with format: YYMMDD-hhmmss] if not set.`.
-        :param str output_image: (optional) The name of the image.
-        :param str output_secret: (optional) The secret that is required to access
-               the image registry. Make sure that the secret is granted with push
-               permissions towards the specified container registry namespace.
-        :param List[BuildParamPrototype] run_build_params: (optional) Optional
-               references to config maps and secret keys, or literal values that are
-               exposed as build arguments within the Docker file.
-        :param str service_account: (optional) Optional service account, which is
-               used for resource control.
-        :param str source_context_dir: (optional) Optional directory in the
-               repository that contains the buildpacks file or the Dockerfile.
-        :param str source_revision: (optional) Commit, tag, or branch in the source
-               repository to pull. This field is optional if the `source_type` is `git`
-               and uses the HEAD of default branch if not specified. If the `source_type`
-               value is `local`, this field must be omitted.
-        :param str source_secret: (optional) Name of the secret that is used access
-               the repository source. This field is optional if the `source_type` is
-               `git`. Additionally, if the `source_url` points to a repository that
-               requires authentication, the build will be created but cannot access any
-               source code, until this property is provided, too. If the `source_type`
-               value is `local`, this field must be omitted.
-        :param str source_type: (optional) Specifies the type of source to
-               determine if your build source is in a repository or based on local source
-               code.
-               * local - For builds from local source code.
-               * git - For builds from git version controlled source code.
-        :param str source_url: (optional) The URL of the code repository. This
-               field is required if the `source_type` is `git`. If the `source_type` value
-               is `local`, this field must be omitted. If the repository is publicly
-               available you can provide a 'https' URL like
-               `https://github.com/IBM/CodeEngine`. If the repository requires
-               authentication, you need to provide a 'ssh' URL like
-               `git@github.com:IBM/CodeEngine.git` along with a `source_secret` that
-               points to a secret of format `ssh_auth`.
-        :param str strategy_size: (optional) Optional size for the build, which
-               determines the amount of resources used. Build sizes are `small`, `medium`,
-               `large`, `xlarge`, `xxlarge`.
-        :param str strategy_spec_file: (optional) Optional path to the
-               specification file that is used for build strategies for building an image.
-        :param str strategy_type: (optional) The strategy to use for building the
-               image.
-        :param int timeout: (optional) The maximum amount of time, in seconds, that
-               can pass before the build must succeed or fail.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `BuildRun` object
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if run_build_params is not None:
-            run_build_params = [convert_model(x) for x in run_build_params]
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='create_build_run',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        data = {
-            'build_name': build_name,
-            'name': name,
-            'output_image': output_image,
-            'output_secret': output_secret,
-            'run_build_params': run_build_params,
-            'service_account': service_account,
-            'source_context_dir': source_context_dir,
-            'source_revision': source_revision,
-            'source_secret': source_secret,
-            'source_type': source_type,
-            'source_url': source_url,
-            'strategy_size': strategy_size,
-            'strategy_spec_file': strategy_spec_file,
-            'strategy_type': strategy_type,
-            'timeout': timeout,
-        }
-        data = {k: v for (k, v) in data.items() if v is not None}
-        data = json.dumps(data)
-        headers['content-type'] = 'application/json'
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-        headers['Accept'] = 'application/json'
-
-        path_param_keys = ['project_id']
-        path_param_values = self.encode_path_vars(project_id)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/build_runs'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='POST',
-            url=url,
-            headers=headers,
-            params=params,
-            data=data,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def delete_build_run(
-        self,
-        project_id: str,
-        name: str,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Delete a build run.
-
-        Delete a build run.
-
-        :param str project_id: The ID of the project.
-        :param str name: The name of your build run.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if not name:
-            raise ValueError('name must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='delete_build_run',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-
-        path_param_keys = ['project_id', 'name']
-        path_param_values = self.encode_path_vars(project_id, name)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/build_runs/{name}'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='DELETE',
-            url=url,
-            headers=headers,
-            params=params,
-        )
-
-        response = self.send(request, **kwargs)
-        return response
-
-    def get_build_run(
-        self,
-        project_id: str,
-        name: str,
-        **kwargs,
-    ) -> DetailedResponse:
-        """
-        Get a build run.
-
-        Display the details of a build run.
-
-        :param str project_id: The ID of the project.
-        :param str name: The name of your build run.
-        :param dict headers: A `dict` containing the request headers
-        :return: A `DetailedResponse` containing the result, headers and HTTP status code.
-        :rtype: DetailedResponse with `dict` result representing a `BuildRun` object
-        """
-
-        if not project_id:
-            raise ValueError('project_id must be provided')
-        if not name:
-            raise ValueError('name must be provided')
-        headers = {}
-        sdk_headers = get_sdk_headers(
-            service_name=self.DEFAULT_SERVICE_NAME,
-            service_version='V2',
-            operation_id='get_build_run',
-        )
-        headers.update(sdk_headers)
-
-        params = {
-            'version': self.version,
-        }
-
-        if 'headers' in kwargs:
-            headers.update(kwargs.get('headers'))
-            del kwargs['headers']
-        headers['Accept'] = 'application/json'
-
-        path_param_keys = ['project_id', 'name']
-        path_param_values = self.encode_path_vars(project_id, name)
-        path_param_dict = dict(zip(path_param_keys, path_param_values))
-        url = '/projects/{project_id}/build_runs/{name}'.format(**path_param_dict)
-        request = self.prepare_request(
-            method='GET',
-            url=url,
-            headers=headers,
-            params=params,
         )
 
         response = self.send(request, **kwargs)
@@ -4748,6 +4748,8 @@ class AllowedOutboundDestination:
     :param str entity_tag: (optional) The version of the allowed outbound
           destination, which is used to achieve optimistic locking.
     :param str name: (optional) The name of the allowed outbound destination.
+    :param str project_id: (optional) The ID of the project in which the resource is
+          located.
     :param str status: (optional) The current status of the outbound destination.
     :param AllowedOutboundStatusDetails status_details: (optional)
     :param str type: Specify the type of the allowed outbound destination. Allowed
@@ -4760,6 +4762,7 @@ class AllowedOutboundDestination:
         *,
         entity_tag: Optional[str] = None,
         name: Optional[str] = None,
+        project_id: Optional[str] = None,
         status: Optional[str] = None,
         status_details: Optional['AllowedOutboundStatusDetails'] = None,
     ) -> None:
@@ -4934,22 +4937,22 @@ class AllowedOutboundDestinationPrototype:
     AllowedOutboundDestinationPrototype is the request model for allowed outbound
     destination create operations.
 
+    :param str name: The name of the allowed outbound destination.
     :param str type: Specify the type of the allowed outbound destination. Allowed
           types are: `cidr_block` and `private_path_service_gateway`.
-    :param str name: The name of the allowed outbound destination.
     """
 
     def __init__(
         self,
-        type: str,
         name: str,
+        type: str,
     ) -> None:
         """
         Initialize a AllowedOutboundDestinationPrototype object.
 
+        :param str name: The name of the allowed outbound destination.
         :param str type: Specify the type of the allowed outbound destination.
                Allowed types are: `cidr_block` and `private_path_service_gateway`.
-        :param str name: The name of the allowed outbound destination.
         """
         msg = "Cannot instantiate base class. Instead, instantiate one of the defined subclasses: {0}".format(
             ", ".join(
@@ -10047,7 +10050,8 @@ class EndpointGatewayDetails:
     Optional information about the endpoint gateway located in the Code Engine VPC that
     connects to the private path service gateway.
 
-    :param str account_id: (optional) The account that created the endpoint gateway.
+    :param str account_id: (optional) The ID of the account that created the
+          endpoint gateway, e.g. 4329073d16d2f3663f74bfa955259139.
     :param str created_at: (optional) The timestamp when the endpoint gateway was
           created.
     :param List[str] ips: (optional) The reserved IPs bound to this endpoint
@@ -13353,6 +13357,7 @@ class PersistentDataStore:
     :param str region: (optional) The region of the project the resource is located
           in. Possible values: 'au-syd', 'br-sao', 'ca-tor', 'eu-de', 'eu-gb', 'jp-osa',
           'jp-tok', 'us-east', 'us-south'.
+    :param str resource_type: (optional) The type of the persistent data store.
     :param str storage_type: Specify the storage type of the persistent data store.
     """
 
@@ -13367,6 +13372,7 @@ class PersistentDataStore:
         id: Optional[str] = None,
         project_id: Optional[str] = None,
         region: Optional[str] = None,
+        resource_type: Optional[str] = None,
     ) -> None:
         """
         Initialize a PersistentDataStore object.
@@ -13389,6 +13395,7 @@ class PersistentDataStore:
         self.name = name
         self.project_id = project_id
         self.region = region
+        self.resource_type = resource_type
         self.storage_type = storage_type
 
     @classmethod
@@ -13415,6 +13422,8 @@ class PersistentDataStore:
             args['project_id'] = project_id
         if (region := _dict.get('region')) is not None:
             args['region'] = region
+        if (resource_type := _dict.get('resource_type')) is not None:
+            args['resource_type'] = resource_type
         if (storage_type := _dict.get('storage_type')) is not None:
             args['storage_type'] = storage_type
         else:
@@ -13446,6 +13455,8 @@ class PersistentDataStore:
             _dict['project_id'] = getattr(self, 'project_id')
         if hasattr(self, 'region') and getattr(self, 'region') is not None:
             _dict['region'] = getattr(self, 'region')
+        if hasattr(self, 'resource_type') and getattr(self, 'resource_type') is not None:
+            _dict['resource_type'] = getattr(self, 'resource_type')
         if hasattr(self, 'storage_type') and self.storage_type is not None:
             _dict['storage_type'] = self.storage_type
         return _dict
@@ -13467,6 +13478,13 @@ class PersistentDataStore:
     def __ne__(self, other: 'PersistentDataStore') -> bool:
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
+
+    class ResourceTypeEnum(str, Enum):
+        """
+        The type of the persistent data store.
+        """
+
+        PERSISTENT_DATA_STORE_V2 = 'persistent_data_store_v2'
 
     class StorageTypeEnum(str, Enum):
         """
@@ -13913,8 +13931,8 @@ class Project:
     """
     Describes the model of a project.
 
-    :param str account_id: (optional) An alphanumeric value identifying the account
-          ID.
+    :param str account_id: (optional) The ID of the account of the project, e.g.
+          4329073d16d2f3663f74bfa955259139.
     :param str created_at: (optional) The timestamp when the project was created.
     :param str crn: (optional) The CRN of the project.
     :param str href: (optional) When you provision a new resource, a URL is created
@@ -15471,7 +15489,6 @@ class VolumeMount:
     Response model of a volume mount.
 
     :param str mount_path: The path that should be mounted.
-    :param str name: (optional) The name of the mount.
     :param bool read_only: (optional) Optional flag for a volume mount of type
           'persistent_data_store' to specify whether it is read-only.
     :param str reference: The name of the referenced secret, config map, or
@@ -15487,7 +15504,6 @@ class VolumeMount:
         reference: str,
         type: str,
         *,
-        name: Optional[str] = None,
         read_only: Optional[bool] = None,
         sub_path: Optional[str] = None,
     ) -> None:
@@ -15499,13 +15515,11 @@ class VolumeMount:
                persistent data store.
         :param str type: Specify the type of the volume mount. Allowed types are:
                'config_map', 'persistent_data_store', 'secret'.
-        :param str name: (optional) The name of the mount.
         :param bool read_only: (optional) Optional flag for a volume mount of type
                'persistent_data_store' to specify whether it is read-only.
         :param str sub_path: (optional) The path mounted at the mount path.
         """
         self.mount_path = mount_path
-        self.name = name
         self.read_only = read_only
         self.reference = reference
         self.sub_path = sub_path
@@ -15519,8 +15533,6 @@ class VolumeMount:
             args['mount_path'] = mount_path
         else:
             raise ValueError('Required property \'mount_path\' not present in VolumeMount JSON')
-        if (name := _dict.get('name')) is not None:
-            args['name'] = name
         if (read_only := _dict.get('read_only')) is not None:
             args['read_only'] = read_only
         if (reference := _dict.get('reference')) is not None:
@@ -15545,8 +15557,6 @@ class VolumeMount:
         _dict = {}
         if hasattr(self, 'mount_path') and self.mount_path is not None:
             _dict['mount_path'] = self.mount_path
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'read_only') and self.read_only is not None:
             _dict['read_only'] = self.read_only
         if hasattr(self, 'reference') and self.reference is not None:
@@ -15591,9 +15601,6 @@ class VolumeMountPrototype:
     Prototype model of a volume mount.
 
     :param str mount_path: The path that should be mounted.
-    :param str name: (optional) Optional name of the mount. If not set, it will be
-          generated based on the `reference` and a random ID. In case the `reference` is
-          longer than 58 characters, it will be cut off.
     :param bool read_only: (optional) Optional flag for a volume mount of type
           'persistent_data_store' to specify whether it is read-only.
     :param str reference: The name of the referenced secret, config map, or
@@ -15609,7 +15616,6 @@ class VolumeMountPrototype:
         reference: str,
         type: str,
         *,
-        name: Optional[str] = None,
         read_only: Optional[bool] = None,
         sub_path: Optional[str] = None,
     ) -> None:
@@ -15621,15 +15627,11 @@ class VolumeMountPrototype:
                persistent data store.
         :param str type: Specify the type of the volume mount. Allowed types are:
                'config_map', 'persistent_data_store', 'secret'.
-        :param str name: (optional) Optional name of the mount. If not set, it will
-               be generated based on the `reference` and a random ID. In case the
-               `reference` is longer than 58 characters, it will be cut off.
         :param bool read_only: (optional) Optional flag for a volume mount of type
                'persistent_data_store' to specify whether it is read-only.
         :param str sub_path: (optional) The path mounted at the mount path.
         """
         self.mount_path = mount_path
-        self.name = name
         self.read_only = read_only
         self.reference = reference
         self.sub_path = sub_path
@@ -15643,8 +15645,6 @@ class VolumeMountPrototype:
             args['mount_path'] = mount_path
         else:
             raise ValueError('Required property \'mount_path\' not present in VolumeMountPrototype JSON')
-        if (name := _dict.get('name')) is not None:
-            args['name'] = name
         if (read_only := _dict.get('read_only')) is not None:
             args['read_only'] = read_only
         if (reference := _dict.get('reference')) is not None:
@@ -15669,8 +15669,6 @@ class VolumeMountPrototype:
         _dict = {}
         if hasattr(self, 'mount_path') and self.mount_path is not None:
             _dict['mount_path'] = self.mount_path
-        if hasattr(self, 'name') and self.name is not None:
-            _dict['name'] = self.name
         if hasattr(self, 'read_only') and self.read_only is not None:
             _dict['read_only'] = self.read_only
         if hasattr(self, 'reference') and self.reference is not None:
@@ -15855,46 +15853,46 @@ class AllowedOutboundDestinationPrototypeCidrBlockDataPrototype(AllowedOutboundD
     """
     Create an allowed outbound destination by using a CIDR block.
 
+    :param str name: The name of the allowed outbound destination.
     :param str type: Specify the type of the allowed outbound destination. Allowed
           types are: `cidr_block` and `private_path_service_gateway`.
-    :param str name: The name of the allowed outbound destination.
     :param str cidr_block: The IPv4 address range.
     """
 
     def __init__(
         self,
-        type: str,
         name: str,
+        type: str,
         cidr_block: str,
     ) -> None:
         """
         Initialize a AllowedOutboundDestinationPrototypeCidrBlockDataPrototype object.
 
+        :param str name: The name of the allowed outbound destination.
         :param str type: Specify the type of the allowed outbound destination.
                Allowed types are: `cidr_block` and `private_path_service_gateway`.
-        :param str name: The name of the allowed outbound destination.
         :param str cidr_block: The IPv4 address range.
         """
         # pylint: disable=super-init-not-called
-        self.type = type
         self.name = name
+        self.type = type
         self.cidr_block = cidr_block
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'AllowedOutboundDestinationPrototypeCidrBlockDataPrototype':
         """Initialize a AllowedOutboundDestinationPrototypeCidrBlockDataPrototype object from a json dictionary."""
         args = {}
-        if (type := _dict.get('type')) is not None:
-            args['type'] = type
-        else:
-            raise ValueError(
-                'Required property \'type\' not present in AllowedOutboundDestinationPrototypeCidrBlockDataPrototype JSON'
-            )
         if (name := _dict.get('name')) is not None:
             args['name'] = name
         else:
             raise ValueError(
                 'Required property \'name\' not present in AllowedOutboundDestinationPrototypeCidrBlockDataPrototype JSON'
+            )
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in AllowedOutboundDestinationPrototypeCidrBlockDataPrototype JSON'
             )
         if (cidr_block := _dict.get('cidr_block')) is not None:
             args['cidr_block'] = cidr_block
@@ -15912,10 +15910,10 @@ class AllowedOutboundDestinationPrototypeCidrBlockDataPrototype(AllowedOutboundD
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'type') and self.type is not None:
-            _dict['type'] = self.type
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
         if hasattr(self, 'cidr_block') and self.cidr_block is not None:
             _dict['cidr_block'] = self.cidr_block
         return _dict
@@ -15952,25 +15950,25 @@ class AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype(
     """
     Create an allowed outbound destination by connecting to a VPC Private Path service.
 
+    :param str name: The name of the allowed outbound destination.
     :param str type: Specify the type of the allowed outbound destination. Allowed
           types are: `cidr_block` and `private_path_service_gateway`.
-    :param str name: The name of the allowed outbound destination.
-    :param str private_path_service_gateway_crn: The CRN of the Private Path
-          service. The CRN can be obtained in the resource details of the target Private
-          Path service. [Learn
-          more](https://cloud.ibm.com/docs/vpc?topic=vpc-pps-ui-communicate).
     :param str isolation_policy: (optional) Optional property to specify the
           isolation policy of the private path service gateway. If set to `shared`, other
           projects within the same account or enterprise account family can connect to
           Private Path service, too. If set to `dedicated` the gateway can only be used by
           a single Code Engine project. If not specified the isolation policy will be set
           to `shared`.
+    :param str private_path_service_gateway_crn: The CRN of the Private Path
+          service. The CRN can be obtained in the resource details of the target Private
+          Path service. [Learn
+          more](https://cloud.ibm.com/docs/vpc?topic=vpc-pps-ui-communicate).
     """
 
     def __init__(
         self,
-        type: str,
         name: str,
+        type: str,
         private_path_service_gateway_crn: str,
         *,
         isolation_policy: Optional[str] = None,
@@ -15978,9 +15976,9 @@ class AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype(
         """
         Initialize a AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype object.
 
+        :param str name: The name of the allowed outbound destination.
         :param str type: Specify the type of the allowed outbound destination.
                Allowed types are: `cidr_block` and `private_path_service_gateway`.
-        :param str name: The name of the allowed outbound destination.
         :param str private_path_service_gateway_crn: The CRN of the Private Path
                service. The CRN can be obtained in the resource details of the target
                Private Path service. [Learn
@@ -15993,35 +15991,35 @@ class AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype(
                isolation policy will be set to `shared`.
         """
         # pylint: disable=super-init-not-called
-        self.type = type
         self.name = name
-        self.private_path_service_gateway_crn = private_path_service_gateway_crn
+        self.type = type
         self.isolation_policy = isolation_policy
+        self.private_path_service_gateway_crn = private_path_service_gateway_crn
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype':
         """Initialize a AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype object from a json dictionary."""
         args = {}
-        if (type := _dict.get('type')) is not None:
-            args['type'] = type
-        else:
-            raise ValueError(
-                'Required property \'type\' not present in AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype JSON'
-            )
         if (name := _dict.get('name')) is not None:
             args['name'] = name
         else:
             raise ValueError(
                 'Required property \'name\' not present in AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype JSON'
             )
+        if (type := _dict.get('type')) is not None:
+            args['type'] = type
+        else:
+            raise ValueError(
+                'Required property \'type\' not present in AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype JSON'
+            )
+        if (isolation_policy := _dict.get('isolation_policy')) is not None:
+            args['isolation_policy'] = isolation_policy
         if (private_path_service_gateway_crn := _dict.get('private_path_service_gateway_crn')) is not None:
             args['private_path_service_gateway_crn'] = private_path_service_gateway_crn
         else:
             raise ValueError(
                 'Required property \'private_path_service_gateway_crn\' not present in AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype JSON'
             )
-        if (isolation_policy := _dict.get('isolation_policy')) is not None:
-            args['isolation_policy'] = isolation_policy
         return cls(**args)
 
     @classmethod
@@ -16032,14 +16030,14 @@ class AllowedOutboundDestinationPrototypePrivatePathServiceGatewayDataPrototype(
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'type') and self.type is not None:
-            _dict['type'] = self.type
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
-        if hasattr(self, 'private_path_service_gateway_crn') and self.private_path_service_gateway_crn is not None:
-            _dict['private_path_service_gateway_crn'] = self.private_path_service_gateway_crn
+        if hasattr(self, 'type') and self.type is not None:
+            _dict['type'] = self.type
         if hasattr(self, 'isolation_policy') and self.isolation_policy is not None:
             _dict['isolation_policy'] = self.isolation_policy
+        if hasattr(self, 'private_path_service_gateway_crn') and self.private_path_service_gateway_crn is not None:
+            _dict['private_path_service_gateway_crn'] = self.private_path_service_gateway_crn
         return _dict
 
     def _to_dict(self):
@@ -16089,6 +16087,8 @@ class AllowedOutboundDestinationCidrBlockData(AllowedOutboundDestination):
     :param str entity_tag: (optional) The version of the allowed outbound
           destination, which is used to achieve optimistic locking.
     :param str name: (optional) The name of the allowed outbound destination.
+    :param str project_id: (optional) The ID of the project in which the resource is
+          located.
     :param str status: (optional) The current status of the outbound destination.
     :param AllowedOutboundStatusDetails status_details: (optional)
     :param str type: Specify the type of the allowed outbound destination. Allowed
@@ -16103,6 +16103,7 @@ class AllowedOutboundDestinationCidrBlockData(AllowedOutboundDestination):
         *,
         entity_tag: Optional[str] = None,
         name: Optional[str] = None,
+        project_id: Optional[str] = None,
         status: Optional[str] = None,
         status_details: Optional['AllowedOutboundStatusDetails'] = None,
     ) -> None:
@@ -16120,6 +16121,7 @@ class AllowedOutboundDestinationCidrBlockData(AllowedOutboundDestination):
         # pylint: disable=super-init-not-called
         self.entity_tag = entity_tag
         self.name = name
+        self.project_id = project_id
         self.status = status
         self.status_details = status_details
         self.type = type
@@ -16133,6 +16135,8 @@ class AllowedOutboundDestinationCidrBlockData(AllowedOutboundDestination):
             args['entity_tag'] = entity_tag
         if (name := _dict.get('name')) is not None:
             args['name'] = name
+        if (project_id := _dict.get('project_id')) is not None:
+            args['project_id'] = project_id
         if (status := _dict.get('status')) is not None:
             args['status'] = status
         if (status_details := _dict.get('status_details')) is not None:
@@ -16161,6 +16165,8 @@ class AllowedOutboundDestinationCidrBlockData(AllowedOutboundDestination):
             _dict['entity_tag'] = self.entity_tag
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'project_id') and getattr(self, 'project_id') is not None:
+            _dict['project_id'] = getattr(self, 'project_id')
         if hasattr(self, 'status') and getattr(self, 'status') is not None:
             _dict['status'] = getattr(self, 'status')
         if hasattr(self, 'status_details') and self.status_details is not None:
@@ -16218,28 +16224,31 @@ class AllowedOutboundDestinationPrivatePathServiceGatewayData(AllowedOutboundDes
     :param str entity_tag: (optional) The version of the allowed outbound
           destination, which is used to achieve optimistic locking.
     :param str name: (optional) The name of the allowed outbound destination.
+    :param str project_id: (optional) The ID of the project in which the resource is
+          located.
     :param str status: (optional) The current status of the outbound destination.
     :param AllowedOutboundStatusDetails status_details: (optional)
     :param str type: Specify the type of the allowed outbound destination. Allowed
           types are: `cidr_block` and `private_path_service_gateway`.
-    :param str private_path_service_gateway_crn: The CRN of the Private Path
-          service.
     :param str isolation_policy: Optional property to specify the isolation policy
           of the private path service gateway. If set to `shared`, other projects within
           the same account or enterprise account family can connect to Private Path
           service, too. If set to `dedicated` the gateway can only be used by a single
           Code Engine project. If not specified the isolation policy will be set to
           `shared`.
+    :param str private_path_service_gateway_crn: The CRN of the Private Path
+          service.
     """
 
     def __init__(
         self,
         type: str,
-        private_path_service_gateway_crn: str,
         isolation_policy: str,
+        private_path_service_gateway_crn: str,
         *,
         entity_tag: Optional[str] = None,
         name: Optional[str] = None,
+        project_id: Optional[str] = None,
         status: Optional[str] = None,
         status_details: Optional['AllowedOutboundStatusDetails'] = None,
     ) -> None:
@@ -16248,14 +16257,14 @@ class AllowedOutboundDestinationPrivatePathServiceGatewayData(AllowedOutboundDes
 
         :param str type: Specify the type of the allowed outbound destination.
                Allowed types are: `cidr_block` and `private_path_service_gateway`.
-        :param str private_path_service_gateway_crn: The CRN of the Private Path
-               service.
         :param str isolation_policy: Optional property to specify the isolation
                policy of the private path service gateway. If set to `shared`, other
                projects within the same account or enterprise account family can connect
                to Private Path service, too. If set to `dedicated` the gateway can only be
                used by a single Code Engine project. If not specified the isolation policy
                will be set to `shared`.
+        :param str private_path_service_gateway_crn: The CRN of the Private Path
+               service.
         :param str entity_tag: (optional) The version of the allowed outbound
                destination, which is used to achieve optimistic locking.
         :param str name: (optional) The name of the allowed outbound destination.
@@ -16264,11 +16273,12 @@ class AllowedOutboundDestinationPrivatePathServiceGatewayData(AllowedOutboundDes
         # pylint: disable=super-init-not-called
         self.entity_tag = entity_tag
         self.name = name
+        self.project_id = project_id
         self.status = status
         self.status_details = status_details
         self.type = type
-        self.private_path_service_gateway_crn = private_path_service_gateway_crn
         self.isolation_policy = isolation_policy
+        self.private_path_service_gateway_crn = private_path_service_gateway_crn
 
     @classmethod
     def from_dict(cls, _dict: Dict) -> 'AllowedOutboundDestinationPrivatePathServiceGatewayData':
@@ -16278,6 +16288,8 @@ class AllowedOutboundDestinationPrivatePathServiceGatewayData(AllowedOutboundDes
             args['entity_tag'] = entity_tag
         if (name := _dict.get('name')) is not None:
             args['name'] = name
+        if (project_id := _dict.get('project_id')) is not None:
+            args['project_id'] = project_id
         if (status := _dict.get('status')) is not None:
             args['status'] = status
         if (status_details := _dict.get('status_details')) is not None:
@@ -16288,17 +16300,17 @@ class AllowedOutboundDestinationPrivatePathServiceGatewayData(AllowedOutboundDes
             raise ValueError(
                 'Required property \'type\' not present in AllowedOutboundDestinationPrivatePathServiceGatewayData JSON'
             )
-        if (private_path_service_gateway_crn := _dict.get('private_path_service_gateway_crn')) is not None:
-            args['private_path_service_gateway_crn'] = private_path_service_gateway_crn
-        else:
-            raise ValueError(
-                'Required property \'private_path_service_gateway_crn\' not present in AllowedOutboundDestinationPrivatePathServiceGatewayData JSON'
-            )
         if (isolation_policy := _dict.get('isolation_policy')) is not None:
             args['isolation_policy'] = isolation_policy
         else:
             raise ValueError(
                 'Required property \'isolation_policy\' not present in AllowedOutboundDestinationPrivatePathServiceGatewayData JSON'
+            )
+        if (private_path_service_gateway_crn := _dict.get('private_path_service_gateway_crn')) is not None:
+            args['private_path_service_gateway_crn'] = private_path_service_gateway_crn
+        else:
+            raise ValueError(
+                'Required property \'private_path_service_gateway_crn\' not present in AllowedOutboundDestinationPrivatePathServiceGatewayData JSON'
             )
         return cls(**args)
 
@@ -16314,6 +16326,8 @@ class AllowedOutboundDestinationPrivatePathServiceGatewayData(AllowedOutboundDes
             _dict['entity_tag'] = self.entity_tag
         if hasattr(self, 'name') and self.name is not None:
             _dict['name'] = self.name
+        if hasattr(self, 'project_id') and getattr(self, 'project_id') is not None:
+            _dict['project_id'] = getattr(self, 'project_id')
         if hasattr(self, 'status') and getattr(self, 'status') is not None:
             _dict['status'] = getattr(self, 'status')
         if hasattr(self, 'status_details') and self.status_details is not None:
@@ -16323,10 +16337,10 @@ class AllowedOutboundDestinationPrivatePathServiceGatewayData(AllowedOutboundDes
                 _dict['status_details'] = self.status_details.to_dict()
         if hasattr(self, 'type') and self.type is not None:
             _dict['type'] = self.type
-        if hasattr(self, 'private_path_service_gateway_crn') and self.private_path_service_gateway_crn is not None:
-            _dict['private_path_service_gateway_crn'] = self.private_path_service_gateway_crn
         if hasattr(self, 'isolation_policy') and self.isolation_policy is not None:
             _dict['isolation_policy'] = self.isolation_policy
+        if hasattr(self, 'private_path_service_gateway_crn') and self.private_path_service_gateway_crn is not None:
+            _dict['private_path_service_gateway_crn'] = self.private_path_service_gateway_crn
         return _dict
 
     def _to_dict(self):
@@ -16491,31 +16505,31 @@ class SecretDataBasicAuthSecretData(SecretData):
     """
     SecretDataBasicAuthSecretData.
 
-    :param str username: Basic auth username.
     :param str password: Basic auth password.
+    :param str username: Basic auth username.
 
     This type supports additional properties of type str.
     """
 
     # The set of defined properties for the class
-    _properties = frozenset(['username', 'password'])
+    _properties = frozenset(['password', 'username'])
 
     def __init__(
         self,
-        username: str,
         password: str,
+        username: str,
         **kwargs: Optional[str],
     ) -> None:
         """
         Initialize a SecretDataBasicAuthSecretData object.
 
-        :param str username: Basic auth username.
         :param str password: Basic auth password.
+        :param str username: Basic auth username.
         :param str **kwargs: (optional) Additional properties of type str
         """
         # pylint: disable=super-init-not-called
-        self.username = username
         self.password = password
+        self.username = username
         for k, v in kwargs.items():
             if k not in SecretDataBasicAuthSecretData._properties:
                 if not isinstance(v, str):
@@ -16528,14 +16542,14 @@ class SecretDataBasicAuthSecretData(SecretData):
     def from_dict(cls, _dict: Dict) -> 'SecretDataBasicAuthSecretData':
         """Initialize a SecretDataBasicAuthSecretData object from a json dictionary."""
         args = {}
-        if (username := _dict.get('username')) is not None:
-            args['username'] = username
-        else:
-            raise ValueError('Required property \'username\' not present in SecretDataBasicAuthSecretData JSON')
         if (password := _dict.get('password')) is not None:
             args['password'] = password
         else:
             raise ValueError('Required property \'password\' not present in SecretDataBasicAuthSecretData JSON')
+        if (username := _dict.get('username')) is not None:
+            args['username'] = username
+        else:
+            raise ValueError('Required property \'username\' not present in SecretDataBasicAuthSecretData JSON')
         for k, v in _dict.items():
             if k not in cls._properties:
                 if not isinstance(v, str):
@@ -16551,10 +16565,10 @@ class SecretDataBasicAuthSecretData(SecretData):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'username') and self.username is not None:
-            _dict['username'] = self.username
         if hasattr(self, 'password') and self.password is not None:
             _dict['password'] = self.password
+        if hasattr(self, 'username') and self.username is not None:
+            _dict['username'] = self.username
         for k in [_k for _k in vars(self).keys() if _k not in SecretDataBasicAuthSecretData._properties]:
             _dict[k] = getattr(self, k)
         return _dict
@@ -16794,22 +16808,22 @@ class SecretDataRegistrySecretData(SecretData):
     """
     SecretDataRegistrySecretData.
 
-    :param str username: Registry username.
+    :param str email: (optional) Registry email address.
     :param str password: Registry password.
     :param str server: Registry server.
-    :param str email: (optional) Registry email address.
+    :param str username: Registry username.
 
     This type supports additional properties of type str.
     """
 
     # The set of defined properties for the class
-    _properties = frozenset(['username', 'password', 'server', 'email'])
+    _properties = frozenset(['email', 'password', 'server', 'username'])
 
     def __init__(
         self,
-        username: str,
         password: str,
         server: str,
+        username: str,
         *,
         email: Optional[str] = None,
         **kwargs: Optional[str],
@@ -16817,17 +16831,17 @@ class SecretDataRegistrySecretData(SecretData):
         """
         Initialize a SecretDataRegistrySecretData object.
 
-        :param str username: Registry username.
         :param str password: Registry password.
         :param str server: Registry server.
+        :param str username: Registry username.
         :param str email: (optional) Registry email address.
         :param str **kwargs: (optional) Additional properties of type str
         """
         # pylint: disable=super-init-not-called
-        self.username = username
+        self.email = email
         self.password = password
         self.server = server
-        self.email = email
+        self.username = username
         for k, v in kwargs.items():
             if k not in SecretDataRegistrySecretData._properties:
                 if not isinstance(v, str):
@@ -16840,10 +16854,8 @@ class SecretDataRegistrySecretData(SecretData):
     def from_dict(cls, _dict: Dict) -> 'SecretDataRegistrySecretData':
         """Initialize a SecretDataRegistrySecretData object from a json dictionary."""
         args = {}
-        if (username := _dict.get('username')) is not None:
-            args['username'] = username
-        else:
-            raise ValueError('Required property \'username\' not present in SecretDataRegistrySecretData JSON')
+        if (email := _dict.get('email')) is not None:
+            args['email'] = email
         if (password := _dict.get('password')) is not None:
             args['password'] = password
         else:
@@ -16852,8 +16864,10 @@ class SecretDataRegistrySecretData(SecretData):
             args['server'] = server
         else:
             raise ValueError('Required property \'server\' not present in SecretDataRegistrySecretData JSON')
-        if (email := _dict.get('email')) is not None:
-            args['email'] = email
+        if (username := _dict.get('username')) is not None:
+            args['username'] = username
+        else:
+            raise ValueError('Required property \'username\' not present in SecretDataRegistrySecretData JSON')
         for k, v in _dict.items():
             if k not in cls._properties:
                 if not isinstance(v, str):
@@ -16869,14 +16883,14 @@ class SecretDataRegistrySecretData(SecretData):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'username') and self.username is not None:
-            _dict['username'] = self.username
+        if hasattr(self, 'email') and self.email is not None:
+            _dict['email'] = self.email
         if hasattr(self, 'password') and self.password is not None:
             _dict['password'] = self.password
         if hasattr(self, 'server') and self.server is not None:
             _dict['server'] = self.server
-        if hasattr(self, 'email') and self.email is not None:
-            _dict['email'] = self.email
+        if hasattr(self, 'username') and self.username is not None:
+            _dict['username'] = self.username
         for k in [_k for _k in vars(self).keys() if _k not in SecretDataRegistrySecretData._properties]:
             _dict[k] = getattr(self, k)
         return _dict
@@ -16923,14 +16937,14 @@ class SecretDataSSHSecretData(SecretData):
     """
     Secret Data field used by SSH secrets.
 
-    :param str ssh_key: SSH key.
     :param str known_hosts: (optional) Known hosts.
+    :param str ssh_key: SSH key.
 
     This type supports additional properties of type str.
     """
 
     # The set of defined properties for the class
-    _properties = frozenset(['ssh_key', 'known_hosts'])
+    _properties = frozenset(['known_hosts', 'ssh_key'])
 
     def __init__(
         self,
@@ -16947,8 +16961,8 @@ class SecretDataSSHSecretData(SecretData):
         :param str **kwargs: (optional) Additional properties of type str
         """
         # pylint: disable=super-init-not-called
-        self.ssh_key = ssh_key
         self.known_hosts = known_hosts
+        self.ssh_key = ssh_key
         for k, v in kwargs.items():
             if k not in SecretDataSSHSecretData._properties:
                 if not isinstance(v, str):
@@ -16961,12 +16975,12 @@ class SecretDataSSHSecretData(SecretData):
     def from_dict(cls, _dict: Dict) -> 'SecretDataSSHSecretData':
         """Initialize a SecretDataSSHSecretData object from a json dictionary."""
         args = {}
+        if (known_hosts := _dict.get('known_hosts')) is not None:
+            args['known_hosts'] = known_hosts
         if (ssh_key := _dict.get('ssh_key')) is not None:
             args['ssh_key'] = ssh_key
         else:
             raise ValueError('Required property \'ssh_key\' not present in SecretDataSSHSecretData JSON')
-        if (known_hosts := _dict.get('known_hosts')) is not None:
-            args['known_hosts'] = known_hosts
         for k, v in _dict.items():
             if k not in cls._properties:
                 if not isinstance(v, str):
@@ -16982,10 +16996,10 @@ class SecretDataSSHSecretData(SecretData):
     def to_dict(self) -> Dict:
         """Return a json dictionary representing this model."""
         _dict = {}
-        if hasattr(self, 'ssh_key') and self.ssh_key is not None:
-            _dict['ssh_key'] = self.ssh_key
         if hasattr(self, 'known_hosts') and self.known_hosts is not None:
             _dict['known_hosts'] = self.known_hosts
+        if hasattr(self, 'ssh_key') and self.ssh_key is not None:
+            _dict['ssh_key'] = self.ssh_key
         for k in [_k for _k in vars(self).keys() if _k not in SecretDataSSHSecretData._properties]:
             _dict[k] = getattr(self, k)
         return _dict
@@ -17260,33 +17274,6 @@ class StorageDataObjectStorageData(StorageData):
         """Return `true` when self and other are not equal, false otherwise."""
         return not self == other
 
-    class BucketLocationEnum(str, Enum):
-        """
-        Specify the location of the bucket.
-        """
-
-        AU_SYD = 'au-syd'
-        BR_SAO = 'br-sao'
-        CA_MON = 'ca-mon'
-        CA_TOR = 'ca-tor'
-        EU_DE = 'eu-de'
-        EU_ES = 'eu-es'
-        EU_GB = 'eu-gb'
-        JP_OSA = 'jp-osa'
-        JP_TOK = 'jp-tok'
-        US_EAST = 'us-east'
-        US_SOUTH = 'us-south'
-        AP = 'ap'
-        EU = 'eu'
-        US = 'us'
-        AMS03 = 'ams03'
-        CHE01 = 'che01'
-        MIL01 = 'mil01'
-        MON01 = 'mon01'
-        PAR01 = 'par01'
-        SJC04 = 'sjc04'
-        SNG01 = 'sng01'
-
 
 ##############################################################################
 # Pagers
@@ -17494,78 +17481,6 @@ class AppsPager:
         return results
 
 
-class AppRevisionsPager:
-    """
-    AppRevisionsPager can be used to simplify the use of the "list_app_revisions" method.
-    """
-
-    def __init__(
-        self,
-        *,
-        client: CodeEngineV2,
-        project_id: str,
-        app_name: str,
-        limit: int = None,
-    ) -> None:
-        """
-        Initialize a AppRevisionsPager object.
-        :param str project_id: The ID of the project.
-        :param str app_name: The name of your application.
-        :param int limit: (optional) Optional maximum number of apps per page.
-        """
-        self._has_next = True
-        self._client = client
-        self._page_context = {'next': None}
-        self._project_id = project_id
-        self._app_name = app_name
-        self._limit = limit
-
-    def has_next(self) -> bool:
-        """
-        Returns true if there are potentially more results to be retrieved.
-        """
-        return self._has_next
-
-    def get_next(self) -> List[dict]:
-        """
-        Returns the next page of results.
-        :return: A List[dict], where each element is a dict that represents an instance of AppRevision.
-        :rtype: List[dict]
-        """
-        if not self.has_next():
-            raise StopIteration(message='No more results available')
-
-        result = self._client.list_app_revisions(
-            project_id=self._project_id,
-            app_name=self._app_name,
-            limit=self._limit,
-            start=self._page_context.get('next'),
-        ).get_result()
-
-        next = None
-        next_page_link = result.get('next')
-        if next_page_link is not None:
-            next = next_page_link.get('start')
-        self._page_context['next'] = next
-        if next is None:
-            self._has_next = False
-
-        return result.get('revisions')
-
-    def get_all(self) -> List[dict]:
-        """
-        Returns all results by invoking get_next() repeatedly
-        until all pages of results have been retrieved.
-        :return: A List[dict], where each element is a dict that represents an instance of AppRevision.
-        :rtype: List[dict]
-        """
-        results = []
-        while self.has_next():
-            next_page = self.get_next()
-            results.extend(next_page)
-        return results
-
-
 class AppInstancesPager:
     """
     AppInstancesPager can be used to simplify the use of the "list_app_instances" method.
@@ -17638,9 +17553,9 @@ class AppInstancesPager:
         return results
 
 
-class JobsPager:
+class AppRevisionsPager:
     """
-    JobsPager can be used to simplify the use of the "list_jobs" method.
+    AppRevisionsPager can be used to simplify the use of the "list_app_revisions" method.
     """
 
     def __init__(
@@ -17648,17 +17563,20 @@ class JobsPager:
         *,
         client: CodeEngineV2,
         project_id: str,
+        app_name: str,
         limit: int = None,
     ) -> None:
         """
-        Initialize a JobsPager object.
+        Initialize a AppRevisionsPager object.
         :param str project_id: The ID of the project.
-        :param int limit: (optional) Optional maximum number of jobs per page.
+        :param str app_name: The name of your application.
+        :param int limit: (optional) Optional maximum number of apps per page.
         """
         self._has_next = True
         self._client = client
         self._page_context = {'next': None}
         self._project_id = project_id
+        self._app_name = app_name
         self._limit = limit
 
     def has_next(self) -> bool:
@@ -17670,14 +17588,15 @@ class JobsPager:
     def get_next(self) -> List[dict]:
         """
         Returns the next page of results.
-        :return: A List[dict], where each element is a dict that represents an instance of Job.
+        :return: A List[dict], where each element is a dict that represents an instance of AppRevision.
         :rtype: List[dict]
         """
         if not self.has_next():
             raise StopIteration(message='No more results available')
 
-        result = self._client.list_jobs(
+        result = self._client.list_app_revisions(
             project_id=self._project_id,
+            app_name=self._app_name,
             limit=self._limit,
             start=self._page_context.get('next'),
         ).get_result()
@@ -17690,13 +17609,13 @@ class JobsPager:
         if next is None:
             self._has_next = False
 
-        return result.get('jobs')
+        return result.get('revisions')
 
     def get_all(self) -> List[dict]:
         """
         Returns all results by invoking get_next() repeatedly
         until all pages of results have been retrieved.
-        :return: A List[dict], where each element is a dict that represents an instance of Job.
+        :return: A List[dict], where each element is a dict that represents an instance of AppRevision.
         :rtype: List[dict]
         """
         results = []
@@ -17770,6 +17689,74 @@ class JobRunsPager:
         Returns all results by invoking get_next() repeatedly
         until all pages of results have been retrieved.
         :return: A List[dict], where each element is a dict that represents an instance of JobRun.
+        :rtype: List[dict]
+        """
+        results = []
+        while self.has_next():
+            next_page = self.get_next()
+            results.extend(next_page)
+        return results
+
+
+class JobsPager:
+    """
+    JobsPager can be used to simplify the use of the "list_jobs" method.
+    """
+
+    def __init__(
+        self,
+        *,
+        client: CodeEngineV2,
+        project_id: str,
+        limit: int = None,
+    ) -> None:
+        """
+        Initialize a JobsPager object.
+        :param str project_id: The ID of the project.
+        :param int limit: (optional) Optional maximum number of jobs per page.
+        """
+        self._has_next = True
+        self._client = client
+        self._page_context = {'next': None}
+        self._project_id = project_id
+        self._limit = limit
+
+    def has_next(self) -> bool:
+        """
+        Returns true if there are potentially more results to be retrieved.
+        """
+        return self._has_next
+
+    def get_next(self) -> List[dict]:
+        """
+        Returns the next page of results.
+        :return: A List[dict], where each element is a dict that represents an instance of Job.
+        :rtype: List[dict]
+        """
+        if not self.has_next():
+            raise StopIteration(message='No more results available')
+
+        result = self._client.list_jobs(
+            project_id=self._project_id,
+            limit=self._limit,
+            start=self._page_context.get('next'),
+        ).get_result()
+
+        next = None
+        next_page_link = result.get('next')
+        if next_page_link is not None:
+            next = next_page_link.get('start')
+        self._page_context['next'] = next
+        if next is None:
+            self._has_next = False
+
+        return result.get('jobs')
+
+    def get_all(self) -> List[dict]:
+        """
+        Returns all results by invoking get_next() repeatedly
+        until all pages of results have been retrieved.
+        :return: A List[dict], where each element is a dict that represents an instance of Job.
         :rtype: List[dict]
         """
         results = []
@@ -17915,74 +17902,6 @@ class BindingsPager:
         return results
 
 
-class BuildsPager:
-    """
-    BuildsPager can be used to simplify the use of the "list_builds" method.
-    """
-
-    def __init__(
-        self,
-        *,
-        client: CodeEngineV2,
-        project_id: str,
-        limit: int = None,
-    ) -> None:
-        """
-        Initialize a BuildsPager object.
-        :param str project_id: The ID of the project.
-        :param int limit: (optional) Optional maximum number of builds per page.
-        """
-        self._has_next = True
-        self._client = client
-        self._page_context = {'next': None}
-        self._project_id = project_id
-        self._limit = limit
-
-    def has_next(self) -> bool:
-        """
-        Returns true if there are potentially more results to be retrieved.
-        """
-        return self._has_next
-
-    def get_next(self) -> List[dict]:
-        """
-        Returns the next page of results.
-        :return: A List[dict], where each element is a dict that represents an instance of Build.
-        :rtype: List[dict]
-        """
-        if not self.has_next():
-            raise StopIteration(message='No more results available')
-
-        result = self._client.list_builds(
-            project_id=self._project_id,
-            limit=self._limit,
-            start=self._page_context.get('next'),
-        ).get_result()
-
-        next = None
-        next_page_link = result.get('next')
-        if next_page_link is not None:
-            next = next_page_link.get('start')
-        self._page_context['next'] = next
-        if next is None:
-            self._has_next = False
-
-        return result.get('builds')
-
-    def get_all(self) -> List[dict]:
-        """
-        Returns all results by invoking get_next() repeatedly
-        until all pages of results have been retrieved.
-        :return: A List[dict], where each element is a dict that represents an instance of Build.
-        :rtype: List[dict]
-        """
-        results = []
-        while self.has_next():
-            next_page = self.get_next()
-            results.extend(next_page)
-        return results
-
-
 class BuildRunsPager:
     """
     BuildRunsPager can be used to simplify the use of the "list_build_runs" method.
@@ -18048,6 +17967,74 @@ class BuildRunsPager:
         Returns all results by invoking get_next() repeatedly
         until all pages of results have been retrieved.
         :return: A List[dict], where each element is a dict that represents an instance of BuildRun.
+        :rtype: List[dict]
+        """
+        results = []
+        while self.has_next():
+            next_page = self.get_next()
+            results.extend(next_page)
+        return results
+
+
+class BuildsPager:
+    """
+    BuildsPager can be used to simplify the use of the "list_builds" method.
+    """
+
+    def __init__(
+        self,
+        *,
+        client: CodeEngineV2,
+        project_id: str,
+        limit: int = None,
+    ) -> None:
+        """
+        Initialize a BuildsPager object.
+        :param str project_id: The ID of the project.
+        :param int limit: (optional) Optional maximum number of builds per page.
+        """
+        self._has_next = True
+        self._client = client
+        self._page_context = {'next': None}
+        self._project_id = project_id
+        self._limit = limit
+
+    def has_next(self) -> bool:
+        """
+        Returns true if there are potentially more results to be retrieved.
+        """
+        return self._has_next
+
+    def get_next(self) -> List[dict]:
+        """
+        Returns the next page of results.
+        :return: A List[dict], where each element is a dict that represents an instance of Build.
+        :rtype: List[dict]
+        """
+        if not self.has_next():
+            raise StopIteration(message='No more results available')
+
+        result = self._client.list_builds(
+            project_id=self._project_id,
+            limit=self._limit,
+            start=self._page_context.get('next'),
+        ).get_result()
+
+        next = None
+        next_page_link = result.get('next')
+        if next_page_link is not None:
+            next = next_page_link.get('start')
+        self._page_context['next'] = next
+        if next is None:
+            self._has_next = False
+
+        return result.get('builds')
+
+    def get_all(self) -> List[dict]:
+        """
+        Returns all results by invoking get_next() repeatedly
+        until all pages of results have been retrieved.
+        :return: A List[dict], where each element is a dict that represents an instance of Build.
         :rtype: List[dict]
         """
         results = []

@@ -1,7 +1,7 @@
 <!-- 
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 -->
-# Python SDK for IBM Cloud Code Engine 5.0.1
+# Python SDK for IBM Cloud Code Engine 6.0.0
 
 Python client library to interact with the [IBM Cloud Code Engine API](https://cloud.ibm.com/apidocs/codeengine).
 
@@ -21,6 +21,7 @@ Python client library to interact with the [IBM Cloud Code Engine API](https://c
 
 - [Overview](#overview)
 - [Prerequisites](#prerequisites)
+- [Breaking Changes (April 2026)](#breaking-changes-april-2026)
 - [Breaking Changes (March 2026)](#breaking-changes-march-2026)
 - [Installation](#installation)
 - [Using the SDK](#using-the-sdk)
@@ -39,8 +40,8 @@ IBM Cloud services:
 
 Service Name | Imported Class Name
 --- | ---
-[IBM Cloud Code Engine V2](https://cloud.ibm.com/apidocs/codeengine/codeengine-v5.0.1) | CodeEngineV2
-[IBM Cloud Code Engine V1](https://cloud.ibm.com/apidocs/codeengine/codeengine-v5.0.1) | IbmCloudCodeEngineV1
+[IBM Cloud Code Engine V2](https://cloud.ibm.com/apidocs/codeengine/codeengine-v6.0.0) | CodeEngineV2
+[IBM Cloud Code Engine V1](https://cloud.ibm.com/apidocs/codeengine/codeengine-v6.0.0) | IbmCloudCodeEngineV1
 
 ## Prerequisites
 
@@ -49,6 +50,12 @@ Service Name | Imported Class Name
 * An [IBM Cloud][ibm-cloud-onboarding] account.
 * An IAM API key to allow the SDK to access your account. Create one [here](https://cloud.ibm.com/iam/apikeys).
 * Python 3.9 or above.
+
+## Breaking Changes (April 2026)
+
+As part of the introduction of `persistent_data_stores` as a Volume Mount type for **apps** and **jobs**, the optional `name` property of entries in `run_volume_mounts` is no longer supported.
+
+If you used the optional `name` property, remove it from the prototype of the **app** or **job**.
 
 ## Breaking Changes (March 2026)
 
@@ -241,13 +248,13 @@ Service Name | Imported Class Name
 To install, use `pip` or `easy_install`:
 
 ```bash
-pip install --upgrade "ibm_code_engine_sdk>=5.0.1"
+pip install --upgrade "ibm_code_engine_sdk>=6.0.0"
 ```
 
 or
 
 ```bash
-easy_install --upgrade "ibm_code_engine_sdk>=5.0.1"
+easy_install --upgrade "ibm_code_engine_sdk>=6.0.0"
 ```
 
 ## Using the SDK

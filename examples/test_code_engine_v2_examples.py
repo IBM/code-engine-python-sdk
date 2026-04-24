@@ -22,7 +22,7 @@ import os
 import pytest
 from ibm_code_engine_sdk.code_engine_v2 import *
 
-version = '2026-02-23'
+version = '2026-03-27'
 
 #
 # This file provides an example of how to use the Code Engine service.
@@ -184,8 +184,8 @@ class TestCodeEngineV2Examples:
             # begin-create_allowed_outbound_destination
 
             allowed_outbound_destination_prototype_model = {
-                'type': 'cidr_block',
                 'name': 'allow-all',
+                'type': 'cidr_block',
                 'cidr_block': 'testString',
             }
 
@@ -348,52 +348,30 @@ class TestCodeEngineV2Examples:
             pytest.fail(str(e))
 
     @needscredentials
-    def test_get_app_example(self):
+    def test_list_app_instances_example(self):
         """
-        get_app request example
-        """
-        try:
-            print('\nget_app() result:')
-
-            # begin-get_app
-
-            response = code_engine_service.get_app(
-                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
-                name='my-app',
-            )
-            app = response.get_result()
-
-            print(json.dumps(app, indent=2))
-
-            # end-get_app
-
-        except ApiException as e:
-            pytest.fail(str(e))
-
-    @needscredentials
-    def test_update_app_example(self):
-        """
-        update_app request example
+        list_app_instances request example
         """
         try:
-            print('\nupdate_app() result:')
+            print('\nlist_app_instances() result:')
 
-            # begin-update_app
+            # begin-list_app_instances
 
-            app_patch_model = {}
-
-            response = code_engine_service.update_app(
+            all_results = []
+            pager = AppInstancesPager(
+                client=code_engine_service,
                 project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
-                name='my-app',
-                if_match='testString',
-                app=app_patch_model,
+                app_name='my-app',
+                limit=100,
             )
-            app = response.get_result()
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
 
-            print(json.dumps(app, indent=2))
+            print(json.dumps(all_results, indent=2))
 
-            # end-update_app
-
+            # end-list_app_instances
         except ApiException as e:
             pytest.fail(str(e))
 
@@ -450,20 +428,70 @@ class TestCodeEngineV2Examples:
             pytest.fail(str(e))
 
     @needscredentials
-    def test_list_app_instances_example(self):
+    def test_get_app_example(self):
         """
-        list_app_instances request example
+        get_app request example
         """
         try:
-            print('\nlist_app_instances() result:')
+            print('\nget_app() result:')
 
-            # begin-list_app_instances
+            # begin-get_app
+
+            response = code_engine_service.get_app(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='my-app',
+            )
+            app = response.get_result()
+
+            print(json.dumps(app, indent=2))
+
+            # end-get_app
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_update_app_example(self):
+        """
+        update_app request example
+        """
+        try:
+            print('\nupdate_app() result:')
+
+            # begin-update_app
+
+            app_patch_model = {}
+
+            response = code_engine_service.update_app(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='my-app',
+                if_match='testString',
+                app=app_patch_model,
+            )
+            app = response.get_result()
+
+            print(json.dumps(app, indent=2))
+
+            # end-update_app
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_list_job_runs_example(self):
+        """
+        list_job_runs request example
+        """
+        try:
+            print('\nlist_job_runs() result:')
+
+            # begin-list_job_runs
 
             all_results = []
-            pager = AppInstancesPager(
+            pager = JobRunsPager(
                 client=code_engine_service,
                 project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
-                app_name='my-app',
+                job_name='my-job',
                 limit=100,
             )
             while pager.has_next():
@@ -473,7 +501,52 @@ class TestCodeEngineV2Examples:
 
             print(json.dumps(all_results, indent=2))
 
-            # end-list_app_instances
+            # end-list_job_runs
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_job_run_example(self):
+        """
+        create_job_run request example
+        """
+        try:
+            print('\ncreate_job_run() result:')
+
+            # begin-create_job_run
+
+            response = code_engine_service.create_job_run(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+            )
+            job_run = response.get_result()
+
+            print(json.dumps(job_run, indent=2))
+
+            # end-create_job_run
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_job_run_example(self):
+        """
+        get_job_run request example
+        """
+        try:
+            print('\nget_job_run() result:')
+
+            # begin-get_job_run
+
+            response = code_engine_service.get_job_run(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='my-job-run',
+            )
+            job_run = response.get_result()
+
+            print(json.dumps(job_run, indent=2))
+
+            # end-get_job_run
+
         except ApiException as e:
             pytest.fail(str(e))
 
@@ -574,79 +647,6 @@ class TestCodeEngineV2Examples:
             print(json.dumps(job, indent=2))
 
             # end-update_job
-
-        except ApiException as e:
-            pytest.fail(str(e))
-
-    @needscredentials
-    def test_list_job_runs_example(self):
-        """
-        list_job_runs request example
-        """
-        try:
-            print('\nlist_job_runs() result:')
-
-            # begin-list_job_runs
-
-            all_results = []
-            pager = JobRunsPager(
-                client=code_engine_service,
-                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
-                job_name='my-job',
-                limit=100,
-            )
-            while pager.has_next():
-                next_page = pager.get_next()
-                assert next_page is not None
-                all_results.extend(next_page)
-
-            print(json.dumps(all_results, indent=2))
-
-            # end-list_job_runs
-        except ApiException as e:
-            pytest.fail(str(e))
-
-    @needscredentials
-    def test_create_job_run_example(self):
-        """
-        create_job_run request example
-        """
-        try:
-            print('\ncreate_job_run() result:')
-
-            # begin-create_job_run
-
-            response = code_engine_service.create_job_run(
-                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
-            )
-            job_run = response.get_result()
-
-            print(json.dumps(job_run, indent=2))
-
-            # end-create_job_run
-
-        except ApiException as e:
-            pytest.fail(str(e))
-
-    @needscredentials
-    def test_get_job_run_example(self):
-        """
-        get_job_run request example
-        """
-        try:
-            print('\nget_job_run() result:')
-
-            # begin-get_job_run
-
-            response = code_engine_service.get_job_run(
-                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
-                name='my-job-run',
-            )
-            job_run = response.get_result()
-
-            print(json.dumps(job_run, indent=2))
-
-            # end-get_job_run
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -854,6 +854,79 @@ class TestCodeEngineV2Examples:
             pytest.fail(str(e))
 
     @needscredentials
+    def test_list_build_runs_example(self):
+        """
+        list_build_runs request example
+        """
+        try:
+            print('\nlist_build_runs() result:')
+
+            # begin-list_build_runs
+
+            all_results = []
+            pager = BuildRunsPager(
+                client=code_engine_service,
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                build_name='my-build',
+                limit=100,
+            )
+            while pager.has_next():
+                next_page = pager.get_next()
+                assert next_page is not None
+                all_results.extend(next_page)
+
+            print(json.dumps(all_results, indent=2))
+
+            # end-list_build_runs
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_create_build_run_example(self):
+        """
+        create_build_run request example
+        """
+        try:
+            print('\ncreate_build_run() result:')
+
+            # begin-create_build_run
+
+            response = code_engine_service.create_build_run(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+            )
+            build_run = response.get_result()
+
+            print(json.dumps(build_run, indent=2))
+
+            # end-create_build_run
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_get_build_run_example(self):
+        """
+        get_build_run request example
+        """
+        try:
+            print('\nget_build_run() result:')
+
+            # begin-get_build_run
+
+            response = code_engine_service.get_build_run(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='my-build-run',
+            )
+            build_run = response.get_result()
+
+            print(json.dumps(build_run, indent=2))
+
+            # end-get_build_run
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
     def test_list_builds_example(self):
         """
         list_builds request example
@@ -952,79 +1025,6 @@ class TestCodeEngineV2Examples:
             print(json.dumps(build, indent=2))
 
             # end-update_build
-
-        except ApiException as e:
-            pytest.fail(str(e))
-
-    @needscredentials
-    def test_list_build_runs_example(self):
-        """
-        list_build_runs request example
-        """
-        try:
-            print('\nlist_build_runs() result:')
-
-            # begin-list_build_runs
-
-            all_results = []
-            pager = BuildRunsPager(
-                client=code_engine_service,
-                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
-                build_name='my-build',
-                limit=100,
-            )
-            while pager.has_next():
-                next_page = pager.get_next()
-                assert next_page is not None
-                all_results.extend(next_page)
-
-            print(json.dumps(all_results, indent=2))
-
-            # end-list_build_runs
-        except ApiException as e:
-            pytest.fail(str(e))
-
-    @needscredentials
-    def test_create_build_run_example(self):
-        """
-        create_build_run request example
-        """
-        try:
-            print('\ncreate_build_run() result:')
-
-            # begin-create_build_run
-
-            response = code_engine_service.create_build_run(
-                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
-            )
-            build_run = response.get_result()
-
-            print(json.dumps(build_run, indent=2))
-
-            # end-create_build_run
-
-        except ApiException as e:
-            pytest.fail(str(e))
-
-    @needscredentials
-    def test_get_build_run_example(self):
-        """
-        get_build_run request example
-        """
-        try:
-            print('\nget_build_run() result:')
-
-            # begin-get_build_run
-
-            response = code_engine_service.get_build_run(
-                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
-                name='my-build-run',
-            )
-            build_run = response.get_result()
-
-            print(json.dumps(build_run, indent=2))
-
-            # end-get_build_run
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -1445,25 +1445,6 @@ class TestCodeEngineV2Examples:
             pytest.fail(str(e))
 
     @needscredentials
-    def test_delete_app_example(self):
-        """
-        delete_app request example
-        """
-        try:
-            # begin-delete_app
-
-            response = code_engine_service.delete_app(
-                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
-                name='my-app',
-            )
-
-            # end-delete_app
-            print('\ndelete_app() response status code: ', response.get_status_code())
-
-        except ApiException as e:
-            pytest.fail(str(e))
-
-    @needscredentials
     def test_delete_app_revision_example(self):
         """
         delete_app_revision request example
@@ -1484,20 +1465,20 @@ class TestCodeEngineV2Examples:
             pytest.fail(str(e))
 
     @needscredentials
-    def test_delete_job_example(self):
+    def test_delete_app_example(self):
         """
-        delete_job request example
+        delete_app request example
         """
         try:
-            # begin-delete_job
+            # begin-delete_app
 
-            response = code_engine_service.delete_job(
+            response = code_engine_service.delete_app(
                 project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
-                name='my-job',
+                name='my-app',
             )
 
-            # end-delete_job
-            print('\ndelete_job() response status code: ', response.get_status_code())
+            # end-delete_app
+            print('\ndelete_app() response status code: ', response.get_status_code())
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -1517,6 +1498,25 @@ class TestCodeEngineV2Examples:
 
             # end-delete_job_run
             print('\ndelete_job_run() response status code: ', response.get_status_code())
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_delete_job_example(self):
+        """
+        delete_job request example
+        """
+        try:
+            # begin-delete_job
+
+            response = code_engine_service.delete_job(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='my-job',
+            )
+
+            # end-delete_job
+            print('\ndelete_job() response status code: ', response.get_status_code())
 
         except ApiException as e:
             pytest.fail(str(e))
@@ -1560,25 +1560,6 @@ class TestCodeEngineV2Examples:
             pytest.fail(str(e))
 
     @needscredentials
-    def test_delete_build_example(self):
-        """
-        delete_build request example
-        """
-        try:
-            # begin-delete_build
-
-            response = code_engine_service.delete_build(
-                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
-                name='my-build',
-            )
-
-            # end-delete_build
-            print('\ndelete_build() response status code: ', response.get_status_code())
-
-        except ApiException as e:
-            pytest.fail(str(e))
-
-    @needscredentials
     def test_delete_build_run_example(self):
         """
         delete_build_run request example
@@ -1593,6 +1574,25 @@ class TestCodeEngineV2Examples:
 
             # end-delete_build_run
             print('\ndelete_build_run() response status code: ', response.get_status_code())
+
+        except ApiException as e:
+            pytest.fail(str(e))
+
+    @needscredentials
+    def test_delete_build_example(self):
+        """
+        delete_build request example
+        """
+        try:
+            # begin-delete_build
+
+            response = code_engine_service.delete_build(
+                project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
+                name='my-build',
+            )
+
+            # end-delete_build
+            print('\ndelete_build() response status code: ', response.get_status_code())
 
         except ApiException as e:
             pytest.fail(str(e))

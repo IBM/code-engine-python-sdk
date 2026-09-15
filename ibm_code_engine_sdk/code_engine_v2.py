@@ -56,7 +56,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2026-05-14`.
+               `2026-09-04`.
         """
         authenticator = get_authenticator_from_environment(service_name)
         service = cls(
@@ -80,7 +80,7 @@ class CodeEngineV2(BaseService):
 
         :param str version: (optional) The API version, in format `YYYY-MM-DD`. For
                the API behavior documented here, specify any date between `2021-03-31` and
-               `2026-05-14`.
+               `2026-09-04`.
         """
         BaseService.__init__(self, service_url=self.DEFAULT_SERVICE_URL, authenticator=authenticator)
         self.version = version
@@ -13740,7 +13740,8 @@ class Probe:
           checks.
     :param str path: (optional) The path of the HTTP request to the resource. A path
           is only supported for a probe with a `type` of `http`.
-    :param int port: (optional) The port on which to probe the resource.
+    :param int port: (optional) The port on which to probe the resource, or 0 to
+          probe the default app port 8080.
     :param int timeout: (optional) The amount of time in seconds that the probe
           waits for a response from the application before it times out and fails.
     :param str type: Specifies whether to use HTTP or TCP for the probe checks. The
@@ -13771,7 +13772,8 @@ class Probe:
                checks.
         :param str path: (optional) The path of the HTTP request to the resource. A
                path is only supported for a probe with a `type` of `http`.
-        :param int port: (optional) The port on which to probe the resource.
+        :param int port: (optional) The port on which to probe the resource, or 0
+               to probe the default app port 8080.
         :param int timeout: (optional) The amount of time in seconds that the probe
                waits for a response from the application before it times out and fails.
         """

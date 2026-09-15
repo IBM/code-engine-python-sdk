@@ -22,7 +22,7 @@ import os
 import pytest
 from ibm_code_engine_sdk.code_engine_v2 import *
 
-version = '2026-05-14'
+version = '2026-09-04'
 
 #
 # This file provides an example of how to use the Code Engine service.

@@ -1276,9 +1276,10 @@ class TestCodeEngineV2Examples:
                 format='generic',
                 name='my-secret',
             )
-            secret = response.get_result()
+            result = response.get_result()
 
-            print(json.dumps(secret, indent=2))
+            fields = ['name', 'resource_type', 'format', 'entity_tag', 'generated_by', 'created_at']
+            print(json.dumps({k: result[k] for k in fields if k in result}, indent=2))
 
             # end-create_secret
 
@@ -1299,9 +1300,10 @@ class TestCodeEngineV2Examples:
                 project_id='15314cc3-85b4-4338-903f-c28cdee6d005',
                 name='my-secret',
             )
-            secret = response.get_result()
+            result = response.get_result()
 
-            print(json.dumps(secret, indent=2))
+            fields = ['name', 'resource_type', 'format', 'entity_tag', 'generated_by', 'created_at']
+            print(json.dumps({k: result[k] for k in fields if k in result}, indent=2))
 
             # end-get_secret
 
@@ -1324,9 +1326,10 @@ class TestCodeEngineV2Examples:
                 if_match='testString',
                 format='generic',
             )
-            secret = response.get_result()
+            result = response.get_result()
 
-            print(json.dumps(secret, indent=2))
+            fields = ['name', 'resource_type', 'format', 'entity_tag', 'generated_by', 'created_at']
+            print(json.dumps({k: result[k] for k in fields if k in result}, indent=2))
 
             # end-replace_secret
 

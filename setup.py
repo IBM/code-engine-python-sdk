@@ -47,7 +47,7 @@ setup(
     install_requires=install_requires,
     tests_require=tests_require,
     author='IBM',
-    author_email='coligo@de.ibm.com',
+    author_email='ibm-cloud-open-source@ibm.com',
     long_description=readme,
     long_description_content_type='text/markdown',
     url='https://github.com/IBM/code-engine-python-sdk',

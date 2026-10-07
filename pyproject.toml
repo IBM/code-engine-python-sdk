@@ -10,7 +10,7 @@ skip-string-normalization = true
 name = 'ibm-code-engine-sdk'
 version = '6.0.6'
 authors = [
-    { name = 'IBM', email = 'coligo@de.ibm.com'},
+    { name = 'IBM', email = 'ibm-cloud-open-source@ibm.com'},
 ]
 classifiers = [
         'Programming Language :: Python',

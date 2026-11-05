@@ -8,9 +8,9 @@ skip-string-normalization = true
 
 [project]
 name = 'ibm-code-engine-sdk'
-version = '6.0.6'
+version = '6.0.7'
 authors = [
-    { name = 'IBM', email = 'ibm-cloud-open-source@ibm.com'},
+    { name = 'IBM', email = 'ce.ui.team@de.ibm.com'},
 ]
 classifiers = [
         'Programming Language :: Python',
